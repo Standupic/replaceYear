@@ -1,0 +1,31 @@
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// Эти стили не будут применены в SHELL
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+@import "styles/fonts.css";
+@import "styles/index.scss";
+
+#root {
+  width: 100%;
+  height: 100%;
+  overflow: unset;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  cursor: default;
+  background-color: var(--background-secondary);
+  overflow: auto;
+}
+
+#juicy-bonus {
+  padding: 0 20px 20px 20px;
+  overflow: unset;
+}
+
