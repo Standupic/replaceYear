@@ -1,5 +1,4 @@
-import { createSlice, PayloadAction, createAsyncThunk, AsyncThunk } from '@reduxjs/toolkit';
-import Axios from '../api/interceptor';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import authorization from '../middlewares/authorization';
 
 export interface UserState {
@@ -9,7 +8,7 @@ export interface UserState {
   user: any;
 }
 
-export const initialState: UserState = {
+const initialState: UserState = {
   loading: false,
   userLoaded: false,
   error: null,
@@ -34,11 +33,7 @@ interface IPayloadFulFilledAUTH {
 const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {
-    // changeName: (state, action: PayloadAction<string>) => {
-    //   state = action.payload;
-    // },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(authorization.pending, (state) => {
       state.loading = true;

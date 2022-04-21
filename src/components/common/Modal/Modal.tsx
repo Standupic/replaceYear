@@ -1,43 +1,43 @@
 import { Modal, Button } from 'juicyfront';
-import React, { FC, useState } from 'react';
-import { ReactComponent as JackdawSuccess } from '../../../assets/images/jackdawSuccess.svg';
-import { ReactComponent as Cross } from '../../../assets/images/cross.svg';
+import React, { FC } from 'react';
+import { useSelector } from 'react-redux';
+import { ReactComponent as JackdawSuccessSVG } from '../../../assets/images/jackdawSuccess.svg';
+import { ReactComponent as CrossSVG } from '../../../assets/images/cross.svg';
 import './styles.sass';
 import Stack, { IKeySpacingMap } from '../Stack';
+import { STATUS_APPLICATION } from '../../../store/globalStateSlice';
+import { selectStatusApplication } from '../../../selectors/globalSelector';
 import { Text, Heading } from './Modal-parts';
 
-export enum IModalStatus {
-  Error = 'Error',
-  Success = 'Success',
-}
-
 const HeadingValues = {
-  [IModalStatus.Error]: 'Заявка успешно исполнена',
-  [IModalStatus.Success]: 'Заявка не была исполнена',
+  [STATUS_APPLICATION.Error]: 'Заявка успешно исполнена',
+  [STATUS_APPLICATION.Success]: 'Заявка не была исполнена',
 };
 
 const TextValues = {
-  [IModalStatus.Error]:
+  [STATUS_APPLICATION.Error]:
     'Табельный номер был блокирован пользователем Ивановым Иваном. Попробуйте создать заявку позже.',
-  [IModalStatus.Success]: 'Созданные заявки будут отображаться в раздел «Мои заявки»',
+  [STATUS_APPLICATION.Success]: 'Созданные заявки будут отображаться в раздел «Мои заявки»',
 };
 
 const Images = {
-  [IModalStatus.Error]: <Cross />,
-  [IModalStatus.Success]: <JackdawSuccess />,
+  [STATUS_APPLICATION.Error]: <CrossSVG />,
+  [STATUS_APPLICATION.Success]: <JackdawSuccessSVG />,
 };
 
 const ModalContainer: FC = () => {
-  const [isError] = useState<null | IModalStatus>(null); // in store
+  const statusApplication = useSelector(selectStatusApplication);
   return (
     <>
-      {isError && (
+      {statusApplication && (
         <Modal size="s" header>
           <Stack gutter={IKeySpacingMap.xl}>
-            {Images[isError]}
+            {Images[statusApplication]}
             <Stack gutter={IKeySpacingMap.sm}>
-              <Heading>{HeadingValues[isError]}</Heading>
-              <Text isError={isError === IModalStatus.Error}>{TextValues[isError]}</Text>
+              <Heading>{HeadingValues[statusApplication]}</Heading>
+              <Text isError={statusApplication === STATUS_APPLICATION.Error}>
+                {TextValues[statusApplication]}
+              </Text>
             </Stack>
             <Button fullWidth>Продолжить</Button>
           </Stack>

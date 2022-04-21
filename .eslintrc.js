@@ -18,6 +18,13 @@ module.exports = {
     },
     ecmaVersion: 'latest',
   },
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      },
+    },
+  },
   plugins: ['react', '@typescript-eslint', 'prettier', 'jsx-a11y'],
   rules: {
     'prettier/prettier': [
