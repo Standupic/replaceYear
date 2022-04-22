@@ -7,12 +7,3 @@ export const Text = styled.p`
   text-align: center;
   inline-size: ${(props: { isError: boolean }) => (props.isError ? 'auto' : '220px')};
 `;
-
-export const Heading = styled.h6`
-  font-size: 18px;
-`;
-
-export const Center = styled.div`
-  justify-items: center;
-  align-items: center;
-`;

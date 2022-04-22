@@ -1,7 +1,3 @@
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// Эти стили не будут применены в SHELL
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 @import "styles/fonts.css";
 @import "styles/index.scss";
 
@@ -23,9 +19,3 @@ body {
   background-color: var(--background-secondary);
   overflow: auto;
 }
-
-#juicy-bonus {
-  padding: 0 20px 20px 20px;
-  overflow: unset;
-}
-
