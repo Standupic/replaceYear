@@ -1,15 +1,17 @@
 import React from 'react';
 import { ReactComponent as BackSVG } from '../../../assets/images/back.svg';
-import { IKeySpacingMap, Inline, Heading } from '../Tags';
+import InlineCluster from '../../styledComponents/InlineCluster';
+import { KEY_JUSTIFYING, KEY_SPACING } from '../../styledComponents/constants';
+import Heading from '../../styledComponents/Heading';
 
 const MainTittle = () => {
   return (
-    <Inline gutter={IKeySpacingMap.lg}>
+    <InlineCluster gutter={KEY_SPACING.lg} align={KEY_JUSTIFYING.center}>
       <BackSVG />
       <Heading level={'h5'} size={'20px'}>
         Заявка на замену лет для расчёта больничного
       </Heading>
-    </Inline>
+    </InlineCluster>
   );
 };
 

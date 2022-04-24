@@ -10,6 +10,7 @@
 html, body {
   width: 100%;
   height: 100%;
+  
 }
 
 body {
@@ -18,4 +19,10 @@ body {
   cursor: default;
   background-color: var(--background-secondary);
   overflow: auto;
+  min-block-size: 100vh;
+}
+
+img {
+  display: block;
+  max-inline-size: 100%;
 }

@@ -18,15 +18,17 @@ const TextValues = {
     'Если в двух предыдущих годах, предшествующих году начала заболевания, вы работали у других работодателей и находились в отпуске по беременности и родам и/или по уходу за ребенком, то для расчёта больничного необходимо предоставить оригинал справки 182н в ОРЗПиИВ (г.Москва, Трубная, 2 к.511)',
 };
 
-const Permission: FC = () => {
+const Permission: FC = ({ children }) => {
   const accessApplication = useSelector(selectAccessApplication);
   return (
     <>
-      {accessApplication && (
+      {accessApplication ? (
         <SomethingWrong
           heading={HeadingValues[accessApplication]}
           text={TextValues[accessApplication]}
         />
+      ) : (
+        children
       )}
     </>
   );
