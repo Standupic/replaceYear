@@ -6,7 +6,8 @@ import { ReactComponent as CrossSVG } from '../../../assets/images/cross.svg';
 import './styles.sass';
 import { STATUS_APPLICATION } from '../../../store/globalStateSlice';
 import { selectStatusApplication } from '../../../selectors/globalSelector';
-import { Heading, IKeySpacingMap, Stack } from '../Tags';
+import { KEY_SPACING } from '../../styledComponents/constants';
+import { Center, Stack, Heading } from '../../styledComponents';
 import { Text } from './Modal-parts';
 
 const HeadingValues = {
@@ -31,18 +32,18 @@ const ModalContainer: FC = () => {
     <>
       {statusApplication && (
         <Modal size="s" header>
-          <Stack gutter={IKeySpacingMap.xl} align={'center'} justify={'center'}>
+          <Center as={Stack} gutter={KEY_SPACING.lg} centerChildren>
             {Images[statusApplication]}
-            <Stack gutter={IKeySpacingMap.sm} align={'center'} justify={'center'}>
+            <Center as={Stack} centerChildren gutter={KEY_SPACING.sm}>
               <Heading size={'18px'} level={'h6'}>
                 {HeadingValues[statusApplication]}
               </Heading>
               <Text isError={statusApplication === STATUS_APPLICATION.Error}>
                 {TextValues[statusApplication]}
               </Text>
-            </Stack>
+            </Center>
             <Button fullWidth>Продолжить</Button>
-          </Stack>
+          </Center>
         </Modal>
       )}
     </>

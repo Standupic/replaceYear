@@ -59,3 +59,8 @@ export const justifyAlignMap: TypeJustifyMap = {
 };
 
 export type WRAP_VALUE = 'wrap' | 'nowrap';
+
+export interface IStyles {
+  gutter?: KEY_SPACING;
+  padding?: KEY_SPACING[];
+}

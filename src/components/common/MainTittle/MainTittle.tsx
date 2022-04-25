@@ -2,7 +2,7 @@ import React from 'react';
 import { ReactComponent as BackSVG } from '../../../assets/images/back.svg';
 import InlineCluster from '../../styledComponents/InlineCluster';
 import { KEY_JUSTIFYING, KEY_SPACING } from '../../styledComponents/constants';
-import Heading from '../../styledComponents/Heading';
+import { Heading } from '../../styledComponents';
 
 const MainTittle = () => {
   return (

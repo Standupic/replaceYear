@@ -18,7 +18,7 @@ export interface GlobalState {
 
 const initialState: GlobalState = {
   statusApplication: null,
-  accessApplication: ACCESS_APPLICATION.ToApply,
+  accessApplication: null,
 };
 
 const globalStateSlice = createSlice({

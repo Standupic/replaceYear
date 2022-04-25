@@ -1,9 +1,7 @@
 import styled from 'styled-components';
-import { spacingMap, KEY_SPACING } from '../constants';
+import { spacingMap, KEY_SPACING, IStyles } from '../constants';
 
-interface IPropsStack {
-  gutter?: KEY_SPACING;
-}
+type IPropsStack = IStyles;
 
 const Stack = styled.div`
   display: grid;

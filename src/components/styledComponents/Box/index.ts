@@ -1,10 +1,11 @@
 import styled from 'styled-components';
-import { KEY_SPACING } from '../constants';
+import { IStyles } from '../constants';
 
-interface IPropsCenter {
-  gutter?: KEY_SPACING;
+interface IPropsBox extends IStyles {
+  width?: string;
 }
-
-const Box = styled.div``;
+const Box = styled.div`
+  width: ${(props: IPropsBox) => (props.width ? props.width : 'auto')};
+`;
 
 export default Box;

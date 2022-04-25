@@ -7,14 +7,14 @@ import UseAuthorization from './hooks/useAuthorization';
 import NavigationTabs from './components/common/NavigationTabs';
 import MainTittle from './components/common/MainTittle';
 import User from './components/common/User';
-import { Container, Stack, Box } from './components/common/Tags';
+import { Stack, Box } from './components/styledComponents';
 const Applications = React.lazy(() => import('./pages/applications'));
 const CreateApplication = React.lazy(() => import('./pages/createApplication'));
 
 const App = () => {
   UseAuthorization();
   return (
-    <Container width={'880px'}>
+    <Box width={'880px'}>
       <Stack>
         <Box>
           <MainTittle />
@@ -35,7 +35,7 @@ const App = () => {
         </Route>
       </Switch>
       <ModalContainer />
-    </Container>
+    </Box>
   );
 };
 

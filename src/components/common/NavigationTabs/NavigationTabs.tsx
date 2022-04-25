@@ -16,6 +16,7 @@ const NavigationTabs = () => {
               history.push('/');
             }
           },
+          active: location.pathname === '/' && true,
         },
         {
           label: 'Мои заявки',
@@ -24,6 +25,7 @@ const NavigationTabs = () => {
               history.push('/applications');
             }
           },
+          active: location.pathname === '/applications' && true,
         },
       ]}
     />

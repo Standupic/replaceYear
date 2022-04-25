@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import { spacingMap, KEY_SPACING } from '../constants';
 
-interface IPropsSplit {
+interface IPropsPadBox {
   padding: KEY_SPACING[];
 }
 
 const PadBox = styled.div`
-  padding: ${(props: IPropsSplit) => {
+  padding: ${(props: IPropsPadBox) => {
     const arr: KEY_SPACING[] = [] as [];
     return arr
       .concat(props.padding)

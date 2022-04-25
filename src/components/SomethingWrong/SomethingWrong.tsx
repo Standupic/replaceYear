@@ -1,12 +1,8 @@
 import React, { FC, ReactSVG } from 'react';
 import { ReactComponent as PermissionSVG } from '../../assets/images/permission.svg';
 import { Text } from '../Permission/Permission-parts';
-import { Heading } from '../common/Tags';
-import Cover from '../styledComponents/Cover';
-import Center from '../styledComponents/Center';
+import { Cover, Center, Box, Stack, Heading } from '../styledComponents';
 import { KEY_SPACING } from '../styledComponents/constants';
-import Box from '../styledComponents/Box';
-import Stack from '../styledComponents/Stack';
 
 interface ISomethingWrongProps {
   heading?: string;
@@ -19,9 +15,9 @@ const SomethingWrong: FC<ISomethingWrongProps> = ({ heading, text, svg = <Permis
     <Cover heightTop="236px">
       <Center as={Stack} gutter={KEY_SPACING.lg} centerChildren centerText>
         <Box>{svg}</Box>
-        <Stack gutter={KEY_SPACING.xs}>
+        <Stack gutter={KEY_SPACING.sm}>
           {heading && (
-            <Heading level={'h5'} size={'20'}>
+            <Heading level={'h5'} size={'20px'}>
               {heading}
             </Heading>
           )}
