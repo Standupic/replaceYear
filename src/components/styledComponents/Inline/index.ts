@@ -5,6 +5,7 @@ import { STRETCH_KEY, stretchMap } from '../constants';
 interface InlineProps extends IResponsive {
   stretch: STRETCH_KEY;
   index?: number;
+  height?: string;
 }
 
 const responsive = css`
@@ -22,6 +23,7 @@ const Inline = styled(InlineCluster as any)`
     if (props.index) return `> :nth-child(${props.index + 1}) { flex: 1 }`;
     return stretchMap[props.stretch] ?? '';
   }}
+  height: ${(props: InlineProps) => props.height && props.height};
   ${(props: InlineProps) => props.width && responsive};
 `;
 

@@ -7,25 +7,28 @@ interface IText {
   fontWeight?: string;
   fontStyle?: string;
   color?: string;
+  align?: string;
+  isActive?: boolean;
 }
 
 export const Text = styled.p`
   font-size: ${(props: IText) => (props.size ? props.size : '1rem')};
-  color: ${(props: IText) => (props.color ? props.color : '#74777f')};
+  color: ${(props: IText) => props.color && props.color};
   font-weight: ${(props: IText) => (props.fontWeight ? props.fontWeight : 'normal')};
   line-height: 20px;
+  text-align: ${(props: IText) => (props.align ? props.align : 'left')};
 `;
 
 export const Total = styled(Text as any)`
   font-weight: 500;
-  font-size: 2rem;
+  font-size: 1.75rem;
 `;
 
 interface IPropsSum extends IStyles {
   width?: string;
   border?: string;
   color?: string;
-  bg?: string;
+  isActive?: boolean;
   theme: { able: { color: string; bg: string } };
 }
 
@@ -33,10 +36,11 @@ export const SumBox = styled(PadBox as any).attrs(() => ({
   as: 'div',
   padding: ['lg'],
 }))`
-  background: ${(props: IPropsSum) => (props.bg ? props.bg : 'white')};
+  background: ${(props: IPropsSum) => (props.isActive ? '#3A85FF' : 'white')};
   border: ${(props: IPropsSum) => (props.border ? props.border : '1px solid #dde0e9')};
   border-radius: 16px;
   width: 410px;
+  height: 96px;
 `;
 
 export const Reasonable = styled(PadBox as any).attrs(() => ({
@@ -61,22 +65,38 @@ export const Different = styled(PadBox as any).attrs(() => ({
 `;
 
 interface IYearsBoxProps {
-  bg?: string;
+  isActive?: boolean;
 }
 
 export const YearsBox = styled(PadBox as any).attrs(() => ({
   as: 'div',
-  padding: ['lg'],
+  padding: ['sm'],
 }))`
-  background: ${(props: IYearsBoxProps) => (props.bg ? props.bg : '#F3F4F6')};
+  background: ${(props: IYearsBoxProps) => (props.isActive ? '#EDF5FF' : '#F3F4F6')};
   border-radius: 16px;
+  height: 112px;
 `;
 
 export const ButtonYear = styled(PadBox as any).attrs(() => ({
-  as: 'div',
+  as: 'button',
   padding: ['sm'],
 }))`
   border-radius: 8px;
   background: #ffffff;
   box-shadow: 0px 2px 6px 0px #193b6826;
+  display: grid;
+  align-items: center;
+`;
+
+export const Line = styled.div`
+  position: relative;
+  &:after {
+    height: 1px;
+    background: #dde9ff;
+    content: '';
+    width: 100wh;
+    position: absolute;
+    left: -8px;
+    right: -8px;
+  }
 `;

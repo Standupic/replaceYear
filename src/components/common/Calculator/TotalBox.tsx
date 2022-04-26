@@ -5,22 +5,22 @@ import { Text, Total, Different } from './calculator-parts';
 import ReasonableBox from './Reasonable';
 
 interface IPropsTotalBox {
-  text: string;
+  tittle: string;
   total: number;
   diff?: number;
-  isBenefit?: boolean;
+  isActive?: boolean;
 }
 
-const TotalBox: FC<IPropsTotalBox> = ({ text, total, diff, isBenefit }) => {
+const TotalBox: FC<IPropsTotalBox> = ({ tittle, total, diff, isActive }) => {
   return (
     <Stack>
-      <Text color={isBenefit ? '#FFFFFF' : ''}>{text}</Text>
+      <Text color={isActive ? '#FFFFFF' : '#74777f'}>{tittle}</Text>
       <Inline index={'0'}>
         <InlineCluster>
-          <Total color={isBenefit ? '#FFFFFF' : ''}>{total} ₽</Total>
+          <Total color={isActive ? '#FFFFFF' : '#74777f'}>{total} ₽</Total>
           {diff && <Different>-{diff} ₽</Different>}
         </InlineCluster>
-        {isBenefit && <ReasonableBox text={'Самое выгодное'} svg={<CheckSVG />} />}
+        {isActive && <ReasonableBox text={'Самое выгодное'} svg={<CheckSVG />} />}
       </Inline>
     </Stack>
   );
