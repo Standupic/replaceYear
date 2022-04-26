@@ -12,7 +12,7 @@ export enum KEY_SPACING {
 
 export const spacingMap: TypeSpacingMap = {
   ['0']: '0',
-  xs: '0.125rem',
+  xs: '0.250rem',
   sm: '0.5rem',
   md: '1rem',
   lg: '1.25rem',
@@ -64,3 +64,11 @@ export interface IStyles {
   gutter?: KEY_SPACING;
   padding?: KEY_SPACING[];
 }
+
+export type STRETCH_KEY = 'all' | 'start' | 'end';
+
+export const stretchMap: Record<STRETCH_KEY, string> = {
+  all: `> *  { flex: 1 }`,
+  start: `> :first-child { flex: 1 }`,
+  end: `> :last-child { flex: 1 }`,
+};
