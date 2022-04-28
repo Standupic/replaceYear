@@ -5,14 +5,14 @@ export interface UserState {
   loading: boolean;
   userLoaded: boolean;
   error: unknown;
-  user: any;
+  user: null;
 }
 
 const initialState: UserState = {
   loading: false,
   userLoaded: false,
   error: null,
-  user: {},
+  user: null,
 };
 
 interface FulfilledAction<ThunkArg, PromiseResult> {
@@ -24,7 +24,7 @@ interface FulfilledAction<ThunkArg, PromiseResult> {
   };
 }
 
-interface IPayloadFulFilledAUTH {
+export interface IPayloadFulFilledAUTH {
   user: FulfilledAction<any, any>['payload'];
   token: FulfilledAction<any, any>['payload'];
   permission: FulfilledAction<any, any>['payload'];

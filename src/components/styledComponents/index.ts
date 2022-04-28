@@ -9,4 +9,5 @@ import Heading from './Heading';
 import Card from './Card';
 import Inline from './Inline';
 import Grid from './Grid';
-export { Box, Stack, Cover, Center, InlineCluster, PadBox, Split, Heading, Card, Inline, Grid };
+import StickyButton from './StickyButton';
+export { Box, Stack, Cover, Center, InlineCluster, PadBox, Split, Heading, Card, Inline, Grid, StickyButton };

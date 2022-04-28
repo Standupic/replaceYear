@@ -9,6 +9,7 @@ interface IText {
   color?: string;
   align?: string;
   isActive?: boolean;
+  disable?: boolean;
 }
 
 export const Text = styled.p`
@@ -99,4 +100,30 @@ export const Line = styled.div`
     left: -8px;
     right: -8px;
   }
+`;
+
+export const CurrentYear = styled(Text as any).attrs(() => ({
+  as: 'div',
+}))`
+  position: relative;
+  cursor: pointer;
+`;
+
+export const StatusInfoYear = styled.em`
+  position: absolute;
+  right: -25px;
+  bottom: -4px;
+  cursor: pointer;
+`;
+
+export const PopUpText = styled(Text as any).attrs(() => ({}))`
+  font-size: 0.8rem;
+  text-align: center;
+`;
+
+export const Link = styled(Text as any).attrs(() => ({
+  as: 'a',
+}))`
+  color: #0062ff;
+  font-weight: 500;
 `;

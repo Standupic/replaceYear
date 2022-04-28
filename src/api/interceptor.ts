@@ -3,7 +3,7 @@ import { setDefaultHeadersRequest } from '../helpers';
 import { logins } from './logins';
 
 enum ILogin {
-  'user' = 'user+',
+  'user' = 'user-',
 }
 
 enum INTERSAPTION {
