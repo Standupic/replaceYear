@@ -1,25 +1,31 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { Hint } from 'juicyfront';
+import { useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import { Card, Split, Stack } from '../../styledComponents';
 import { KEY_SPACING } from '../../styledComponents/constants';
+import { selectHelperList, totalNotActiveYears } from '../../../selectors/globalSelector';
 import { Line, SumBox, YearsBox, Text, Link } from './calculator-parts';
 import TotalBox from './TotalBox';
 import { YearActive, YearNotActive } from './Years';
 
 const Calculator: FC = () => {
+  const currentYear = new Date().getFullYear();
+  const total = useSelector(totalNotActiveYears);
+  console.log(total);
   return (
     <Card>
       <Stack>
         <Split>
           <Stack>
             <SumBox>
-              <TotalBox tittle={'До замены лет'} total={830} />
+              <TotalBox tittle={'До замены лет'} total={total} />
             </SumBox>
             <YearsBox>
               <Stack gutter={KEY_SPACING.sm}>
-                <YearNotActive year={'2021'} />
+                <YearNotActive year={currentYear - 1} />
                 <Line />
-                <YearNotActive year={'2020'} />
+                <YearNotActive year={currentYear - 2} />
               </Stack>
             </YearsBox>
           </Stack>

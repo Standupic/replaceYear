@@ -1,15 +1,18 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectIsUser } from '../selectors/userSelector';
+import { selectIsUserLoaded } from '../selectors/userSelector';
 import getHelperList from '../middlewares/getHelperList';
 import initReplaceYear from '../middlewares/initReplaceYear';
 
 const useHelperList = () => {
   const dispatch = useDispatch();
+  const userLoaded = useSelector(selectIsUserLoaded);
   useEffect(() => {
-    dispatch(getHelperList());
-    dispatch(initReplaceYear());
-  }, []);
+    if (userLoaded) {
+      dispatch(getHelperList());
+      dispatch(initReplaceYear());
+    }
+  }, [userLoaded]);
 };
 
 export default useHelperList;

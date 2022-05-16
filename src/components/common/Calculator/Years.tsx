@@ -90,7 +90,7 @@ const YearActive: FC<IYearProps> = ({ disable = false, year, income }) => {
 };
 
 interface IYearNotActiveProps {
-  year: string;
+  year: number;
 }
 
 const YearNotActive: FC<IYearNotActiveProps> = ({ year }) => {
