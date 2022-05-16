@@ -11,8 +11,8 @@ import { Center, Stack, Heading } from '../../styledComponents';
 import { Text } from './Modal-parts';
 
 const HeadingValues = {
-  [STATUS_APPLICATION.Error]: 'Заявка успешно исполнена',
-  [STATUS_APPLICATION.Success]: 'Заявка не была исполнена',
+  [STATUS_APPLICATION.Error]: 'Заявка не была исполнена',
+  [STATUS_APPLICATION.Success]: 'Заявка успешно исполнена',
 };
 
 const TextValues = {

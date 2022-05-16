@@ -1,36 +1,21 @@
 import React from 'react';
 import { Employee } from 'juicyfront';
+import { useSelector } from 'react-redux';
 import InlineCluster from '../../styledComponents/InlineCluster';
 import { KEY_JUSTIFYING, KEY_SPACING } from '../../styledComponents/constants';
 import { Card, Box, Stack } from '../../styledComponents';
+import { selectUser, selectIsUserLoaded } from '../../../selectors/userSelector';
 
 const User = () => {
+  const user = useSelector(selectUser);
+  const userLoaded = useSelector(selectIsUserLoaded);
   return (
-    <Employee
-      user={{
-        department: 'The Betrayer',
-        departmentId: '11',
-        departmentsPath: [
-          {
-            id: 'o1',
-            name: 'Name 1',
-            unitType: 'Unit type 1',
-            unitTypeDesc: 'Unit description 1',
-          },
-        ],
-        firstName: 'Illidan',
-        fullName: 'Illidan Stormrage',
-        id: '#000001',
-        lastName: 'Stormrage',
-        middleName: '',
-        photo: '',
-        position: 'Engineer',
-        positionId: 'FE 1',
-      }}
-    />
+    <>{userLoaded ? <Employee user={user} /> : null}</>
     // <Card>
     //   <InlineCluster gutter={KEY_SPACING.lg} align={KEY_JUSTIFYING.center}>
-    //     <Box>img</Box>
+    //     <Box>
+    //       <img src={user.photo} />
+    //     </Box>
     //     <Stack>
     //       <Box>Кузнецова Злата Игоревна</Box>
     //       <InlineCluster gutter={KEY_SPACING.lg} align={KEY_JUSTIFYING.center}>

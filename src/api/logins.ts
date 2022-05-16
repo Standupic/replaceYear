@@ -1,6 +1,7 @@
 export const logins: Record<string, string> = {
-  'user+': `Basic ${btoa('kutateladzem:12345Tgb')}`,
-  'user-': `Basic ${btoa('BEZRUKOVAMM:12345QAz')}`,
+  user1: `Basic ${btoa('TEST_USER83:OLGA1577069')}`,
+  user2: `Basic ${btoa('kutateladzem:12345TGb')}`,
+  user3: `Basic ${btoa('BEZRUKOVAMM:12345QAz')}`,
   sv: `Basic ${btoa('ZALUCKAYASA:SKovalevskaya54')}`,
 
   ak: `Basic ${btoa('kokorevav:12345YHn')}`,

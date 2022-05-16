@@ -23,3 +23,7 @@ export const domElementGetter = () => {
 export const getCurrency = (income: number) => {
   return income.toLocaleString('ru-Ru', { style: 'currency', currency: 'RUB' });
 };
+
+
+
+

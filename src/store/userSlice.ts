@@ -1,18 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IUser } from 'juicyfront/types/projects.types';
 import authorization from '../middlewares/authorization';
 
 export interface UserState {
   loading: boolean;
   userLoaded: boolean;
-  error: unknown;
-  user: null;
+  error: undefined | string[];
+  user: IUser;
 }
 
 const initialState: UserState = {
   loading: false,
   userLoaded: false,
-  error: null,
-  user: null,
+  error: undefined,
+  user: {} as IUser,
 };
 
 interface FulfilledAction<ThunkArg, PromiseResult> {
@@ -44,6 +45,7 @@ const userSlice = createSlice({
         sessionStorage.setItem('CSRF', action.payload.token);
         state.user = action.payload.user;
         state.loading = false;
+        state.userLoaded = true;
       },
     );
     builder.addCase(authorization.rejected, (state, action) => {
