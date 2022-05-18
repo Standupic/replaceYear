@@ -9,18 +9,20 @@ interface IPropsTotalBox {
   total: number;
   diff?: number;
   isActive?: boolean;
+  isTheBest?: boolean;
 }
 
-const TotalBox: FC<IPropsTotalBox> = ({ tittle, total, diff, isActive }) => {
+const TotalBox: FC<IPropsTotalBox> = ({ tittle, total, diff, isActive, isTheBest }) => {
+  console.log(isTheBest);
   return (
     <Stack>
       <Text color={isActive ? '#FFFFFF' : '#74777f'}>{tittle}</Text>
       <Inline index={'0'}>
         <InlineCluster>
           <Total color={isActive ? '#FFFFFF' : '#74777f'}>{total} ₽</Total>
-          {diff && <Different>-{diff} ₽</Different>}
+          {diff && diff < 0 ? <Different>{diff} ₽</Different> : null}
         </InlineCluster>
-        {isActive && <ReasonableBox text={'Самое выгодное'} svg={<CheckSVG />} />}
+        {isTheBest && <ReasonableBox text={'Самое выгодное'} svg={<CheckSVG />} />}
       </Inline>
     </Stack>
   );

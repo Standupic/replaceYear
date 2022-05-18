@@ -1,25 +1,32 @@
 import React, { FC, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Hint } from 'juicyfront';
-import { useSelector } from 'react-redux';
-import { createSelector } from 'reselect';
 import { Card, Split, Stack } from '../../styledComponents';
 import { KEY_SPACING } from '../../styledComponents/constants';
-import { selectHelperList, totalNotActiveYears } from '../../../selectors/globalSelector';
+import {
+  selectTotalNotActiveYears,
+  selectBottomYear,
+  selectTopYear,
+  selectDataActiveYears,
+} from '../../../selectors/calculatorSelector';
+import { currentYear } from '../../../helpers';
 import { Line, SumBox, YearsBox, Text, Link } from './calculator-parts';
 import TotalBox from './TotalBox';
 import { YearActive, YearNotActive } from './Years';
-
 const Calculator: FC = () => {
-  const currentYear = new Date().getFullYear();
-  const total = useSelector(totalNotActiveYears);
-  console.log(total);
+  const totalNotActiveYear = useSelector(selectTotalNotActiveYears);
+  const topYear = useSelector(selectTopYear);
+  const bottomYear = useSelector(selectBottomYear);
+  const dataActiveYears = useSelector(selectDataActiveYears);
+  const { total, diff, isTheBest } = dataActiveYears;
+  console.log(dataActiveYears);
   return (
     <Card>
       <Stack>
         <Split>
           <Stack>
             <SumBox>
-              <TotalBox tittle={'До замены лет'} total={total} />
+              <TotalBox tittle={'До замены лет'} total={totalNotActiveYear} />
             </SumBox>
             <YearsBox>
               <Stack gutter={KEY_SPACING.sm}>
@@ -31,13 +38,25 @@ const Calculator: FC = () => {
           </Stack>
           <Stack>
             <SumBox isActive>
-              <TotalBox tittle={'После замены лет'} total={1200} diff={30} isActive />
+              <TotalBox
+                tittle={'После замены лет'}
+                total={total}
+                diff={diff}
+                isTheBest={isTheBest}
+                isActive
+              />
             </SumBox>
             <YearsBox isActive>
               <Stack gutter={KEY_SPACING.sm}>
-                <YearActive year={'2019'} income={'700000'} />
+                <YearActive
+                  year={topYear}
+                  type={'topYear'}
+                />
                 <Line />
-                <YearActive year={'2020'} income={'600000'} />
+                <YearActive
+                  year={bottomYear}
+                  type={'bottomYear'}
+                />
               </Stack>
             </YearsBox>
           </Stack>

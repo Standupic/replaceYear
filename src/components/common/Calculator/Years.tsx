@@ -1,17 +1,20 @@
 import React, { FC, useState } from 'react';
 import { StatusInfoOutline } from 'juicyfront/indexIcon';
-import { Toast } from 'juicyfront';
+import { useDispatch } from 'react-redux';
 import { Inline, Stack } from '../../styledComponents';
-import { KEY_SPACING } from '../../styledComponents/constants';
 import { ReactComponent as ArrowLeftSVG } from '../../../assets/images/arrow-left.svg';
 import { ReactComponent as ArrowRightSVG } from '../../../assets/images/arrow-right.svg';
+import { decrementYear, incrementYear } from '../../../store/calculatorSlice';
 import PopUp from './PopUp';
-import { ButtonYear, Line, CurrentYear, StatusInfoYear, PopUpText } from './calculator-parts';
+import { ButtonYear, CurrentYear, StatusInfoYear } from './calculator-parts';
 
 interface IYearProps {
   disable?: boolean;
-  year: string;
-  income?: string;
+  year?: number;
+  income?: number;
+  isThereNextYear?: boolean;
+  isTherePrevYear?: boolean;
+  type: string;
 }
 
 const infoStyle: React.CSSProperties | undefined = {
@@ -28,15 +31,19 @@ const currentYearStyle: React.CSSProperties | undefined = {
   height: '40px',
 };
 
-const YearActive: FC<IYearProps> = ({ disable = false, year, income }) => {
+const YearActive: FC<IYearProps> = ({ disable = false, year, income, type }) => {
   const currentYearRef = React.useRef(null);
   const statusInfoRef = React.useRef(null);
   const [isVisibleInfo, setVisibleInfo] = useState<boolean>(false);
   const [isVisibleInCome, setVisibleInCome] = useState<boolean>(false);
+  const dispatch = useDispatch();
   return (
     <Inline index={1} align={'center'} justify={'center'} height={'39px'}>
       {!disable && (
-        <ButtonYear>
+        <ButtonYear
+          onClick={() => {
+            dispatch(decrementYear(type));
+          }}>
           <ArrowLeftSVG />
         </ButtonYear>
       )}
@@ -81,7 +88,10 @@ const YearActive: FC<IYearProps> = ({ disable = false, year, income }) => {
         )}
       </CurrentYear>
       {!disable && (
-        <ButtonYear>
+        <ButtonYear
+          onClick={() => {
+            dispatch(incrementYear(type));
+          }}>
           <ArrowRightSVG />
         </ButtonYear>
       )}

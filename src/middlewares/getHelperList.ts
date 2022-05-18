@@ -1,7 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from '../api/interceptor';
+import { IHelperList } from '../store/calculatorSlice';
 
-const getHelperList = createAsyncThunk<any, any, { rejectValue: string[] | undefined }>(
+const getHelperList = createAsyncThunk<IHelperList[], any, { rejectValue: string[] | undefined }>(
   'helperList',
   async (_, api) => {
     console.log('helperList');

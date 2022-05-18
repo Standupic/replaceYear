@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import userSlice from './userSlice';
 import globalStateSlice from './globalStateSlice';
+import calculatorSlice from './calculatorSlice';
 
 export const store = configureStore({
   reducer: {
     globalState: globalStateSlice,
     user: userSlice,
+    calculator: calculatorSlice,
   },
 });
 
