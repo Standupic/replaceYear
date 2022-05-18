@@ -5,6 +5,7 @@ import { getMostBenefitYears, getPreviousTwoYears, mappingHelperList } from '../
 export interface IHelperListAPI {
   year: number;
   Amount: number;
+  dailyAmount: number;
   currency: string;
   withoutAbsence: boolean;
 }
@@ -12,6 +13,7 @@ export interface IHelperListAPI {
 export interface IHelperList {
   year: number;
   Amount: number;
+  dailyAmount: number;
   currency: string;
   withoutAbsence: boolean;
 }
@@ -22,11 +24,15 @@ interface CalculatorState {
   mostBenefitYears: IHelperList[] | undefined;
   previousTwoYears: IHelperList[] | undefined;
   helperList: IHelperList[];
+  minYear: number;
+  maxYear: number;
 }
 
 const initialState: CalculatorState = {
   topYear: 0,
   bottomYear: 0,
+  minYear: 0,
+  maxYear: 0,
   mostBenefitYears: undefined,
   previousTwoYears: undefined,
   helperList: [] as IHelperList[],
@@ -64,7 +70,6 @@ const calculatorSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getHelperList.fulfilled, (state, action) => {
       state.helperList = mappingHelperList(action.payload);
-      console.log(mappingHelperList(action.payload));
       const theBestYears = getMostBenefitYears(mappingHelperList(action.payload));
       state.mostBenefitYears = theBestYears;
       state.previousTwoYears = getPreviousTwoYears(mappingHelperList(action.payload));

@@ -22,15 +22,11 @@ export const domElementGetter = () => {
 };
 
 export const getCurrency = (income: number) => {
-  return income.toLocaleString('ru-Ru', { style: 'currency', currency: 'RUB' });
+  if (income) return income.toLocaleString('ru-Ru', { style: 'currency', currency: 'RUB' });
+  return "";
 };
 
 export const currentYear = new Date().getFullYear();
-
-Number.prototype.getTotal = function (this: ThisType<any>) {
-  // @ts-ignore
-  return this / 730;
-};
 
 export const mappingHelperList = (years: IHelperListAPI[]) => {
   return years.map((item) => {

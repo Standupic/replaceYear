@@ -8,8 +8,9 @@ import {
   selectBottomYear,
   selectTopYear,
   selectDataActiveYears,
+  selectIncomeActiveYears,
 } from '../../../selectors/calculatorSelector';
-import { currentYear } from '../../../helpers';
+import { currentYear, getCurrency } from '../../../helpers';
 import { Line, SumBox, YearsBox, Text, Link } from './calculator-parts';
 import TotalBox from './TotalBox';
 import { YearActive, YearNotActive } from './Years';
@@ -19,14 +20,14 @@ const Calculator: FC = () => {
   const bottomYear = useSelector(selectBottomYear);
   const dataActiveYears = useSelector(selectDataActiveYears);
   const { total, diff, isTheBest } = dataActiveYears;
-  console.log(dataActiveYears);
+  const { topYearIncome, bottomYearIncome } = useSelector(selectIncomeActiveYears);
   return (
     <Card>
       <Stack>
         <Split>
           <Stack>
             <SumBox>
-              <TotalBox tittle={'До замены лет'} total={totalNotActiveYear} />
+              <TotalBox tittle={'До замены лет'} total={getCurrency(totalNotActiveYear)} />
             </SumBox>
             <YearsBox>
               <Stack gutter={KEY_SPACING.sm}>
@@ -48,15 +49,9 @@ const Calculator: FC = () => {
             </SumBox>
             <YearsBox isActive>
               <Stack gutter={KEY_SPACING.sm}>
-                <YearActive
-                  year={topYear}
-                  type={'topYear'}
-                />
+                <YearActive year={topYear} type={'topYear'} income={topYearIncome} />
                 <Line />
-                <YearActive
-                  year={bottomYear}
-                  type={'bottomYear'}
-                />
+                <YearActive year={bottomYear} type={'bottomYear'} income={bottomYearIncome} />
               </Stack>
             </YearsBox>
           </Stack>

@@ -7,11 +7,12 @@ import { ReactComponent as ArrowRightSVG } from '../../../assets/images/arrow-ri
 import { decrementYear, incrementYear } from '../../../store/calculatorSlice';
 import PopUp from './PopUp';
 import { ButtonYear, CurrentYear, StatusInfoYear } from './calculator-parts';
+import {getCurrency} from "../../../helpers";
 
 interface IYearProps {
   disable?: boolean;
   year?: number;
-  income?: number;
+  income: number;
   isThereNextYear?: boolean;
   isTherePrevYear?: boolean;
   type: string;
@@ -80,7 +81,7 @@ const YearActive: FC<IYearProps> = ({ disable = false, year, income, type }) => 
         )}
         {!disable && (
           <PopUp
-            text={`Расчётная база: ${income}`}
+            text={`Расчётная база: ${getCurrency(income)}`}
             isVisible={isVisibleInCome}
             currentRef={currentYearRef}
             style={currentYearStyle}

@@ -6,7 +6,7 @@ import ReasonableBox from './Reasonable';
 
 interface IPropsTotalBox {
   tittle: string;
-  total: number;
+  total: string;
   diff?: number;
   isActive?: boolean;
   isTheBest?: boolean;
@@ -19,7 +19,7 @@ const TotalBox: FC<IPropsTotalBox> = ({ tittle, total, diff, isActive, isTheBest
       <Text color={isActive ? '#FFFFFF' : '#74777f'}>{tittle}</Text>
       <Inline index={'0'}>
         <InlineCluster>
-          <Total color={isActive ? '#FFFFFF' : '#74777f'}>{total} ₽</Total>
+          <Total color={isActive ? '#FFFFFF' : '#74777f'}>{total}</Total>
           {diff && diff < 0 ? <Different>{diff} ₽</Different> : null}
         </InlineCluster>
         {isTheBest && <ReasonableBox text={'Самое выгодное'} svg={<CheckSVG />} />}
