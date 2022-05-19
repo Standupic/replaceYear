@@ -1,7 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import authorization from '../middlewares/authorization';
 import getHelperList from '../middlewares/getHelperList';
-import userSlice from './userSlice';
 
 export enum STATUS_APPLICATION {
   Error = 'Error',

@@ -26,8 +26,8 @@ export interface IHelperList {
 interface CalculatorState {
   topYear: number;
   bottomYear: number;
-  mostBenefitYears: IHelperList[] | undefined;
-  previousTwoYears: IHelperList[] | undefined;
+  mostBenefitYears: IHelperList[];
+  previousTwoYears: IHelperList[];
   helperList: IHelperList[];
   topYearMaxMin: number[];
   bottomYearMaxMin: number[];
@@ -38,8 +38,8 @@ const initialState: CalculatorState = {
   bottomYear: 0,
   topYearMaxMin: [],
   bottomYearMaxMin: [],
-  mostBenefitYears: undefined,
-  previousTwoYears: undefined,
+  mostBenefitYears: [],
+  previousTwoYears: [],
   helperList: [] as IHelperList[],
 };
 
@@ -47,6 +47,10 @@ const calculatorSlice = createSlice({
   name: 'calculator',
   initialState,
   reducers: {
+    toMostBenefit: (state) => {
+      state.topYear = state.mostBenefitYears[0].year;
+      state.bottomYear = state.mostBenefitYears[1].year;
+    },
     incrementYear: (state, action) => {
       switch (action.payload) {
         case 'topYear':
@@ -98,5 +102,5 @@ const calculatorSlice = createSlice({
     });
   },
 });
-export const { incrementYear, decrementYear } = calculatorSlice.actions;
+export const { incrementYear, decrementYear, toMostBenefit } = calculatorSlice.actions;
 export default calculatorSlice.reducer;

@@ -50,6 +50,7 @@ export const Reasonable = styled(PadBox as any).attrs(() => ({
 }))`
   color: #0062ff;
   background: #ffffff;
+  cursor: ${(props: { cursor: boolean }) => (props.cursor ? 'pointer' : 'auto')};
   font-size: 0.8rem;
   font-style: normal;
   border-radius: 16px;
