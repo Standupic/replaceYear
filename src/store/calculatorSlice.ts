@@ -50,9 +50,15 @@ const calculatorSlice = createSlice({
     incrementYear: (state, action) => {
       switch (action.payload) {
         case 'topYear':
+          if (state.bottomYear === state.topYear + 1) {
+            state.bottomYear += 1;
+          }
           state.topYear += 1;
           return state;
         case 'bottomYear':
+          if (state.topYear === state.bottomYear + 1) {
+            state.topYear += 1;
+          }
           state.bottomYear += 1;
           return state;
         default:
@@ -62,12 +68,15 @@ const calculatorSlice = createSlice({
     decrementYear: (state, action) => {
       switch (action.payload) {
         case 'topYear':
-          // if (state.bottomYear === state.topYear - 1) {
-          //   state.bottomYear -= 1;
-          // }
+          if (state.bottomYear === state.topYear - 1) {
+            state.bottomYear -= 1;
+          }
           state.topYear -= 1;
           return state;
         case 'bottomYear':
+          if (state.topYear === state.bottomYear - 1) {
+            state.topYear -= 1;
+          }
           state.bottomYear -= 1;
           return state;
         default:
