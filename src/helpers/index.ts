@@ -23,10 +23,33 @@ export const domElementGetter = () => {
 
 export const getCurrency = (income: number) => {
   if (income) return income.toLocaleString('ru-Ru', { style: 'currency', currency: 'RUB' });
-  return "";
+  return '';
 };
 
 export const currentYear = new Date().getFullYear();
+
+export const controllerArrow = (a: number, b: number[]) => {
+  const right = a !== b[1];
+  const left = a !== b[0];
+  return {
+    left,
+    right,
+  };
+};
+
+export const minMaxYears = (years: IHelperListAPI[]) => {
+  const arr = years.map((item) => item.year).sort();
+  if (arr.length === 3) {
+    return {
+      top: [arr[arr.length - 2], arr[arr.length - 1]],
+      bottom: [arr[0], arr[arr.length - 2]],
+    };
+  }
+  return {
+    top: [arr[1], arr[arr.length - 1]],
+    bottom: [arr[0], arr[arr.length - 2]],
+  };
+};
 
 export const mappingHelperList = (years: IHelperListAPI[]) => {
   return years.map((item) => {

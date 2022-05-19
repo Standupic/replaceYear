@@ -1,6 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import getHelperList from '../middlewares/getHelperList';
-import { getMostBenefitYears, getPreviousTwoYears, mappingHelperList } from '../helpers';
+import {
+  getMostBenefitYears,
+  getPreviousTwoYears,
+  mappingHelperList,
+  minMaxYears,
+} from '../helpers';
 
 export interface IHelperListAPI {
   year: number;
@@ -24,15 +29,15 @@ interface CalculatorState {
   mostBenefitYears: IHelperList[] | undefined;
   previousTwoYears: IHelperList[] | undefined;
   helperList: IHelperList[];
-  minYear: number;
-  maxYear: number;
+  topYearMaxMin: number[];
+  bottomYearMaxMin: number[];
 }
 
 const initialState: CalculatorState = {
   topYear: 0,
   bottomYear: 0,
-  minYear: 0,
-  maxYear: 0,
+  topYearMaxMin: [],
+  bottomYearMaxMin: [],
   mostBenefitYears: undefined,
   previousTwoYears: undefined,
   helperList: [] as IHelperList[],
@@ -57,6 +62,9 @@ const calculatorSlice = createSlice({
     decrementYear: (state, action) => {
       switch (action.payload) {
         case 'topYear':
+          // if (state.bottomYear === state.topYear - 1) {
+          //   state.bottomYear -= 1;
+          // }
           state.topYear -= 1;
           return state;
         case 'bottomYear':
@@ -70,9 +78,12 @@ const calculatorSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getHelperList.fulfilled, (state, action) => {
       state.helperList = mappingHelperList(action.payload);
+      const { top, bottom } = minMaxYears(action.payload);
       const theBestYears = getMostBenefitYears(mappingHelperList(action.payload));
-      state.mostBenefitYears = theBestYears;
       state.previousTwoYears = getPreviousTwoYears(mappingHelperList(action.payload));
+      state.bottomYearMaxMin = bottom;
+      state.topYearMaxMin = top;
+      state.mostBenefitYears = theBestYears;
       state.topYear = theBestYears[0].year;
       state.bottomYear = theBestYears[1].year;
     });

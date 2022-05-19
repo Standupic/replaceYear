@@ -11,7 +11,7 @@ interface IReasonable {
 const ReasonableBox: FC<IReasonable> = ({ svg, text }) => {
   return (
     <Reasonable>
-      <InlineCluster gutter={KEY_SPACING.sm} align={KEY_JUSTIFYING.center}>
+      <InlineCluster gutter={KEY_SPACING.xs} align={KEY_JUSTIFYING.center}>
         {svg}
         {text}
       </InlineCluster>

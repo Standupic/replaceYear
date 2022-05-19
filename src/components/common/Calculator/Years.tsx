@@ -1,20 +1,19 @@
 import React, { FC, useState } from 'react';
 import { StatusInfoOutline } from 'juicyfront/indexIcon';
 import { useDispatch } from 'react-redux';
-import { Inline, Stack } from '../../styledComponents';
+import { Inline } from '../../styledComponents';
 import { ReactComponent as ArrowLeftSVG } from '../../../assets/images/arrow-left.svg';
 import { ReactComponent as ArrowRightSVG } from '../../../assets/images/arrow-right.svg';
 import { decrementYear, incrementYear } from '../../../store/calculatorSlice';
+import { getCurrency } from '../../../helpers';
 import PopUp from './PopUp';
-import { ButtonYear, CurrentYear, StatusInfoYear } from './calculator-parts';
-import {getCurrency} from "../../../helpers";
+import { ButtonYear, CurrentYear, StatusInfoYear, YearBox } from './calculator-parts';
 
 interface IYearProps {
-  disable?: boolean;
+  disabled?: boolean;
   year?: number;
   income: number;
-  isThereNextYear?: boolean;
-  isTherePrevYear?: boolean;
+  controller: { left: boolean; right: boolean };
   type: string;
 }
 
@@ -26,22 +25,29 @@ const infoStyle: React.CSSProperties | undefined = {
 };
 
 const currentYearStyle: React.CSSProperties | undefined = {
-  top: '33px',
+  top: '15px',
   left: '155px',
   width: '207px',
   height: '40px',
 };
 
-const YearActive: FC<IYearProps> = ({ disable = false, year, income, type }) => {
+const YearActive: FC<IYearProps> = ({
+  disabled: disabled = false,
+  year,
+  income,
+  type,
+  controller,
+}) => {
   const currentYearRef = React.useRef(null);
   const statusInfoRef = React.useRef(null);
   const [isVisibleInfo, setVisibleInfo] = useState<boolean>(false);
   const [isVisibleInCome, setVisibleInCome] = useState<boolean>(false);
   const dispatch = useDispatch();
   return (
-    <Inline index={1} align={'center'} justify={'center'} height={'39px'}>
-      {!disable && (
+    <Inline index={1} align={'center'} justify={'center'} height={'39px'} position={'relative'}>
+      {!disabled && (
         <ButtonYear
+          disabled={!controller.left}
           onClick={() => {
             dispatch(decrementYear(type));
           }}>
@@ -52,16 +58,16 @@ const YearActive: FC<IYearProps> = ({ disable = false, year, income, type }) => 
         ref={currentYearRef}
         align={'center'}
         size={'1.1rem'}
-        disable={disable}
-        color={disable ? '#B1B5BB' : '#000'}
+        disable={disabled}
+        color={disabled ? '#B1B5BB' : '#000'}
         onMouseOver={() => {
           setVisibleInCome(true);
         }}
         onMouseLeave={() => {
           setVisibleInCome(false);
         }}>
-        {year}
-        {disable && (
+        <YearBox>{year}</YearBox>
+        {disabled && (
           <StatusInfoYear
             ref={statusInfoRef}
             onMouseOver={() => {
@@ -79,7 +85,7 @@ const YearActive: FC<IYearProps> = ({ disable = false, year, income, type }) => 
             />
           </StatusInfoYear>
         )}
-        {!disable && (
+        {!disabled && (
           <PopUp
             text={`Расчётная база: ${getCurrency(income)}`}
             isVisible={isVisibleInCome}
@@ -88,8 +94,9 @@ const YearActive: FC<IYearProps> = ({ disable = false, year, income, type }) => 
           />
         )}
       </CurrentYear>
-      {!disable && (
+      {!disabled && (
         <ButtonYear
+          disabled={!controller.right}
           onClick={() => {
             dispatch(incrementYear(type));
           }}>

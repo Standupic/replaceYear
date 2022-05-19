@@ -6,6 +6,7 @@ interface InlineProps extends IResponsive {
   stretch: STRETCH_KEY;
   index?: number;
   height?: string;
+  position?: string;
 }
 
 const responsive = css`
@@ -25,6 +26,7 @@ const Inline = styled(InlineCluster as any)`
   }}
   height: ${(props: InlineProps) => props.height && props.height};
   ${(props: InlineProps) => props.width && responsive};
+  position: ${(props: InlineProps) => props.position && props.position};
 `;
 
 interface IResponsive {

@@ -35,7 +35,7 @@ interface IPropsSum extends IStyles {
 
 export const SumBox = styled(PadBox as any).attrs(() => ({
   as: 'div',
-  padding: ['lg'],
+  padding: ['md'],
 }))`
   background: ${(props: IPropsSum) => (props.isActive ? '#3A85FF' : 'white')};
   border: ${(props: IPropsSum) => (props.border ? props.border : '1px solid #dde0e9')};
@@ -78,15 +78,24 @@ export const YearsBox = styled(PadBox as any).attrs(() => ({
   height: 112px;
 `;
 
+export const YearBox = styled.div`
+  width: 38px;
+  position: absolute;
+  left: calc(50% - 16px);
+  top: calc(50% - 10px);
+`;
+
 export const ButtonYear = styled(PadBox as any).attrs(() => ({
   as: 'button',
   padding: ['sm'],
 }))`
+  opacity: ${(props: { disabled?: boolean }) => (props.disabled ? '0.5' : '1')};
   border-radius: 8px;
   background: #ffffff;
   box-shadow: 0px 2px 6px 0px #193b6826;
   display: grid;
   align-items: center;
+  cursor: ${(props: { disabled?: boolean }) => (props.disabled ? 'auto' : 'pointer')};
 `;
 
 export const Line = styled.div`
@@ -111,8 +120,8 @@ export const CurrentYear = styled(Text as any).attrs(() => ({
 
 export const StatusInfoYear = styled.em`
   position: absolute;
-  right: -25px;
-  bottom: -4px;
+  right: -50px;
+  bottom: -14px;
   cursor: pointer;
 `;
 

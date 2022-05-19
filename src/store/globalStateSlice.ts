@@ -24,7 +24,7 @@ const initialState: GlobalState = {
   accessApplication: null,
 };
 
-const globalStateSlice = createSlice({
+export const globalStateSlice = createSlice({
   name: 'globalState',
   initialState,
   reducers: {
@@ -34,6 +34,13 @@ const globalStateSlice = createSlice({
     setAccessToApplication: (state: GlobalState, action: PayloadAction<ACCESS_APPLICATION>) => {
       state.accessApplication = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getHelperList.fulfilled, (state, action) => {
+      if (action.payload.length < 3) {
+        state.accessApplication = ACCESS_APPLICATION.NoRight;
+      }
+    });
   },
 });
 

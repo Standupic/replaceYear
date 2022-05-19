@@ -1,12 +1,14 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import { getCurrency, isMostBenefitYears } from '../helpers';
+import { controllerArrow, getCurrency, isMostBenefitYears } from '../helpers';
 
 export const selectHelperList = (state: RootState) => state.calculator.helperList;
 export const selectTopYear = (state: RootState) => state.calculator.topYear;
 export const selectBottomYear = (state: RootState) => state.calculator.bottomYear;
 export const selectMostBenefit = (state: RootState) => state.calculator.mostBenefitYears;
 export const selectPreviousTwoYears = (state: RootState) => state.calculator.previousTwoYears;
+export const selectTopYearMaxMin = (state: RootState) => state.calculator.topYearMaxMin;
+export const selectBottomYearMaxMin = (state: RootState) => state.calculator.bottomYearMaxMin;
 
 export const selectTotalNotActiveYears = createSelector(selectPreviousTwoYears, (items) => {
   return items?.reduce((acc: any, item) => {
@@ -20,7 +22,9 @@ export const selectDataActiveYears = createSelector(
   selectMostBenefit,
   selectHelperList,
   selectTotalNotActiveYears,
-  (top, bottom, mostBenefitYears, helperList, totalNotActiveYear) => {
+  selectTopYearMaxMin,
+  selectBottomYearMaxMin,
+  (top, bottom, mostBenefitYears, helperList, totalNotActiveYear, topMaxMin, bottomMaxMin) => {
     const total = helperList
       .filter((item) => {
         return item.year === top || item.year === bottom;
@@ -31,6 +35,10 @@ export const selectDataActiveYears = createSelector(
     const isTheBest = isMostBenefitYears(top, bottom, mostBenefitYears);
     const diff = Number((total - totalNotActiveYear).toFixed(2));
     return {
+      controller: {
+        top: controllerArrow(top, topMaxMin),
+        bottom: controllerArrow(bottom, bottomMaxMin),
+      },
       total: getCurrency(total),
       isTheBest,
       diff,

@@ -1,5 +1,5 @@
-import React, { FC, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { FC } from 'react';
+import { useSelector } from 'react-redux';
 import { Hint } from 'juicyfront';
 import { Card, Split, Stack } from '../../styledComponents';
 import { KEY_SPACING } from '../../styledComponents/constants';
@@ -12,22 +12,23 @@ import {
 } from '../../../selectors/calculatorSelector';
 import { currentYear, getCurrency } from '../../../helpers';
 import { Line, SumBox, YearsBox, Text, Link } from './calculator-parts';
-import TotalBox from './TotalBox';
+import TotalBoxActive, { TotalBoxNotActive } from './TotalBox';
 import { YearActive, YearNotActive } from './Years';
 const Calculator: FC = () => {
   const totalNotActiveYear = useSelector(selectTotalNotActiveYears);
   const topYear = useSelector(selectTopYear);
   const bottomYear = useSelector(selectBottomYear);
   const dataActiveYears = useSelector(selectDataActiveYears);
-  const { total, diff, isTheBest } = dataActiveYears;
+  const { total, diff, isTheBest, controller } = dataActiveYears;
   const { topYearIncome, bottomYearIncome } = useSelector(selectIncomeActiveYears);
+  console.log(dataActiveYears);
   return (
     <Card>
       <Stack>
         <Split>
           <Stack>
             <SumBox>
-              <TotalBox tittle={'До замены лет'} total={getCurrency(totalNotActiveYear)} />
+              <TotalBoxNotActive tittle={'До замены лет'} total={getCurrency(totalNotActiveYear)} />
             </SumBox>
             <YearsBox>
               <Stack gutter={KEY_SPACING.sm}>
@@ -39,19 +40,28 @@ const Calculator: FC = () => {
           </Stack>
           <Stack>
             <SumBox isActive>
-              <TotalBox
+              <TotalBoxActive
                 tittle={'После замены лет'}
                 total={total}
                 diff={diff}
                 isTheBest={isTheBest}
-                isActive
               />
             </SumBox>
             <YearsBox isActive>
               <Stack gutter={KEY_SPACING.sm}>
-                <YearActive year={topYear} type={'topYear'} income={topYearIncome} />
+                <YearActive
+                  year={topYear}
+                  type={'topYear'}
+                  income={topYearIncome}
+                  controller={controller.top}
+                />
                 <Line />
-                <YearActive year={bottomYear} type={'bottomYear'} income={bottomYearIncome} />
+                <YearActive
+                  year={bottomYear}
+                  type={'bottomYear'}
+                  income={bottomYearIncome}
+                  controller={controller.bottom}
+                />
               </Stack>
             </YearsBox>
           </Stack>
