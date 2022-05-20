@@ -28,7 +28,6 @@ const TotalBoxActive: FC<IPropsTotalBox> = ({ tittle, total, diff, isTheBest }) 
         {isTheBest && <ReasonableBox text={'Самое выгодное'} svg={<CheckSVG />} />}
         {!isTheBest ? (
           <ReasonableBox
-            cursor
             text={'К самому выгодному'}
             svg={<ReturnSVG />}
             handleToBenefit={toMostBenefit}

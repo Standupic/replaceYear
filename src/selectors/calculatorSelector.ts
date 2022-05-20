@@ -9,6 +9,7 @@ export const selectMostBenefit = (state: RootState) => state.calculator.mostBene
 export const selectPreviousTwoYears = (state: RootState) => state.calculator.previousTwoYears;
 export const selectTopYearMaxMin = (state: RootState) => state.calculator.topYearMaxMin;
 export const selectBottomYearMaxMin = (state: RootState) => state.calculator.bottomYearMaxMin;
+export const selectIsOnlyOneYearActive = (state: RootState) => state.calculator.isOnlyOneYearActive;
 
 export const selectTotalNotActiveYears = createSelector(selectPreviousTwoYears, (items) => {
   return items?.reduce((acc: any, item) => {
@@ -24,20 +25,29 @@ export const selectDataActiveYears = createSelector(
   selectTotalNotActiveYears,
   selectTopYearMaxMin,
   selectBottomYearMaxMin,
-  (top, bottom, mostBenefitYears, helperList, totalNotActiveYear, topMaxMin, bottomMaxMin) => {
+  selectIsOnlyOneYearActive,
+  (
+    topYear,
+    bottomYear,
+    mostBenefitYears,
+    helperList,
+    totalNotActiveYear,
+    topMaxMin,
+    bottomMaxMin,
+  ) => {
     const total = helperList
       .filter((item) => {
-        return item.year === top || item.year === bottom;
+        return item.year === topYear.value || item.year === bottomYear.value;
       })
       .reduce((acc: any, item) => {
         return acc + item.dailyAmount;
       }, 0);
-    const isTheBest = isMostBenefitYears(top, bottom, mostBenefitYears);
+    const isTheBest = isMostBenefitYears(topYear, bottomYear, mostBenefitYears);
     const diff = Number((total - totalNotActiveYear).toFixed(2));
     return {
       controller: {
-        top: controllerArrow(top, topMaxMin),
-        bottom: controllerArrow(bottom, bottomMaxMin),
+        top: controllerArrow(topYear.value, topMaxMin),
+        bottom: controllerArrow(bottomYear.value, bottomMaxMin),
       },
       total: getCurrency(total),
       isTheBest,
@@ -51,7 +61,9 @@ export const selectIncomeActiveYears = createSelector(
   selectBottomYear,
   selectHelperList,
   (top, bottom, helperList) => {
-    const filtered = helperList.filter((item) => item.year === top || item.year === bottom);
+    const filtered = helperList.filter(
+      (item) => item.year === top.value || item.year === bottom.value,
+    );
     if (filtered && filtered.length === 2) {
       return {
         topYearIncome: filtered[0].Amount,

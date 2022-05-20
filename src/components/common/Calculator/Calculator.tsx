@@ -50,17 +50,19 @@ const Calculator: FC = () => {
             <YearsBox isActive>
               <Stack gutter={KEY_SPACING.sm}>
                 <YearActive
-                  year={topYear}
+                  year={topYear.value}
                   type={'topYear'}
                   income={topYearIncome}
                   controller={controller.top}
+                  disabled={topYear.isSelectable}
                 />
                 <Line />
                 <YearActive
-                  year={bottomYear}
+                  year={bottomYear.value}
                   type={'bottomYear'}
                   income={bottomYearIncome}
                   controller={controller.bottom}
+                  disabled={bottomYear.isSelectable}
                 />
               </Stack>
             </YearsBox>
