@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Inline } from '../../styledComponents';
 import { ReactComponent as ArrowLeftSVG } from '../../../assets/images/arrow-left.svg';
 import { ReactComponent as ArrowRightSVG } from '../../../assets/images/arrow-right.svg';
-import { decrementYear, incrementYear } from '../../../store/calculatorSlice';
+import { decrementYear, incrementYear, YEARS_KEY } from '../../../store/calculatorSlice';
 import { getCurrency } from '../../../helpers';
 import PopUp from './PopUp';
 import { ButtonYear, CurrentYear, StatusInfoYear, YearBox } from './calculator-parts';
@@ -14,7 +14,7 @@ interface IYearProps {
   year?: number;
   income: number;
   controller: { left: boolean; right: boolean };
-  type: string;
+  type: YEARS_KEY;
 }
 
 const infoStyle: React.CSSProperties | undefined = {

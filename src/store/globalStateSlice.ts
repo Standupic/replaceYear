@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import getHelperList from '../middlewares/getHelperList';
+import { checkIsThereMoreThanOneNotSelectableYear } from '../helpers';
 
 export enum STATUS_APPLICATION {
   Error = 'Error',
@@ -36,10 +37,15 @@ export const globalStateSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getHelperList.fulfilled, (state, action) => {
       if (action.payload.length < 3) {
+        new Error('Пришло всего 2 года');
+        state.accessApplication = ACCESS_APPLICATION.NoRight;
+      }
+      if (checkIsThereMoreThanOneNotSelectableYear(action.payload).length >= 2) {
+        new Error('Пришло 2 недоступных года');
         state.accessApplication = ACCESS_APPLICATION.NoRight;
       }
     });
   },
 });
-
+export const { setStatusApplication, setAccessToApplication } = globalStateSlice.actions;
 export default globalStateSlice.reducer;

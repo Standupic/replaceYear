@@ -9,8 +9,10 @@ import {
   selectTopYear,
   selectDataActiveYears,
   selectIncomeActiveYears,
+  selectLoaded,
 } from '../../../selectors/calculatorSelector';
 import { currentYear, getCurrency } from '../../../helpers';
+import { YEARS_KEY } from '../../../store/calculatorSlice';
 import { Line, SumBox, YearsBox, Text, Link } from './calculator-parts';
 import TotalBoxActive, { TotalBoxNotActive } from './TotalBox';
 import { YearActive, YearNotActive } from './Years';
@@ -51,18 +53,18 @@ const Calculator: FC = () => {
               <Stack gutter={KEY_SPACING.sm}>
                 <YearActive
                   year={topYear.value}
-                  type={'topYear'}
+                  type={YEARS_KEY.topYear}
                   income={topYearIncome}
                   controller={controller.top}
-                  disabled={topYear.isSelectable}
+                  disabled={!topYear.isSelectable}
                 />
                 <Line />
                 <YearActive
                   year={bottomYear.value}
-                  type={'bottomYear'}
+                  type={YEARS_KEY.bottomYear}
                   income={bottomYearIncome}
                   controller={controller.bottom}
-                  disabled={bottomYear.isSelectable}
+                  disabled={!bottomYear.isSelectable}
                 />
               </Stack>
             </YearsBox>
