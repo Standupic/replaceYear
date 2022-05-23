@@ -9,13 +9,13 @@ import {
   selectTopYear,
   selectDataActiveYears,
   selectIncomeActiveYears,
-  selectLoaded,
 } from '../../../selectors/calculatorSelector';
 import { currentYear, getCurrency } from '../../../helpers';
 import { YEARS_KEY } from '../../../store/calculatorSlice';
 import { Line, SumBox, YearsBox, Text, Link } from './calculator-parts';
 import TotalBoxActive, { TotalBoxNotActive } from './TotalBox';
 import { YearActive, YearNotActive } from './Years';
+
 const Calculator: FC = () => {
   const totalNotActiveYear = useSelector(selectTotalNotActiveYears);
   const topYear = useSelector(selectTopYear);

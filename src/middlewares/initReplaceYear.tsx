@@ -1,16 +1,20 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from '../api/interceptor';
+import { ACCESS_APPLICATION } from '../store/globalStateSlice';
 
-const initReplaceYear = createAsyncThunk('initReplaceYear', async (_, api) => {
-  console.log('initReplaceYear');
-  try {
-    const user = await Axios.get(
-      'sap/opu/odata4/sap/zhrxss/default/sap/zhrxss_0837_req_yrep/0001/IYearReplacementInit(%27%27)?$expand=initiator($expand=departmentsPath),events',
-    );
-    return user.data;
-  } catch (e) {
-    return api.rejectWithValue('Не удалось инициализировать заявку!');
-  }
-});
+const initReplaceYear = createAsyncThunk<any, any, { rejectValue: ACCESS_APPLICATION }>(
+  'initReplaceYear',
+  async (_: {}, api) => {
+    console.log('initReplaceYear');
+    try {
+      const init = await Axios.get(
+        'sap/opu/odata4/sap/zhrxss/default/sap/zhrxss_0837_req_yrep/0001/IYearReplacementInit(%27%27)?$expand=initiator($expand=departmentsPath),events',
+      );
+      return init.data;
+    } catch (e: any) {
+      return api.rejectWithValue(e.response.data.error.details[0].message);
+    }
+  },
+);
 
 export default initReplaceYear;

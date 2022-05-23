@@ -44,15 +44,10 @@ export interface IHelperList {
   selectable: boolean;
 }
 
-export interface IBenefitYears {
-  topBenefit: number;
-  bottomBenefit: number;
-}
-
 interface CalculatorState {
   topYear: IYear;
   bottomYear: IYear;
-  mostBenefitYears: IBenefitYears;
+  mostBenefitYears: IHelperList[];
   previousTwoYears: IHelperList[];
   helperList: IHelperList[];
   minMaxYears: IMinMaxYear;
@@ -63,7 +58,7 @@ const initialState: CalculatorState = {
   topYear: { value: 0, isSelectable: true, stepLimitYear: 0 },
   bottomYear: { value: 0, isSelectable: true, stepLimitYear: 0 },
   minMaxYears: { top: { min: 0, max: 0 }, bottom: { min: 0, max: 0 } },
-  mostBenefitYears: {} as IBenefitYears,
+  mostBenefitYears: [] as IHelperList[],
   previousTwoYears: [],
   helperList: [] as IHelperList[],
   isOnlyOneYearActive: false,
@@ -76,14 +71,14 @@ const calculatorSlice = createSlice({
     toMostBenefit: (state) => {
       if (state.isOnlyOneYearActive) {
         if (!state.topYear.isSelectable) {
-          state.bottomYear.value = state.mostBenefitYears.bottomBenefit;
+          state.bottomYear.value = state.mostBenefitYears[0].year;
         }
         if (!state.bottomYear.isSelectable) {
-          state.topYear.value = state.mostBenefitYears.topBenefit;
+          state.topYear.value = state.mostBenefitYears[0].year;
         }
       } else {
-        state.topYear.value = state.mostBenefitYears.topBenefit;
-        state.bottomYear.value = state.mostBenefitYears.bottomBenefit;
+        state.topYear.value = state.mostBenefitYears[0].year;
+        state.bottomYear.value = state.mostBenefitYears[1].year;
       }
     },
     incrementYear: (state, action: PayloadAction<YEARS_KEY>) => {
@@ -145,23 +140,22 @@ const calculatorSlice = createSlice({
       if (isThereNotSelectable) {
         console.log('Only one year');
         state.isOnlyOneYearActive = true;
-        const mostBenefitYears = getMostBenefitYear(action.payload, isThereNotSelectable.year);
-        if (mostBenefitYears) {
-          state.mostBenefitYears = mostBenefitYears;
+        const mostBenefitYear = getMostBenefitYear(action.payload, isThereNotSelectable.year);
+        if (mostBenefitYear.length) {
+          state.mostBenefitYears = mostBenefitYear;
         }
-        console.log(minMaxYear(action.payload));
         state.minMaxYears = minMaxYear(action.payload);
         switch (isThereNotSelectable.value) {
           case YEARS_KEY.bottomYear:
             state.bottomYear.value = isThereNotSelectable.year;
             state.bottomYear.isSelectable = false;
-            state.topYear.value = mostBenefitYears.topBenefit;
+            state.topYear.value = mostBenefitYear[0].year;
             state.topYear.stepLimitYear = state.minMaxYears.top.max - 2;
             return state;
           case YEARS_KEY.topYear:
             state.topYear.value = isThereNotSelectable.year;
             state.topYear.isSelectable = false;
-            state.bottomYear.value = mostBenefitYears.bottomBenefit;
+            state.bottomYear.value = mostBenefitYear[0].year;
             return state;
           default:
             return state;
@@ -169,9 +163,9 @@ const calculatorSlice = createSlice({
       } else {
         console.log('Two active years');
         const theBestYears = getMostBenefitYears(mappingHelperList(action.payload));
-        if (theBestYears) {
-          state.topYear.value = theBestYears.topBenefit;
-          state.bottomYear.value = theBestYears.bottomBenefit;
+        if (theBestYears.length) {
+          state.topYear.value = theBestYears[0].year;
+          state.bottomYear.value = theBestYears[1].year;
         }
         state.minMaxYears = minMaxYears(action.payload);
         state.mostBenefitYears = theBestYears;

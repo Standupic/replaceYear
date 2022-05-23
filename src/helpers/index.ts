@@ -1,6 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
 import {
-  IBenefitYears,
   IHelperList,
   IHelperListAPI,
   IMinMaxYear,
@@ -112,7 +111,7 @@ export const checkIsThereNotSelectableYear = (
 export const getMostBenefitYear = (
   years: IHelperList[],
   notSelectableYear: number,
-): IBenefitYears => {
+): IHelperList[] => {
   return years
     .filter((item) => {
       return item.year !== notSelectableYear;
@@ -126,13 +125,10 @@ export const getMostBenefitYear = (
       }
       return 0;
     })
-    .slice(0, 1)
-    .reduce((acc: any, item) => {
-      return { ...acc, topBenefit: item.year, bottomBenefit: item.year };
-    }, {});
+    .slice(0, 1);
 };
 
-export const getMostBenefitYears = (years: IHelperList[]): IBenefitYears => {
+export const getMostBenefitYears = (years: IHelperList[]): IHelperList[] => {
   return years
     .filter((item) => {
       return item.year !== currentYear - 1 || item.year !== currentYear - 2;
@@ -146,21 +142,17 @@ export const getMostBenefitYears = (years: IHelperList[]): IBenefitYears => {
       }
       return 0;
     })
-    .slice(0, 2)
-    .reduce((acc: any, item) => {
-      return { ...acc, top: item.year, bottom: item.year };
-    }, {});
+    .slice(0, 2);
 };
 
 interface IMostBenefitYear {
   top: IYear;
   bottom: IYear;
-  years: IBenefitYears;
+  years: IHelperList[];
 }
 
 export const checkMostBenefitYear = (isOnlyOneYear: boolean, data: IMostBenefitYear) => {
-  const { topBenefit, bottomBenefit } = data.years;
-  if (topBenefit && bottomBenefit) return false;
+  if (!data.years.length) return false;
   if (isOnlyOneYear) {
     return mostBenefitYear(data);
   } else {
@@ -170,14 +162,13 @@ export const checkMostBenefitYear = (isOnlyOneYear: boolean, data: IMostBenefitY
 
 export const mostBenefitYear = (data: IMostBenefitYear): boolean => {
   const { years, top, bottom } = data;
-  const { topBenefit, bottomBenefit } = years;
-  if (topBenefit && top.isSelectable) {
-    if (top.value === topBenefit) {
+  if (top && top.isSelectable) {
+    if (top.value === years[0].year) {
       return true;
     }
   }
-  if (bottomBenefit && bottom.isSelectable) {
-    if (bottom.value === bottomBenefit) {
+  if (bottom && bottom.isSelectable) {
+    if (bottom.value === years[1].year) {
       return true;
     }
   }
@@ -186,9 +177,8 @@ export const mostBenefitYear = (data: IMostBenefitYear): boolean => {
 
 export const mostBenefitYears = (data: IMostBenefitYear): boolean => {
   const { years, top, bottom } = data;
-  const { topBenefit, bottomBenefit } = years;
   if (years && top.isSelectable && bottom.isSelectable) {
-    if (top.value === topBenefit && bottom.value === bottomBenefit) {
+    if (top.value === years[0].year && bottom.value === years[1].year) {
       return true;
     }
   }

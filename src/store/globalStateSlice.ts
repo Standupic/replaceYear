@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import initReplaceYear from '../middlewares/initReplaceYear';
 import getHelperList from '../middlewares/getHelperList';
 import { checkIsThereMoreThanOneNotSelectableYear } from '../helpers';
 
@@ -11,16 +12,17 @@ export enum ACCESS_APPLICATION {
   NoRight = 'NoRight',
   NeedOriginalReference = 'NeedOriginalReference',
   ToApply = 'ToApply',
+  BestYears = 'BestYears',
 }
 
 export interface GlobalState {
-  statusApplication: STATUS_APPLICATION | null;
-  accessApplication: ACCESS_APPLICATION | null;
+  statusApplication: STATUS_APPLICATION | undefined;
+  accessApplication: ACCESS_APPLICATION | undefined;
 }
 
 const initialState: GlobalState = {
-  statusApplication: null,
-  accessApplication: null,
+  statusApplication: undefined,
+  accessApplication: undefined,
 };
 
 export const globalStateSlice = createSlice({
@@ -45,7 +47,10 @@ export const globalStateSlice = createSlice({
         state.accessApplication = ACCESS_APPLICATION.NoRight;
       }
     });
+    builder.addCase(initReplaceYear.rejected, (state, action) => {
+      state.accessApplication = action.payload;
+    });
   },
 });
-export const { setStatusApplication, setAccessToApplication } = globalStateSlice.actions;
+export const { setStatusApplication } = globalStateSlice.actions;
 export default globalStateSlice.reducer;

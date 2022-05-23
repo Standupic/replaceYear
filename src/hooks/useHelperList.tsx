@@ -3,14 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectIsUserLoaded } from '../selectors/userSelector';
 import getHelperList from '../middlewares/getHelperList';
 import initReplaceYear from '../middlewares/initReplaceYear';
+import { IHelperList } from '../store/calculatorSlice';
 
 const useHelperList = () => {
   const dispatch = useDispatch();
   const userLoaded = useSelector(selectIsUserLoaded);
   useEffect(() => {
     if (userLoaded) {
-      dispatch(getHelperList());
-      dispatch(initReplaceYear());
+      dispatch(getHelperList({}));
+      dispatch(initReplaceYear({}));
     }
   }, [userLoaded]);
 };
