@@ -23,7 +23,6 @@ const Calculator: FC = () => {
   const dataActiveYears = useSelector(selectDataActiveYears);
   const { total, diff, isTheBest, controller } = dataActiveYears;
   const { topYearIncome, bottomYearIncome } = useSelector(selectIncomeActiveYears);
-  console.log(dataActiveYears);
   return (
     <Card>
       <Stack>

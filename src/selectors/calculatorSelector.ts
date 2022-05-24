@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import { controllerArrow, getCurrency, checkMostBenefitYear } from '../helpers';
+import { checkMostBenefitYear, controllerArrow, getCurrency } from '../helpers';
 
 export const selectHelperList = (state: RootState) => state.calculator.helperList;
 export const selectTopYear = (state: RootState) => state.calculator.topYear;
@@ -16,44 +16,51 @@ export const selectTotalNotActiveYears = createSelector(selectPreviousTwoYears, 
   }, 0);
 });
 
-export const selectDataActiveYears = createSelector(
+export const selectTotalActiveYears = createSelector(
   selectTopYear,
   selectBottomYear,
-  selectMostBenefit,
   selectHelperList,
-  selectTotalNotActiveYears,
-  selectMinMax,
-  selectIsOnlyOneYearActive,
-  (
-    topYear,
-    bottomYear,
-    mostBenefitYears,
-    helperList,
-    totalNotActiveYear,
-    minMax,
-    isOnlyOneYear,
-  ) => {
-    const total = helperList
+  (topYear, bottomYear, helperList) => {
+    return helperList
       .filter((item) => {
         return item.year === topYear.value || item.year === bottomYear.value;
       })
       .reduce((acc: any, item) => {
         return acc + item.dailyAmount;
       }, 0);
+  },
+);
+
+export const selectDelta = createSelector(
+  selectTotalActiveYears,
+  selectTotalNotActiveYears,
+  (active, notActive) => {
+    return Number((active - notActive).toFixed(2));
+  },
+);
+
+export const selectDataActiveYears = createSelector(
+  selectTopYear,
+  selectBottomYear,
+  selectMostBenefit,
+  selectDelta,
+  selectMinMax,
+  selectIsOnlyOneYearActive,
+  selectTotalActiveYears,
+  (topYear, bottomYear, mostBenefitYears, delta, minMax, isOnlyOneYear, totalActiveYears) => {
     const isTheBest = checkMostBenefitYear(isOnlyOneYear, {
       top: topYear,
       bottom: bottomYear,
       years: mostBenefitYears,
     });
-    const diff = Number((total - totalNotActiveYear).toFixed(2));
     return {
       controller: {
         top: controllerArrow(topYear.value, [minMax.top.min, minMax.top.max]),
         bottom: controllerArrow(bottomYear.value, [minMax.bottom.min, minMax.bottom.max]),
       },
-      total: getCurrency(total),
+      total: getCurrency(totalActiveYears),
       isTheBest,
-      diff,
+      diff: delta,
     };
   },
 );

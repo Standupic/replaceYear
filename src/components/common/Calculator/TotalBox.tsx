@@ -43,7 +43,7 @@ export const TotalBoxNotActive: FC<Partial<IPropsTotalBox>> = ({ tittle, total }
     <Stack>
       <Text color={'#74777f'}>{tittle}</Text>
       <Inline index={'0'}>
-        <Total color={'#74777f'}>{total}</Total>
+        <Total color={'#74777f'}>{total ? total : 0}</Total>
       </Inline>
     </Stack>
   );
