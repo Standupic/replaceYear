@@ -1,1 +1,1 @@
-export { default } from '/ToApply';
+export { default } from './ToApply';

@@ -9,7 +9,7 @@ const EntryPoint: FC = ({ children }) => {
   const isLoading = useSelector(selectIsUserLoading);
   const isError = useSelector(selectError);
   const initLoading = useSelector(selectInitLoading);
-  if (!isLoading && isError && !initLoading) {
+  if (!isLoading && isError) {
     const error = isError.map((item, index) => {
       return <Notification key={index} item={{ variant: 'red', title: 'Ошибка', message: item }} />;
     });

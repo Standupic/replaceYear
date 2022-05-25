@@ -8,3 +8,12 @@ export const selectInitLoading = (state: RootState) => state.globalState.initLoa
 
 export const selectHasAlreadyOneMessage = (state: RootState) =>
   state.globalState.hasAlreadyOneMessage;
+
+export const selectInitData = (state: RootState) => state.globalState.initDataForPostRequest;
+
+export const selectFormingApplicationLoading = (state: RootState) =>
+  state.globalState.formingApplicationLoading;
+
+export const selectAttachmentId = (state: RootState) => state.globalState.applicationAttachmentId;
+
+export const selectIsHandSignature = (state: RootState) => state.globalState.isHandSignature;

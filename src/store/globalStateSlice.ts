@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import initReplaceYear from '../middlewares/initReplaceYear';
 import getHelperList from '../middlewares/getHelperList';
-import { checkIsThereMoreThanOneNotSelectableYear } from '../helpers';
+import { checkIsThereMoreThanOneNotSelectableYear, mappingInitData } from '../helpers';
+import formingApplication from '../middlewares/formingApplication';
 
 export enum STATUS_APPLICATION {
   Error = 'Error',
@@ -15,11 +16,25 @@ export enum ACCESS_APPLICATION {
   BestYears = 'BestYears',
 }
 
+export interface InitData {
+  reqId: string;
+  statusId: string;
+  CurrentYear1: string;
+  CurrentYear1Repl: boolean;
+  CurrentYear2: string;
+  CurrentYear2Repl: boolean;
+  CurrentAmount: number;
+}
+
 export interface GlobalState {
   statusApplication: STATUS_APPLICATION | undefined;
   accessApplication: ACCESS_APPLICATION | undefined;
   hasAlreadyOneMessage: string;
   initLoading: boolean;
+  formingApplicationLoading: boolean;
+  initDataForPostRequest: InitData;
+  applicationAttachmentId: string;
+  isHandSignature: boolean | undefined;
 }
 
 const initialState: GlobalState = {
@@ -27,6 +42,10 @@ const initialState: GlobalState = {
   accessApplication: undefined,
   hasAlreadyOneMessage: '',
   initLoading: true,
+  formingApplicationLoading: false,
+  initDataForPostRequest: {} as InitData,
+  applicationAttachmentId: '',
+  isHandSignature: undefined,
 };
 
 export const globalStateSlice = createSlice({
@@ -54,7 +73,7 @@ export const globalStateSlice = createSlice({
         state.accessApplication = ACCESS_APPLICATION.NoRight;
       }
     });
-    builder.addCase(initReplaceYear.pending, (state, action) => {
+    builder.addCase(initReplaceYear.pending, (state) => {
       state.initLoading = true;
     });
     builder.addCase(initReplaceYear.fulfilled, (state, action) => {
@@ -62,10 +81,22 @@ export const globalStateSlice = createSlice({
         state.hasAlreadyOneMessage = action.payload.message;
       }
       state.initLoading = false;
+      state.initDataForPostRequest = mappingInitData(action.payload);
+      state.isHandSignature = action.payload.anotherEmployer;
     });
     builder.addCase(initReplaceYear.rejected, (state, action) => {
       state.accessApplication = action.payload;
       state.initLoading = false;
+    });
+    builder.addCase(formingApplication.pending, (state, action) => {
+      state.formingApplicationLoading = true;
+    });
+    builder.addCase(formingApplication.fulfilled, (state, action) => {
+      state.formingApplicationLoading = false;
+      state.applicationAttachmentId = action.payload.Id;
+    });
+    builder.addCase(formingApplication.rejected, (state, action) => {
+      state.formingApplicationLoading = false;
     });
   },
 });

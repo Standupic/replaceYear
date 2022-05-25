@@ -1,6 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import { checkMostBenefitYear, controllerArrow, getCurrency } from '../helpers';
+import { checkMostBenefitYear, controllerArrow } from '../helpers';
+import { selectInitData } from '../selectors/globalSelector';
 
 export const selectHelperList = (state: RootState) => state.calculator.helperList;
 export const selectTopYear = (state: RootState) => state.calculator.topYear;
@@ -58,7 +59,7 @@ export const selectDataActiveYears = createSelector(
         top: controllerArrow(topYear.value, [minMax.top.min, minMax.top.max]),
         bottom: controllerArrow(bottomYear.value, [minMax.bottom.min, minMax.bottom.max]),
       },
-      total: getCurrency(totalActiveYears),
+      total: totalActiveYears,
       isTheBest,
       diff: delta,
     };
@@ -82,6 +83,22 @@ export const selectIncomeActiveYears = createSelector(
     return {
       topYearIncome: 0,
       bottomYearIncome: 0,
+    };
+  },
+);
+
+export const selectPostData = createSelector(
+  selectTopYear,
+  selectBottomYear,
+  selectTotalActiveYears,
+  selectInitData,
+  (top, bottom, total, initData) => {
+    return {
+      ...initData,
+      NextYear1: top.value.toString(),
+      NextYear2: bottom.value.toString(),
+      CurrentAmount: total,
+      currency: 'RUB',
     };
   },
 );

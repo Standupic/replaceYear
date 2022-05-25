@@ -6,6 +6,7 @@ import {
   IYear,
   YEARS_KEY,
 } from '../store/calculatorSlice';
+import { InitData } from '../store/globalStateSlice';
 
 export const setDefaultHeadersRequest = (
   config: AxiosRequestConfig,
@@ -53,12 +54,6 @@ export const minMaxYear = (years: IHelperListAPI[]): IMinMaxYear => {
 
 export const minMaxYears = (years: IHelperListAPI[]): IMinMaxYear => {
   const arr = years.map((item) => item.year).sort();
-  // if (arr.length === 3) {
-  //   return {
-  //     top: [arr[arr.length - 2], arr[arr.length - 1]],
-  //     bottom: [arr[0], arr[arr.length - 2]],
-  //   };
-  // }
   return {
     top: { min: arr[1], max: arr[arr.length - 1] },
     bottom: { min: arr[0], max: arr[arr.length - 2] },
@@ -108,6 +103,15 @@ export const checkIsThereNotSelectableYear = (
   return false;
 };
 
+const sortAmount = (a: IHelperList, b: IHelperList) => {
+  if (a.Amount > b.Amount) {
+    return -1;
+  }
+  if (a.Amount < b.Amount) {
+    return 1;
+  }
+  return 0;
+};
 export const getMostBenefitYear = (
   years: IHelperList[],
   notSelectableYear: number,
@@ -116,15 +120,7 @@ export const getMostBenefitYear = (
     .filter((item) => {
       return item.year !== notSelectableYear;
     })
-    .sort((a, b) => {
-      if (a.Amount > b.Amount) {
-        return -1;
-      }
-      if (a.Amount < b.Amount) {
-        return 1;
-      }
-      return 0;
-    })
+    .sort(sortAmount)
     .slice(0, 1);
 };
 
@@ -133,15 +129,7 @@ export const getMostBenefitYears = (years: IHelperList[]): IHelperList[] => {
     .filter((item) => {
       return item.year !== currentYear - 1 || item.year !== currentYear - 2;
     })
-    .sort((a, b) => {
-      if (a.Amount > b.Amount) {
-        return -1;
-      }
-      if (a.Amount < b.Amount) {
-        return 1;
-      }
-      return 0;
-    })
+    .sort(sortAmount)
     .slice(0, 2);
 };
 
@@ -183,4 +171,16 @@ export const mostBenefitYears = (data: IMostBenefitYear): boolean => {
     }
   }
   return false;
+};
+
+export const mappingInitData = (data: any): InitData => {
+  return {
+    reqId: data.reqId,
+    statusId: data.statusId,
+    CurrentYear1: data.CurrentYear1,
+    CurrentYear1Repl: data.CurrentYear1Repl,
+    CurrentYear2: data.CurrentYear2,
+    CurrentYear2Repl: data.CurrentYear2Repl,
+    CurrentAmount: data.CurrentAmount,
+  };
 };

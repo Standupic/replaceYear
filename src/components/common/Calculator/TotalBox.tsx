@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { useDispatch } from 'react-redux';
 import { Stack, Inline } from '../../styledComponents';
 import { ReactComponent as CheckSVG } from '../../../assets/images/check.svg';
 import { ReactComponent as ReturnSVG } from '../../../assets/images/return.svg';

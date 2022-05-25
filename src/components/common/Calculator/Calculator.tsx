@@ -23,6 +23,7 @@ const Calculator: FC = () => {
   const dataActiveYears = useSelector(selectDataActiveYears);
   const { total, diff, isTheBest, controller } = dataActiveYears;
   const { topYearIncome, bottomYearIncome } = useSelector(selectIncomeActiveYears);
+  console.log(total);
   return (
     <Card>
       <Stack>
@@ -43,7 +44,7 @@ const Calculator: FC = () => {
             <SumBox isActive>
               <TotalBoxActive
                 tittle={'После замены лет'}
-                total={total}
+                total={getCurrency(total)}
                 diff={diff}
                 isTheBest={isTheBest}
               />

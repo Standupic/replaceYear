@@ -5,10 +5,10 @@ import { PadBox, Stack, StickyButton } from '../../components/styledComponents';
 import Permission from '../../components/Permission';
 import { KEY_SPACING } from '../../components/styledComponents/constants';
 import Calculator from '../../components/common/Calculator/Calculator';
-import ToApply from '../../components/common/ToApply/ToApply';
 import HasAlreadyOne from '../../components/common/HasAlreadyOne/HasAlreadyOne';
 import { selectHasAlreadyOneMessage } from '../../selectors/globalSelector';
 import { selectDelta } from '../../selectors/calculatorSelector';
+import SwitcherToApply from '../../components/common/SwitcherToApply';
 
 const createApplication = () => {
   const hasAlreadyOne = useSelector(selectHasAlreadyOneMessage);
@@ -21,7 +21,7 @@ const createApplication = () => {
         ) : (
           <>
             <Calculator />
-            <ToApply />
+            <SwitcherToApply />
           </>
         )}
       </Stack>
