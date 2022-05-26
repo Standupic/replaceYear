@@ -18,7 +18,7 @@ interface IPostApplicationParams {
   event: string;
 }
 
-const formingApplication = createAsyncThunk<any, any, { rejectValue: any }>(
+const formStatement = createAsyncThunk<any, any, { rejectValue: any }>(
   'postApplication',
   async (data: IPostApplicationParams, api) => {
     try {
@@ -37,4 +37,4 @@ const formingApplication = createAsyncThunk<any, any, { rejectValue: any }>(
   },
 );
 
-export default formingApplication;
+export default formStatement;

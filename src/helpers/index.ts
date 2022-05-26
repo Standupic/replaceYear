@@ -184,3 +184,10 @@ export const mappingInitData = (data: any): InitData => {
     CurrentAmount: data.CurrentAmount,
   };
 };
+
+export const savePdfFile = (base64: string, fileName: string) => {
+  const a = document.createElement('a');
+  a.href = base64 || '';
+  a.download = fileName;
+  a.click();
+};

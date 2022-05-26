@@ -2,15 +2,20 @@ import React from 'react';
 import { Button, Hint } from 'juicyfront';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Card, Heading, Stack } from '../../styledComponents';
-import formingApplication from '../../../middlewares/formingApplication';
+import formStatement from '../../../middlewares/formStatement';
 import { selectDelta, selectPostData } from '../../../selectors/calculatorSelector';
-import { selectFormingApplicationLoading } from '../../../selectors/globalSelector';
+import {
+  selectAttachmentId,
+  selectFormingApplicationLoading,
+} from '../../../selectors/globalSelector';
+import { ReactComponent as DownLoadSVG } from '../../../assets/images/download.svg';
 
-const ToApply = () => {
+const ToFormStatement = () => {
   const dispatch = useDispatch();
-  const postData = useSelector(selectPostData);
+  const params = useSelector(selectPostData);
   const delta = useSelector(selectDelta);
   const formingLoading = useSelector(selectFormingApplicationLoading);
+  const attachmentId = useSelector(selectAttachmentId);
   return (
     <Card>
       <Stack>
@@ -24,7 +29,7 @@ const ToApply = () => {
             width={'32px'}
             disabled={delta <= 0}
             onClick={() => {
-              dispatch(formingApplication(postData));
+              dispatch(formStatement(params));
             }}>
             Сформировать
           </Button>
@@ -35,9 +40,14 @@ const ToApply = () => {
             замены лет
           </Hint>
         )}
+        {attachmentId === undefined && (
+          <Hint variant={'red'} maxWidth={'100%'}>
+            К сожалению не удалось сформировать заявление. Обратитесь в службу поддержки.
+          </Hint>
+        )}
       </Stack>
     </Card>
   );
 };
 
-export default ToApply;
+export default ToFormStatement;

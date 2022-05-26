@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import initReplaceYear from '../middlewares/initReplaceYear';
 import getHelperList from '../middlewares/getHelperList';
-import { checkIsThereMoreThanOneNotSelectableYear, mappingInitData } from '../helpers';
-import formingApplication from '../middlewares/formingApplication';
+import { checkIsThereMoreThanOneNotSelectableYear, mappingInitData, savePdfFile } from '../helpers';
+import formStatement from '../middlewares/formStatement';
+import getStatement, { IRequestAttachment } from '../middlewares/getStatement';
 
 export enum STATUS_APPLICATION {
   Error = 'Error',
@@ -31,10 +32,11 @@ export interface GlobalState {
   accessApplication: ACCESS_APPLICATION | undefined;
   hasAlreadyOneMessage: string;
   initLoading: boolean;
-  formingApplicationLoading: boolean;
-  initDataForPostRequest: InitData;
-  applicationAttachmentId: string;
+  formStatementLoading: boolean;
+  paramsFormStatement: InitData;
+  statementAttachmentId: string | undefined;
   isHandSignature: boolean | undefined;
+  pdfFileLoading: boolean;
 }
 
 const initialState: GlobalState = {
@@ -42,10 +44,11 @@ const initialState: GlobalState = {
   accessApplication: undefined,
   hasAlreadyOneMessage: '',
   initLoading: true,
-  formingApplicationLoading: false,
-  initDataForPostRequest: {} as InitData,
-  applicationAttachmentId: '',
+  formStatementLoading: false,
+  paramsFormStatement: {} as InitData,
+  statementAttachmentId: '',
   isHandSignature: undefined,
+  pdfFileLoading: false,
 };
 
 export const globalStateSlice = createSlice({
@@ -81,22 +84,35 @@ export const globalStateSlice = createSlice({
         state.hasAlreadyOneMessage = action.payload.message;
       }
       state.initLoading = false;
-      state.initDataForPostRequest = mappingInitData(action.payload);
+      state.paramsFormStatement = mappingInitData(action.payload);
       state.isHandSignature = action.payload.anotherEmployer;
     });
     builder.addCase(initReplaceYear.rejected, (state, action) => {
       state.accessApplication = action.payload;
       state.initLoading = false;
     });
-    builder.addCase(formingApplication.pending, (state, action) => {
-      state.formingApplicationLoading = true;
+    builder.addCase(formStatement.pending, (state) => {
+      state.formStatementLoading = true;
+      state.statementAttachmentId = '';
     });
-    builder.addCase(formingApplication.fulfilled, (state, action) => {
-      state.formingApplicationLoading = false;
-      state.applicationAttachmentId = action.payload.Id;
+    builder.addCase(formStatement.fulfilled, (state, action) => {
+      state.formStatementLoading = false;
+      state.statementAttachmentId = action.payload.Id;
     });
-    builder.addCase(formingApplication.rejected, (state, action) => {
-      state.formingApplicationLoading = false;
+    builder.addCase(formStatement.rejected, (state) => {
+      state.formStatementLoading = false;
+      state.statementAttachmentId = undefined;
+    });
+    builder.addCase(getStatement.fulfilled, (state, action) => {
+      const { base64, fileName } = action.payload;
+      savePdfFile(base64, fileName);
+      state.pdfFileLoading = false;
+    });
+    builder.addCase(getStatement.pending, (state) => {
+      state.pdfFileLoading = true;
+    });
+    builder.addCase(getStatement.rejected, (state) => {
+      state.pdfFileLoading = false;
     });
   },
 });

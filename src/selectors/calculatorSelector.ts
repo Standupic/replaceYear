@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { checkMostBenefitYear, controllerArrow } from '../helpers';
-import { selectInitData } from '../selectors/globalSelector';
+import { selectParamsFormStatement } from '../selectors/globalSelector';
 
 export const selectHelperList = (state: RootState) => state.calculator.helperList;
 export const selectTopYear = (state: RootState) => state.calculator.topYear;
@@ -91,7 +91,7 @@ export const selectPostData = createSelector(
   selectTopYear,
   selectBottomYear,
   selectTotalActiveYears,
-  selectInitData,
+  selectParamsFormStatement,
   (top, bottom, total, initData) => {
     return {
       ...initData,
