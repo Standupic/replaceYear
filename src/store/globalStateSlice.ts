@@ -37,6 +37,7 @@ export interface GlobalState {
   statementAttachmentId: string | undefined;
   isHandSignature: boolean | undefined;
   pdfFileLoading: boolean;
+  paramsAttachment: IRequestAttachment;
 }
 
 const initialState: GlobalState = {
@@ -49,6 +50,7 @@ const initialState: GlobalState = {
   statementAttachmentId: '',
   isHandSignature: undefined,
   pdfFileLoading: false,
+  paramsAttachment: {} as IRequestAttachment,
 };
 
 export const globalStateSlice = createSlice({
@@ -63,6 +65,13 @@ export const globalStateSlice = createSlice({
     },
     switchOnHasAlreadyOne: (state) => {
       state.hasAlreadyOneMessage = '';
+    },
+    attachFile: (state, action: PayloadAction<{ base64: string }>) => {
+      state.paramsAttachment = {
+        ...state.paramsAttachment,
+        base64: action.payload.base64,
+        action: 'U',
+      };
     },
   },
   extraReducers: (builder) => {
@@ -107,6 +116,7 @@ export const globalStateSlice = createSlice({
       const { base64, fileName } = action.payload;
       savePdfFile(base64, fileName);
       state.pdfFileLoading = false;
+      state.paramsAttachment = action.payload;
     });
     builder.addCase(getStatement.pending, (state) => {
       state.pdfFileLoading = true;
@@ -116,5 +126,5 @@ export const globalStateSlice = createSlice({
     });
   },
 });
-export const { setStatusApplication, switchOnHasAlreadyOne } = globalStateSlice.actions;
+export const { setStatusApplication, switchOnHasAlreadyOne, attachFile } = globalStateSlice.actions;
 export default globalStateSlice.reducer;

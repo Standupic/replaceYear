@@ -1,10 +1,12 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Button, Hint, InputFile } from 'juicyfront';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Card, Heading, InlineCluster, Stack, Inline } from '../../styledComponents';
+import { IFileData } from 'juicyfront/types';
+import { Box, Card, Heading, Stack, Inline } from '../../styledComponents';
 import { ReactComponent as DownLoadSVG } from '../../../assets/images/download.svg';
 import getStatement from '../../../middlewares/getStatement';
 import { selectAttachmentId, selectPdfFileLoading } from '../../../selectors/globalSelector';
+import { attachFile } from '../../../store/globalStateSlice';
 
 const ToApplyManually = () => {
   const dispatch = useDispatch();
@@ -34,7 +36,8 @@ const ToApplyManually = () => {
                   fullWidth={false}
                   name={'file'}
                   placeholder={'Прикрепить файл'}
-                  setFile={() => {
+                  setFile={(file: IFileData[]) => {
+                    dispatch(attachFile({ base64: file[0].base64 }));
                     setAttachable(!isAttachable);
                   }}
                 />

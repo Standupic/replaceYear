@@ -156,7 +156,7 @@ export const mostBenefitYear = (data: IMostBenefitYear): boolean => {
     }
   }
   if (bottom && bottom.isSelectable) {
-    if (bottom.value === years[1].year) {
+    if (bottom.value === years[0].year) {
       return true;
     }
   }

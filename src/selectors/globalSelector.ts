@@ -20,3 +20,5 @@ export const selectAttachmentId = (state: RootState) => state.globalState.statem
 export const selectIsHandSignature = (state: RootState) => state.globalState.isHandSignature;
 
 export const selectPdfFileLoading = (state: RootState) => state.globalState.pdfFileLoading;
+
+export const selectParamsAttachment = (state: RootState) => state.globalState.paramsAttachment;
