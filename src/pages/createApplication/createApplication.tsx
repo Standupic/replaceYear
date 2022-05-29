@@ -10,7 +10,6 @@ import {
   selectAttachmentId,
   selectHasAlreadyOneMessage,
   selectParamsAttachment,
-  selectParamsFormStatement,
 } from '../../selectors/globalSelector';
 import { selectDelta } from '../../selectors/calculatorSelector';
 import SwitcherToApply from '../../components/common/SwitcherToApply';
@@ -21,7 +20,6 @@ const createApplication = () => {
   const attachmentId = useSelector(selectAttachmentId);
   const delta = useSelector(selectDelta);
   const paramsAttachment = useSelector(selectParamsAttachment);
-  const paramsStatement = useSelector(selectParamsFormStatement);
   const dispatch = useDispatch();
   return (
     <Permission>
@@ -38,7 +36,7 @@ const createApplication = () => {
       {!hasAlreadyOne && (
         <StickyButton>
           <Button
-            disabled={delta < 0}
+            disabled={delta <= 0}
             onClick={() => {
               dispatch(
                 submitManually({

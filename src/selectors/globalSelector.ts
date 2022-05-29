@@ -9,8 +9,7 @@ export const selectInitLoading = (state: RootState) => state.globalState.initLoa
 export const selectHasAlreadyOneMessage = (state: RootState) =>
   state.globalState.hasAlreadyOneMessage;
 
-export const selectParamsFormStatement = (state: RootState) =>
-  state.globalState.paramsFormStatement;
+export const selectParamsFormStatement = (state: RootState) => state.globalState.paramsStatement;
 
 export const selectFormingApplicationLoading = (state: RootState) =>
   state.globalState.formStatementLoading;

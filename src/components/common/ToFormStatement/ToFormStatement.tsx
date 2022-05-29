@@ -8,7 +8,6 @@ import {
   selectAttachmentId,
   selectFormingApplicationLoading,
 } from '../../../selectors/globalSelector';
-import { ReactComponent as DownLoadSVG } from '../../../assets/images/download.svg';
 
 const ToFormStatement = () => {
   const dispatch = useDispatch();

@@ -1,15 +1,18 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { checkMostBenefitYear, controllerArrow } from '../helpers';
-import { selectParamsFormStatement } from '../selectors/globalSelector';
+import { selectParamsFormStatement } from './globalSelector';
 
 export const selectHelperList = (state: RootState) => state.calculator.helperList;
-export const selectTopYear = (state: RootState) => state.calculator.topYear;
-export const selectBottomYear = (state: RootState) => state.calculator.bottomYear;
+export const selectTopYear = (state: RootState) => state.calculator.topActiveYear;
+export const selectBottomYear = (state: RootState) => state.calculator.bottomActiveYear;
+export const selectPreviousYear = (state: RootState) => state.calculator.previousYear;
+export const selectBeforePreviousYear = (state: RootState) => state.calculator.beforePreviousYear;
 export const selectMostBenefit = (state: RootState) => state.calculator.mostBenefitYears;
 export const selectPreviousTwoYears = (state: RootState) => state.calculator.previousTwoYears;
 export const selectMinMax = (state: RootState) => state.calculator.minMaxYears;
 export const selectIsOnlyOneYearActive = (state: RootState) => state.calculator.isOnlyOneYearActive;
+
 
 export const selectTotalNotActiveYears = createSelector(selectPreviousTwoYears, (items) => {
   return items?.reduce((acc: any, item) => {

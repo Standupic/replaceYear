@@ -3,6 +3,7 @@ import {
   IHelperList,
   IHelperListAPI,
   IMinMaxYear,
+  ITwoPreviousYears,
   IYear,
   YEARS_KEY,
 } from '../store/calculatorSlice';
@@ -33,7 +34,6 @@ export const getCurrency = (income: number) => {
   return '';
 };
 
-export const currentYear = new Date().getFullYear();
 
 export const controllerArrow = (a: number, b: number[]) => {
   const right = a !== b[1];
@@ -67,28 +67,38 @@ export const mappingHelperList = (years: IHelperListAPI[]) => {
   });
 };
 
-export const getPreviousTwoYears = (years: IHelperList[]): IHelperList[] => {
+export const getPreviousTwoYears = (
+  years: IHelperList[],
+  twoPreviousYears: ITwoPreviousYears,
+): IHelperList[] => {
+  const { previousYear, beforePreviousYear } = twoPreviousYears;
   return years.filter((item) => {
-    return item.year === currentYear - 1 || item.year === currentYear - 2;
+    return item.year === previousYear || item.year === beforePreviousYear;
   });
 };
 
-export const checkIsThereMoreThanOneNotSelectableYear = (years: IHelperList[]) => {
+export const checkIsThereMoreThanOneNotSelectableYear = (
+  years: IHelperList[],
+  twoPreviousYears: ITwoPreviousYears,
+) => {
+  const { previousYear, beforePreviousYear } = twoPreviousYears;
   return years.filter((item) => {
     return (
-      (item.year === currentYear - 1 && !item.selectable) ||
-      (item.year === currentYear - 2 && !item.selectable)
+      (item.year === previousYear && !item.selectable) ||
+      (item.year === beforePreviousYear && !item.selectable)
     );
   });
 };
 
 export const checkIsThereNotSelectableYear = (
   years: IHelperList[],
+  twoPreviousYears: ITwoPreviousYears,
 ): { year: number; value: string } | false => {
+  const { previousYear, beforePreviousYear } = twoPreviousYears;
   const filtered = years.filter((item) => {
     return (
-      (item.year === currentYear - 1 && !item.selectable) ||
-      (item.year === currentYear - 2 && !item.selectable)
+      (item.year === previousYear && !item.selectable) ||
+      (item.year === beforePreviousYear && !item.selectable)
     );
   });
   if (filtered.length) {
@@ -96,7 +106,7 @@ export const checkIsThereNotSelectableYear = (
       return {
         ...acc,
         year: item.year,
-        value: currentYear - item.year === 1 ? YEARS_KEY.topYear : YEARS_KEY.bottomYear,
+        value: previousYear - item.year === 1 ? YEARS_KEY.topYear : YEARS_KEY.bottomYear,
       };
     }, {});
   }
@@ -124,10 +134,14 @@ export const getMostBenefitYear = (
     .slice(0, 1);
 };
 
-export const getMostBenefitYears = (years: IHelperList[]): IHelperList[] => {
+export const getMostBenefitYears = (
+  years: IHelperList[],
+  twoPreviousYears: ITwoPreviousYears,
+): IHelperList[] => {
+  const { previousYear, beforePreviousYear } = twoPreviousYears;
   return years
     .filter((item) => {
-      return item.year !== currentYear - 1 || item.year !== currentYear - 2;
+      return item.year !== previousYear || item.year !== beforePreviousYear;
     })
     .sort(sortAmount)
     .slice(0, 2);

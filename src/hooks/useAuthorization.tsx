@@ -5,7 +5,7 @@ import authorization from '../middlewares/authorization';
 const useAuthorization = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(authorization());
+    dispatch(authorization({}));
   }, []);
 };
 

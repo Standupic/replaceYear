@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import initReplaceYear from '../middlewares/initReplaceYear';
-import getHelperList from '../middlewares/getHelperList';
-import { checkIsThereMoreThanOneNotSelectableYear, mappingInitData, savePdfFile } from '../helpers';
+import { mappingInitData, savePdfFile } from '../helpers';
 import formStatement from '../middlewares/formStatement';
 import getStatement, { IRequestAttachment } from '../middlewares/getStatement';
+import submitManually from '../middlewares/submitManually';
+import { decrementYear, incrementYear, toMostBenefit } from './calculatorSlice';
 
 export enum STATUS_APPLICATION {
   Error = 'Error',
@@ -15,6 +16,7 @@ export enum ACCESS_APPLICATION {
   NeedOriginalReference = 'NeedOriginalReference',
   ToApply = 'ToApply',
   BestYears = 'BestYears',
+  dataWrong = 'dataWrong',
 }
 
 export interface InitData {
@@ -31,13 +33,13 @@ export interface GlobalState {
   statusApplication: STATUS_APPLICATION | undefined;
   accessApplication: ACCESS_APPLICATION | undefined;
   hasAlreadyOneMessage: string;
-  initLoading: boolean;
   formStatementLoading: boolean;
-  paramsFormStatement: InitData;
-  statementAttachmentId: string | undefined;
+  paramsStatement: InitData;
+  paramsAttachment: IRequestAttachment | undefined;
+  statementAttachmentId: string | false;
   isHandSignature: boolean | undefined;
   pdfFileLoading: boolean;
-  paramsAttachment: IRequestAttachment;
+  initLoading: boolean;
 }
 
 const initialState: GlobalState = {
@@ -46,11 +48,11 @@ const initialState: GlobalState = {
   hasAlreadyOneMessage: '',
   initLoading: true,
   formStatementLoading: false,
-  paramsFormStatement: {} as InitData,
+  paramsStatement: {} as InitData,
   statementAttachmentId: '',
   isHandSignature: undefined,
   pdfFileLoading: false,
-  paramsAttachment: {} as IRequestAttachment,
+  paramsAttachment: undefined,
 };
 
 export const globalStateSlice = createSlice({
@@ -66,25 +68,17 @@ export const globalStateSlice = createSlice({
     switchOnHasAlreadyOne: (state) => {
       state.hasAlreadyOneMessage = '';
     },
-    attachFile: (state, action: PayloadAction<{ base64: string }>) => {
-      state.paramsAttachment = {
-        ...state.paramsAttachment,
-        base64: action.payload.base64,
-        action: 'U',
-      };
+    attachFile: (state, action: PayloadAction<{ base64: string | undefined }>) => {
+      if (state.paramsStatement) {
+        state.paramsAttachment = {
+          ...state.paramsAttachment,
+          base64: action.payload.base64,
+          action: 'U',
+        };
+      }
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getHelperList.fulfilled, (state, action) => {
-      if (action.payload.length < 3) {
-        new Error('Пришло всего 2 года');
-        state.accessApplication = ACCESS_APPLICATION.NoRight;
-      }
-      if (checkIsThereMoreThanOneNotSelectableYear(action.payload).length >= 2) {
-        new Error('Пришло 2 недоступных года');
-        state.accessApplication = ACCESS_APPLICATION.NoRight;
-      }
-    });
     builder.addCase(initReplaceYear.pending, (state) => {
       state.initLoading = true;
     });
@@ -93,12 +87,27 @@ export const globalStateSlice = createSlice({
         state.hasAlreadyOneMessage = action.payload.message;
       }
       state.initLoading = false;
-      state.paramsFormStatement = mappingInitData(action.payload);
+      state.paramsStatement = mappingInitData(action.payload);
       state.isHandSignature = action.payload.anotherEmployer;
     });
     builder.addCase(initReplaceYear.rejected, (state, action) => {
       state.accessApplication = action.payload;
       state.initLoading = false;
+    });
+    builder.addCase(toMostBenefit, (state) => {
+      state.paramsAttachment = undefined;
+      state.isHandSignature = undefined;
+      state.statementAttachmentId = '';
+    });
+    builder.addCase(incrementYear, (state) => {
+      state.paramsAttachment = undefined;
+      state.isHandSignature = undefined;
+      state.statementAttachmentId = '';
+    });
+    builder.addCase(decrementYear, (state) => {
+      state.paramsAttachment = undefined;
+      state.isHandSignature = undefined;
+      state.statementAttachmentId = '';
     });
     builder.addCase(formStatement.pending, (state) => {
       state.formStatementLoading = true;
@@ -110,11 +119,13 @@ export const globalStateSlice = createSlice({
     });
     builder.addCase(formStatement.rejected, (state) => {
       state.formStatementLoading = false;
-      state.statementAttachmentId = undefined;
+      state.statementAttachmentId = '';
     });
     builder.addCase(getStatement.fulfilled, (state, action) => {
       const { base64, fileName } = action.payload;
-      savePdfFile(base64, fileName);
+      if (base64 && fileName) {
+        savePdfFile(base64, fileName);
+      }
       state.pdfFileLoading = false;
       state.paramsAttachment = action.payload;
     });
@@ -124,7 +135,14 @@ export const globalStateSlice = createSlice({
     builder.addCase(getStatement.rejected, (state) => {
       state.pdfFileLoading = false;
     });
+    builder.addCase(submitManually.fulfilled, (state) => {
+      state.statusApplication = STATUS_APPLICATION.Success;
+    });
+    builder.addCase(submitManually.rejected, (state) => {
+      state.statusApplication = STATUS_APPLICATION.Error;
+    });
   },
 });
-export const { setStatusApplication, switchOnHasAlreadyOne, attachFile } = globalStateSlice.actions;
+export const { setStatusApplication, switchOnHasAlreadyOne, attachFile, setAccessToApplication } =
+  globalStateSlice.actions;
 export default globalStateSlice.reducer;

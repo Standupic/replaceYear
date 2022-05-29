@@ -15,7 +15,7 @@ const CreateApplication = React.lazy(() => import('./pages/createApplication'));
 
 const App = () => {
   useAuthorization();
-  useHelperList();
+  // useHelperList();
   return (
     <Box width={'880px'}>
       <EntryPoint>

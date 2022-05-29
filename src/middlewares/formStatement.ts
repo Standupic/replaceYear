@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from '../api/interceptor';
 
-interface IPostApplicationParams {
+interface IStatementParams {
   reqId: string;
   statusId: string;
   CurrentYear1: string;
@@ -18,7 +18,7 @@ interface IPostApplicationParams {
 
 const formStatement = createAsyncThunk<any, any, { rejectValue: any }>(
   'postApplication',
-  async (data: IPostApplicationParams, api) => {
+  async (data: IStatementParams, api) => {
     try {
       const init = await Axios.post(
         'sap/opu/odata4/sap/zhrxss/default/sap/zhrxss_0837_req_yrep/0001/IYearReplacement',

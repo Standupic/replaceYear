@@ -8,7 +8,7 @@ import {
   selectBottomYear,
   selectTopYear,
   selectDataActiveYears,
-  selectIncomeActiveYears,
+  selectIncomeActiveYears, selectPreviousTwoYears, selectPreviousYear, selectBeforePreviousYear,
 } from '../../../selectors/calculatorSelector';
 import { currentYear, getCurrency } from '../../../helpers';
 import { YEARS_KEY } from '../../../store/calculatorSlice';
@@ -18,12 +18,13 @@ import { YearActive, YearNotActive } from './Years';
 
 const Calculator: FC = () => {
   const totalNotActiveYear = useSelector(selectTotalNotActiveYears);
-  const topYear = useSelector(selectTopYear);
-  const bottomYear = useSelector(selectBottomYear);
+  const topActiveYear = useSelector(selectTopYear);
+  const bottomActiveYear = useSelector(selectBottomYear);
   const dataActiveYears = useSelector(selectDataActiveYears);
   const { total, diff, isTheBest, controller } = dataActiveYears;
   const { topYearIncome, bottomYearIncome } = useSelector(selectIncomeActiveYears);
-  console.log(total);
+  const previousYear = useSelector(selectPreviousYear);
+  const beforePreviousYear = useSelector(selectBeforePreviousYear);
   return (
     <Card>
       <Stack>
@@ -34,9 +35,9 @@ const Calculator: FC = () => {
             </SumBox>
             <YearsBox>
               <Stack gutter={KEY_SPACING.sm}>
-                <YearNotActive year={currentYear - 1} />
+                <YearNotActive year={previousYear} />
                 <Line />
-                <YearNotActive year={currentYear - 2} />
+                <YearNotActive year={beforePreviousYear} />
               </Stack>
             </YearsBox>
           </Stack>
@@ -52,19 +53,19 @@ const Calculator: FC = () => {
             <YearsBox isActive>
               <Stack gutter={KEY_SPACING.sm}>
                 <YearActive
-                  year={topYear.value}
+                  year={topActiveYear.value}
                   type={YEARS_KEY.topYear}
                   income={topYearIncome}
                   controller={controller.top}
-                  disabled={!topYear.isSelectable}
+                  disabled={!topActiveYear.isSelectable}
                 />
                 <Line />
                 <YearActive
-                  year={bottomYear.value}
+                  year={bottomActiveYear.value}
                   type={YEARS_KEY.bottomYear}
                   income={bottomYearIncome}
                   controller={controller.bottom}
-                  disabled={!bottomYear.isSelectable}
+                  disabled={!bottomActiveYear.isSelectable}
                 />
               </Stack>
             </YearsBox>

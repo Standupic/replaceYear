@@ -5,8 +5,8 @@ export interface IRequestAttachment {
   id?: string;
   attType?: string;
   attTypeText?: string;
-  fileName: string;
-  base64: string;
+  fileName?: string;
+  base64?: string;
   action?: string;
   singBase64?: string;
   cert?: string;
