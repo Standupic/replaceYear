@@ -5,7 +5,11 @@ import { IFileData } from 'juicyfront/types';
 import { Box, Card, Heading, Stack, Inline } from '../../styledComponents';
 import { ReactComponent as DownLoadSVG } from '../../../assets/images/download.svg';
 import getStatement from '../../../middlewares/getStatement';
-import {selectAttachmentId, selectParamsAttachment, selectPdfFileLoading} from '../../../selectors/globalSelector';
+import {
+  selectAttachmentId,
+  selectParamsAttachment,
+  selectPdfFileLoading,
+} from '../../../selectors/globalSelector';
 import { attachFile } from '../../../store/globalStateSlice';
 
 const ToApplyManually = () => {
@@ -35,13 +39,17 @@ const ToApplyManually = () => {
               <Box>
                 <InputFile
                   buttonType="light"
-                  disabled={!isAttachable && !parasAttachment}
+                  disabled={isAttachable || !parasAttachment}
                   fullWidth={false}
                   name={'file'}
                   placeholder={'Прикрепить файл'}
                   setFile={(file: IFileData[]) => {
-                    dispatch(attachFile({ base64: file[0].base64 }));
-                    setAttachable(!isAttachable);
+                    if (!file.length) {
+                      setAttachable(false);
+                    } else {
+                      dispatch(attachFile({ base64: file[0].base64 }));
+                      setAttachable(!isAttachable);
+                    }
                   }}
                 />
               </Box>

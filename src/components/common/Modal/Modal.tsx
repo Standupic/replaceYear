@@ -1,10 +1,14 @@
 import { Modal, Button } from 'juicyfront';
 import React, { FC } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ReactComponent as JackdawSuccessSVG } from '../../../assets/images/jackdawSuccess.svg';
 import { ReactComponent as CrossSVG } from '../../../assets/images/cross.svg';
 import './styles.sass';
-import { STATUS_APPLICATION } from '../../../store/globalStateSlice';
+import {
+  resetStatementData,
+  setStatusApplication,
+  STATUS_APPLICATION,
+} from '../../../store/globalStateSlice';
 import { selectStatusApplication } from '../../../selectors/globalSelector';
 import { KEY_SPACING } from '../../styledComponents/constants';
 import { Center, Stack, Heading } from '../../styledComponents';
@@ -28,10 +32,17 @@ const Images = {
 
 const ModalContainer: FC = () => {
   const statusApplication = useSelector(selectStatusApplication);
+  const dispatch = useDispatch();
   return (
     <>
       {statusApplication && (
-        <Modal size="s" header>
+        <Modal
+          size="s"
+          header
+          onClose={() => {
+            dispatch(setStatusApplication(undefined));
+            dispatch(resetStatementData());
+          }}>
           <Center as={Stack} gutter={KEY_SPACING.lg} centerChildren>
             {Images[statusApplication]}
             <Center as={Stack} centerChildren gutter={KEY_SPACING.sm}>
@@ -42,7 +53,14 @@ const ModalContainer: FC = () => {
                 {TextValues[statusApplication]}
               </Text>
             </Center>
-            <Button fullWidth>Продолжить</Button>
+            <Button
+              fullWidth
+              onClick={() => {
+                dispatch(setStatusApplication(undefined));
+                dispatch(resetStatementData());
+              }}>
+              Продолжить
+            </Button>
           </Center>
         </Modal>
       )}

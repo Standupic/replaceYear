@@ -59,7 +59,10 @@ export const globalStateSlice = createSlice({
   name: 'globalState',
   initialState,
   reducers: {
-    setStatusApplication: (state: GlobalState, action: PayloadAction<STATUS_APPLICATION>) => {
+    setStatusApplication: (
+      state: GlobalState,
+      action: PayloadAction<STATUS_APPLICATION | undefined>,
+    ) => {
       state.statusApplication = action.payload;
     },
     setAccessToApplication: (state: GlobalState, action: PayloadAction<ACCESS_APPLICATION>) => {
@@ -76,6 +79,11 @@ export const globalStateSlice = createSlice({
           action: 'U',
         };
       }
+    },
+    resetStatementData: (state) => {
+      state.paramsAttachment = undefined;
+      state.isHandSignature = undefined;
+      state.statementAttachmentId = '';
     },
   },
   extraReducers: (builder) => {
@@ -143,6 +151,11 @@ export const globalStateSlice = createSlice({
     });
   },
 });
-export const { setStatusApplication, switchOnHasAlreadyOne, attachFile, setAccessToApplication } =
-  globalStateSlice.actions;
+export const {
+  setStatusApplication,
+  switchOnHasAlreadyOne,
+  attachFile,
+  setAccessToApplication,
+  resetStatementData,
+} = globalStateSlice.actions;
 export default globalStateSlice.reducer;

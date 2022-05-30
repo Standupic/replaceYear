@@ -87,7 +87,7 @@ const YearActive: FC<IYearProps> = ({
         )}
         {!disabled && (
           <PopUp
-            text={`Расчётная база: ${getCurrency(income)}`}
+            text={`Расчётная база: ${income > 0 ? getCurrency(income) : 0}`}
             isVisible={isVisibleInCome}
             currentRef={currentYearRef}
             style={currentYearStyle}

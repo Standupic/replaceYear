@@ -8,9 +8,11 @@ import {
   selectBottomYear,
   selectTopYear,
   selectDataActiveYears,
-  selectIncomeActiveYears, selectPreviousTwoYears, selectPreviousYear, selectBeforePreviousYear,
+  selectIncomeActiveYears,
+  selectPreviousYear,
+  selectBeforePreviousYear,
 } from '../../../selectors/calculatorSelector';
-import { currentYear, getCurrency } from '../../../helpers';
+import { getCurrency } from '../../../helpers';
 import { YEARS_KEY } from '../../../store/calculatorSlice';
 import { Line, SumBox, YearsBox, Text, Link } from './calculator-parts';
 import TotalBoxActive, { TotalBoxNotActive } from './TotalBox';
