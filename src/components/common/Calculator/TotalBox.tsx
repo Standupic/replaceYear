@@ -24,7 +24,9 @@ const TotalBoxActive: FC<IPropsTotalBox> = ({ tittle, total, diff, isTheBest }) 
       </Inline>
       <Inline index={'0'}>
         <Total color={'#FFFFFF'}>{total}</Total>
-        {isTheBest && <ReasonableBox text={'Самое выгодное'} svg={<CheckSVG />} />}
+        {isTheBest && (
+          <ReasonableBox isTheBest={isTheBest} text={'Самое выгодное'} svg={<CheckSVG />} />
+        )}
         {!isTheBest ? (
           <ReasonableBox
             text={'К самому выгодному'}

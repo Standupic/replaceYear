@@ -8,12 +8,18 @@ interface IReasonable {
   svg: ReactNode;
   text: string;
   handleToBenefit?: () => void;
+  isTheBest?: boolean;
 }
 
-const ReasonableBox: FC<IReasonable> = ({ svg, text, handleToBenefit }) => {
+const ReasonableBox: FC<IReasonable> = ({ svg, text, handleToBenefit, isTheBest }) => {
   const dispatch = useDispatch();
+  console.log(isTheBest);
   return (
-    <Reasonable onClick={() => dispatch(handleToBenefit && handleToBenefit())}>
+    <Reasonable
+      onClick={() => {
+        if (isTheBest) return;
+        dispatch(handleToBenefit && handleToBenefit());
+      }}>
       <InlineCluster gutter={KEY_SPACING.xs} align={KEY_JUSTIFYING.center}>
         {svg}
         {text}
