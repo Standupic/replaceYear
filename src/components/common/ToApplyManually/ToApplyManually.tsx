@@ -18,8 +18,6 @@ const ToApplyManually = () => {
   const pdfLoading = useSelector(selectPdfFileLoading);
   const parasAttachment = useSelector(selectParamsAttachment);
   const [isAttachable, setAttachable] = useState(false);
-  console.log(isAttachable);
-  console.log(attachmentId);
   return (
     <>
       <Card>
