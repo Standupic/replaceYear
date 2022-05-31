@@ -17,7 +17,7 @@ interface IStatementParams {
 }
 
 const formStatement = createAsyncThunk<any, any, { rejectValue: any }>(
-  'postApplication',
+  'formStatement',
   async (data: IStatementParams, api) => {
     try {
       const init = await Axios.post(

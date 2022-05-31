@@ -9,7 +9,7 @@ export const selectInitLoading = (state: RootState) => state.globalState.initLoa
 export const selectHasAlreadyOneMessage = (state: RootState) =>
   state.globalState.hasAlreadyOneMessage;
 
-export const selectParamsFormStatement = (state: RootState) => state.globalState.paramsStatement;
+export const selectParamsStatement = (state: RootState) => state.globalState.paramsStatement;
 
 export const selectFormingApplicationLoading = (state: RootState) =>
   state.globalState.formStatementLoading;
@@ -21,3 +21,5 @@ export const selectIsHandSignature = (state: RootState) => state.globalState.isH
 export const selectPdfFileLoading = (state: RootState) => state.globalState.pdfFileLoading;
 
 export const selectParamsAttachment = (state: RootState) => state.globalState.paramsAttachment;
+
+export const selectCurrentDate = (state: RootState) => state.globalState.date;

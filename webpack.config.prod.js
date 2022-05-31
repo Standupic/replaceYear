@@ -6,7 +6,7 @@ const config = common.config({
   exposes: {
     './app': './src/Main',
   },
-  baseUrl: '/sap/bc/ui5_ui5/sap/z_hr_bonus/',
+  baseUrl: '/sap/bc/ui5_ui5/sap/z_hr_yarrep/',
 });
 
 module.exports = config;

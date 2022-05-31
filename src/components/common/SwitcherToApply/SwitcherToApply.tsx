@@ -3,12 +3,13 @@ import { useSelector } from 'react-redux';
 import { selectAttachmentId, selectIsHandSignature } from '../../../selectors/globalSelector';
 import ToFormStatement from '../ToFormStatement';
 import ToApplyManually from '../ToApplyManually';
+import ToApplySignification from '../ToApplySignification/ToApplySignification';
 
 const SwitcherToApply = () => {
   const attachmentId = useSelector(selectAttachmentId);
   const isHandSignature = useSelector(selectIsHandSignature);
   if (attachmentId && !isHandSignature) {
-    return <ToApplyManually />;
+    return <ToApplySignification />;
   }
   if (attachmentId && isHandSignature) {
     return <ToApplyManually />;

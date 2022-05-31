@@ -40,6 +40,7 @@ export interface GlobalState {
   isHandSignature: boolean | undefined;
   pdfFileLoading: boolean;
   initLoading: boolean;
+  date: string;
 }
 
 const initialState: GlobalState = {
@@ -53,6 +54,7 @@ const initialState: GlobalState = {
   isHandSignature: undefined,
   pdfFileLoading: false,
   paramsAttachment: undefined,
+  date: new Date().toLocaleDateString(),
 };
 
 export const globalStateSlice = createSlice({
@@ -71,8 +73,9 @@ export const globalStateSlice = createSlice({
     switchOnHasAlreadyOne: (state) => {
       state.hasAlreadyOneMessage = '';
     },
-    attachFile: (state, action: PayloadAction<{ base64: string | undefined }>) => {
+    attachFile: (state, action: PayloadAction<{ base64: string }>) => {
       if (state.paramsStatement) {
+        // @ts-ignore
         state.paramsAttachment = {
           ...state.paramsAttachment,
           base64: action.payload.base64,
@@ -130,12 +133,16 @@ export const globalStateSlice = createSlice({
       state.statementAttachmentId = '';
     });
     builder.addCase(getStatement.fulfilled, (state, action) => {
-      const { base64, fileName } = action.payload;
-      if (base64 && fileName) {
-        savePdfFile(base64, fileName);
-      }
       state.pdfFileLoading = false;
       state.paramsAttachment = action.payload;
+      if (!state.isHandSignature) {
+        return state;
+      } else {
+        const { base64, fileName } = action.payload;
+        if (base64 && fileName) {
+          savePdfFile(base64, fileName);
+        }
+      }
     });
     builder.addCase(getStatement.pending, (state) => {
       state.pdfFileLoading = true;
