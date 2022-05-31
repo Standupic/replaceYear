@@ -22,7 +22,9 @@ export const getToken = createAsyncThunk('user/getToken', async (_, { rejectWith
           ['cacheURL']: true,
         },
       });
-      return headers['x-csrf-token'];
+      if (headers) {
+        return headers['x-csrf-token'];
+      }
     }
   } catch (e) {
     return rejectWithValue('Не удалось получить токен!');

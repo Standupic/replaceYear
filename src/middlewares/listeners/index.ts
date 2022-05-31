@@ -1,10 +1,10 @@
-import { createListenerMiddleware, ListenerEffect, PayloadAction } from '@reduxjs/toolkit';
+import { createListenerMiddleware } from '@reduxjs/toolkit';
 import initReplaceYear from '../initReplaceYear';
 import getHelperList from '../getHelperList';
 import { checkIsThereMoreThanOneNotSelectableYear } from '../../helpers';
 import { ACCESS_APPLICATION, setAccessToApplication } from '../../store/globalStateSlice';
 import { RootState } from '../../store';
-import getStatement, { IGetStatement, IRequestAttachment } from '../getStatement';
+import getStatement from '../getStatement';
 
 const listenerMiddleware = createListenerMiddleware();
 

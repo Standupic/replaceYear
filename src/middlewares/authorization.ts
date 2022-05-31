@@ -9,9 +9,9 @@ const authorization = createAsyncThunk<any, any, { rejectValue: string[] | undef
       api.dispatch(getToken()),
       api.dispatch(getPermissions()),
     ]);
-    console.log(result);
-    if (result.find((item: any) => item.error)) {
-      const errors = result.map((item) => item.payload);
+    const filtered = result.filter((item: any) => item.error);
+    if (filtered.length) {
+      const errors = filtered.map((item) => item.payload);
       return api.rejectWithValue(errors);
     } else {
       return {
