@@ -22,10 +22,7 @@ export const getToken = createAsyncThunk('user/getToken', async (_, { rejectWith
           ['cacheURL']: true,
         },
       });
-      if (headers) {
-        console.log(headers['x-csrf-token']);
-        return headers['x-csrf-token'];
-      }
+      return headers['x-csrf-token'];
     }
   } catch (e) {
     return rejectWithValue('Не удалось получить токен!');
@@ -39,7 +36,6 @@ export const getPermissions = createAsyncThunk(
       if (process.env['REACT_APP_GET_USER_PERMISSIONS']) {
         const { data } = await Axios.get(process.env['REACT_APP_GET_USER_PERMISSIONS']);
         if (data) {
-          console.log(data.value);
           return data.value;
         }
       }
