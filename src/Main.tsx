@@ -26,7 +26,16 @@ const reactLifecycles = singleSpaReact({
   React,
   ReactDOM,
   rootComponent: Main,
-  domElementGetter: domElementGetter,
+  domElementGetter: ({ place = 'container' }) => {
+    let div = document.getElementById(place);
+
+    if (!div) {
+      div = document.createElement('div');
+      div.id = place;
+    }
+
+    return div;
+  },
   errorBoundary(err, info, props) {
     console.log('---------------');
     console.log(err);
@@ -38,6 +47,6 @@ const reactLifecycles = singleSpaReact({
   },
 });
 
-export const { bootstrap } = reactLifecycles;
-export const { mount } = reactLifecycles;
-export const { unmount } = reactLifecycles;
+export const bootstrap = reactLifecycles.bootstrap;
+export const mount = reactLifecycles.mount;
+export const unmount = reactLifecycles.unmount;
