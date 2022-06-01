@@ -12,7 +12,7 @@ import { domElementGetter } from './helpers';
 
 const Main: FC = () => {
   return (
-    <HashRouter>
+    <HashRouter basename={'/'}>
       <Provider store={store}>
         <App />
       </Provider>
@@ -26,16 +26,7 @@ const reactLifecycles = singleSpaReact({
   React,
   ReactDOM,
   rootComponent: Main,
-  domElementGetter: ({ place = 'container' }) => {
-    let div = document.getElementById(place);
-
-    if (!div) {
-      div = document.createElement('div');
-      div.id = place;
-    }
-
-    return div;
-  },
+  domElementGetter: domElementGetter,
   errorBoundary(err, info, props) {
     console.log('---------------');
     console.log(err);
