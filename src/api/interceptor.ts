@@ -29,7 +29,7 @@ Axios.interceptors.request.use((config: AxiosRequestConfig): AxiosRequestConfig 
       ['Accept-Language']: 'ru-RU, ru;q=0.9, en-US;q=0.8, en',
       ['Cache-Control']: 'no-cache',
       ['Expires']: '-1',
-      ['Authorization']: logins[ILogin.user],
+      ['Authorization']: process.env.REACT_APP_ENV === 'dev' ? logins[ILogin.user] : '',
     });
   }
   return config;
