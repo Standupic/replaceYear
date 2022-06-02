@@ -7,14 +7,14 @@ export interface UserState {
   loading: boolean;
   userLoaded: boolean;
   error: undefined | string[];
-  user: IUser;
+  user: IUser | undefined;
 }
 
 const initialState: UserState = {
   loading: true,
   userLoaded: false,
   error: undefined,
-  user: {} as IUser,
+  user: undefined,
 };
 
 interface FulfilledAction<ThunkArg, PromiseResult> {

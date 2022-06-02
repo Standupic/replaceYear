@@ -12,11 +12,11 @@ import { domElementGetter } from './helpers';
 
 const Main: FC = () => {
   return (
-    <HashRouter basename={'/'}>
-      <Provider store={store}>
+    <Provider store={store}>
+      <HashRouter>
         <App />
-      </Provider>
-    </HashRouter>
+      </HashRouter>
+    </Provider>
   );
 };
 

@@ -5,27 +5,28 @@ import InlineCluster from '../../styledComponents/InlineCluster';
 import { KEY_JUSTIFYING, KEY_SPACING } from '../../styledComponents/constants';
 import { Card, Box, Stack } from '../../styledComponents';
 import { selectUser, selectIsUserLoaded } from '../../../selectors/userSelector';
+import { UserProfile } from './user-parts';
 
 const User = () => {
   const user = useSelector(selectUser);
   const userLoaded = useSelector(selectIsUserLoaded);
-  return (
-    <>{userLoaded ? <Employee user={user} /> : null}</>
-    // <Card>
-    //   <InlineCluster gutter={KEY_SPACING.lg} align={KEY_JUSTIFYING.center}>
-    //     <Box>
-    //       <img src={user.photo} />
-    //     </Box>
-    //     <Stack>
-    //       <Box>Кузнецова Злата Игоревна</Box>
-    //       <InlineCluster gutter={KEY_SPACING.lg} align={KEY_JUSTIFYING.center}>
-    //         <Box>1.1 категория</Box>
-    //         <Box>Начальник управления, вице-президент</Box>
-    //       </InlineCluster>
-    //     </Stack>
-    //   </InlineCluster>
-    // </Card>
-  );
+  if (user && userLoaded) {
+    return (
+      <Card>
+        <InlineCluster gutter={KEY_SPACING.lg} align={KEY_JUSTIFYING.center}>
+          <UserProfile src={user.photo} />
+          <Stack>
+            <Box>{user.fullName}</Box>
+            <InlineCluster gutter={KEY_SPACING.lg} align={KEY_JUSTIFYING.center}>
+              <Box>TH:#{user.id}</Box>
+              <Box>{user.position}</Box>
+            </InlineCluster>
+          </Stack>
+        </InlineCluster>
+      </Card>
+    );
+  }
+  return null;
 };
 
 export default User;
