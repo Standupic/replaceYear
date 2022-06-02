@@ -4,7 +4,7 @@ import { KEY_SPACING } from '../../components/styledComponents/constants';
 import useReceiveApplications from '../../hooks/useRecieveApplications';
 
 const Applications = () => {
-  useReceiveApplications({});
+  useReceiveApplications();
   return (
     <Stack as={PadBox} padding={[KEY_SPACING.lg, KEY_SPACING.zero, KEY_SPACING.zero]}>
       <Card>
