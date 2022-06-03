@@ -10,20 +10,20 @@ const NavigationTabs = () => {
       {
         label: 'Создание заявки',
         handler: () => {
-          if (location.pathname !== '/service/replaceyears') {
-            history.push('/service/replaceyears');
+          if (location.pathname !== '/replaceyears') {
+            history.push('/replaceyears');
           }
         },
-        active: location.pathname === '/service/replaceyears' && true,
+        active: location.pathname === '/replaceyears' && true,
       },
       {
         label: 'Мои заявки',
         handler: () => {
-          if (location.pathname !== '/service/applications') {
-            history.push('/service/applications');
+          if (location.pathname !== '/applications') {
+            history.push('/applications');
           }
         },
-        active: location.pathname === '/service/applications' && true,
+        active: location.pathname === '/applications' && true,
       },
     ];
   }, [location.pathname]);

@@ -32,11 +32,11 @@ listenerMiddleware.startListening({
     };
     if (checkIsThereMoreThanOneNotSelectableYear(action.payload, twoPreviousYears).length >= 2) {
       new Error('Пришло 2 недоступных года');
-      api.dispatch(setAccessToApplication(ACCESS_APPLICATION.dataWrong));
+      api.dispatch(setAccessToApplication(ACCESS_APPLICATION.DataWrong));
     }
     if (action.payload.length < 3) {
       new Error('Пришло всего 2 года');
-      api.dispatch(setAccessToApplication(ACCESS_APPLICATION.dataWrong));
+      api.dispatch(setAccessToApplication(ACCESS_APPLICATION.DataWrong));
     }
   },
 });

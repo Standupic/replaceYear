@@ -14,6 +14,7 @@ import {
 import { selectDelta } from '../../selectors/calculatorSelector';
 import SwitcherToApply from '../../components/common/SwitcherToApply';
 import submitManually from '../../middlewares/submitManually';
+import User from '../../components/common/User';
 
 const createApplication = () => {
   const hasAlreadyOne = useSelector(selectHasAlreadyOneMessage);
@@ -28,6 +29,7 @@ const createApplication = () => {
           <HasAlreadyOne />
         ) : (
           <>
+            <User />
             <Calculator />
             <SwitcherToApply />
           </>

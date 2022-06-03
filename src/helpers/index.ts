@@ -8,6 +8,8 @@ import {
   YEARS_KEY,
 } from '../store/calculatorSlice';
 import { InitData } from '../store/globalStateSlice';
+import { IApplications } from '../middlewares/receiveApplications';
+import { IApplicationMapped } from '../store/applicationsSlice';
 
 export const setDefaultHeadersRequest = (
   config: AxiosRequestConfig,
@@ -33,7 +35,6 @@ export const getCurrency = (income: number) => {
   if (income) return income.toLocaleString('ru-Ru', { style: 'currency', currency: 'RUB' });
   return '';
 };
-
 
 export const controllerArrow = (a: number, b: number[]) => {
   const right = a !== b[1];
@@ -204,4 +205,22 @@ export const savePdfFile = (base64: string, fileName: string) => {
   a.href = base64 || '';
   a.download = fileName;
   a.click();
+};
+
+export const mappingApplications = (data: IApplications[]): IApplicationMapped[] => {
+  return data?.reduce((acc: any, item) => {
+    return [
+      ...acc,
+      {
+        id: `${item.Id}`,
+        date: new Date(item.createDateTime).toLocaleDateString(),
+        title: `Заявка на замену лет для расчёта больничного на ${new Date(
+          item.createDateTime,
+        ).getFullYear()} год`,
+        requestNumber: `${item.reqId}`,
+        statusText: `${item.statusText}`,
+        statusColor: 'yellow',
+      },
+    ];
+  }, []);
 };

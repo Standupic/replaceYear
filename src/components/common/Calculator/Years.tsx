@@ -44,7 +44,7 @@ const YearActive: FC<IYearProps> = ({
   const [isVisibleInCome, setVisibleInCome] = useState<boolean>(false);
   const dispatch = useDispatch();
   return (
-    <Inline index={1} align={'center'} justify={'center'} height={'39px'} position={'relative'}>
+    <Inline stretch={1} align={'center'} justify={'center'} height={'39px'} position={'relative'}>
       {!disabled && (
         <ButtonYear
           disabled={!controller.left}

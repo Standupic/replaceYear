@@ -9,7 +9,8 @@ const HeadingValues = {
   [ACCESS_APPLICATION.ToApply]: 'Свяжитесь с ОРЗПиИВ',
   [ACCESS_APPLICATION.NeedOriginalReference]: 'Необходим оригинал справки 182н',
   [ACCESS_APPLICATION.BestYears]: 'Текущее сочетание самое выгодное для вас',
-  [ACCESS_APPLICATION.dataWrong]: 'Ошибка предоставленых данных с сервера',
+  [ACCESS_APPLICATION.DataWrong]: 'Ошибка предоставленых данных с сервера',
+  [ACCESS_APPLICATION.NoApplications]: 'Заявки отсутсвуют',
 };
 
 const TextValues = {
@@ -20,8 +21,9 @@ const TextValues = {
     'Если в двух предыдущих годах, предшествующих году начала заболевания, вы работали у других работодателей и находились в отпуске по беременности и родам и/или по уходу за ребенком, то для расчёта больничного необходимо предоставить оригинал справки 182н в ОРЗПиИВ (г.Москва, Трубная, 2 к.511).',
   [ACCESS_APPLICATION.BestYears]:
     'В случае возникновения возможности для замены лет в будущем вы сможете обратиться к данному сервису.',
-  [ACCESS_APPLICATION.dataWrong]:
+  [ACCESS_APPLICATION.DataWrong]:
     'Cервис получил данные, которые не овтечает условиям работы сервиса.',
+  [ACCESS_APPLICATION.NoApplications]: '',
 };
 
 const Permission: FC = ({ children }) => {

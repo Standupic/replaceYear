@@ -4,6 +4,7 @@ import { mappingInitData, savePdfFile } from '../helpers';
 import formStatement from '../middlewares/formStatement';
 import getStatement, { IRequestAttachment } from '../middlewares/getStatement';
 import submitManually from '../middlewares/submitManually';
+import receiveApplications, { IApplications } from '../middlewares/receiveApplications';
 import { decrementYear, incrementYear, toMostBenefit } from './calculatorSlice';
 
 export enum STATUS_APPLICATION {
@@ -16,7 +17,8 @@ export enum ACCESS_APPLICATION {
   NeedOriginalReference = 'NeedOriginalReference',
   ToApply = 'ToApply',
   BestYears = 'BestYears',
-  dataWrong = 'dataWrong',
+  DataWrong = 'DataWrong',
+  NoApplications = 'NoApplications',
 }
 
 export interface InitData {
@@ -156,6 +158,14 @@ export const globalStateSlice = createSlice({
     builder.addCase(submitManually.rejected, (state) => {
       state.statusApplication = STATUS_APPLICATION.Error;
     });
+    builder.addCase(
+      receiveApplications.fulfilled,
+      (state, action: PayloadAction<IApplications[]>) => {
+        if (!action.payload.length) {
+          state.accessApplication = ACCESS_APPLICATION.NoApplications;
+        }
+      },
+    );
   },
 });
 export const {

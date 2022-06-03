@@ -1,16 +1,37 @@
 import React from 'react';
-import { Card, PadBox, Stack } from '../../components/styledComponents';
+import { useSelector } from 'react-redux';
+import { PadBox, Stack } from '../../components/styledComponents';
 import { KEY_SPACING } from '../../components/styledComponents/constants';
 import useReceiveApplications from '../../hooks/useRecieveApplications';
+import Permission from '../../components/Permission';
+import ApplicationCard from '../../components/common/ApplicationCard';
+import { selectApplications } from '../../selectors/applicationsSelector';
+import { IApplicationMapped } from '../../store/applicationsSlice';
+import Filters from '../../components/common/Filters';
 
 const Applications = () => {
   useReceiveApplications();
+  const applications = useSelector(selectApplications);
+  const data = applications?.map((item: IApplicationMapped) => {
+    return (
+      <ApplicationCard
+        key={item.id}
+        id={item.id}
+        requestNumber={item.requestNumber}
+        statusColor={item.statusColor}
+        statusText={item.statusText}
+        title={item.title}
+        date={item.date}
+      />
+    );
+  });
   return (
-    <Stack as={PadBox} padding={[KEY_SPACING.lg, KEY_SPACING.zero, KEY_SPACING.zero]}>
-      <Card>
-        <p>Applications</p>
-      </Card>
-    </Stack>
+    <Permission>
+      <Stack as={PadBox} padding={[KEY_SPACING.lg, KEY_SPACING.zero, KEY_SPACING.zero]}>
+        <Filters />
+        {data}
+      </Stack>
+    </Permission>
   );
 };
 

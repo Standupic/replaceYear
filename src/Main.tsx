@@ -13,7 +13,7 @@ import { domElementGetter } from './helpers';
 const Main: FC = () => {
   return (
     <Provider store={store}>
-      <HashRouter>
+      <HashRouter basename={'/service'}>
         <App />
       </HashRouter>
     </Provider>

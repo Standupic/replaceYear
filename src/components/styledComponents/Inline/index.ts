@@ -3,7 +3,7 @@ import InlineCluster from '../InlineCluster';
 import { STRETCH_KEY, stretchMap } from '../constants';
 
 interface InlineProps extends IResponsive {
-  stretch: STRETCH_KEY;
+  stretch: STRETCH_KEY | number;
   index?: number;
   height?: string;
   position?: string;
@@ -21,7 +21,9 @@ const responsive = css`
 const Inline = styled(InlineCluster as any)`
   flex-wrap: nowrap;
   ${(props: InlineProps) => {
-    if (props.index) return `> :nth-child(${props.index + 1}) { flex: 1 }`;
+    if (typeof props.stretch === 'number') {
+      return `> :nth-child(${props.stretch + 1}) { flex: 1 }`;
+    }
     return stretchMap[props.stretch] ?? '';
   }}
   height: ${(props: InlineProps) => props.height && props.height};
