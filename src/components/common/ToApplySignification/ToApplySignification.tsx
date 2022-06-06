@@ -13,6 +13,7 @@ const ToApplySignification = () => {
     <>
       <Signification
         onSignify={(result) => {
+          console.log(result);
           const { file } = result;
           dispatch(attachFile({ base64: file.base64 }));
         }}
