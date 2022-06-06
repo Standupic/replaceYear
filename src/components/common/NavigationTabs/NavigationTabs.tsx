@@ -19,11 +19,11 @@ const NavigationTabs = () => {
       {
         label: 'Мои заявки',
         handler: () => {
-          if (location.pathname !== '/applications') {
-            history.push('/applications');
+          if (location.pathname !== '/replaceyears/applications') {
+            history.push('/replaceyears/applications');
           }
         },
-        active: location.pathname === '/applications' && true,
+        active: location.pathname === '/replaceyears/applications' && true,
       },
     ];
   }, [location.pathname]);

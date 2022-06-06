@@ -21,7 +21,7 @@ const SomethingWrong: FC<ISomethingWrongProps> = ({ heading, text, svg = <Permis
               {heading}
             </Heading>
           )}
-          {text && <Text>{text}</Text>}
+          {text && <Text dangerouslySetInnerHTML={{ __html: text }} />}
         </Stack>
       </Center>
     </Cover>

@@ -91,11 +91,16 @@ export const ButtonYear = styled(PadBox as any).attrs(() => ({
 }))`
   opacity: ${(props: { disabled?: boolean }) => (props.disabled ? '0.5' : '1')};
   border-radius: 8px;
+  width: 32px;
+  height: 32px;
   background: #ffffff;
   box-shadow: 0px 2px 6px 0px #193b6826;
   display: grid;
   align-items: center;
   cursor: ${(props: { disabled?: boolean }) => (props.disabled ? 'auto' : 'pointer')};
+  svg {
+    margin: 0 auto;
+  }
 `;
 
 export const Line = styled.div`
