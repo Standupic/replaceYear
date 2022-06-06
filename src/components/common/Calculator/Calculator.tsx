@@ -86,7 +86,7 @@ const Calculator: FC = () => {
             стаже менее 5 лет – 60%. При возникновении вопросов по страховому стажу, обратитесь к
             куратору кадрового администрирования.
           </Text>
-          <Link href="#">Личный кабинет</Link>
+          <Link href="https://intranet.vtb.com/lk/Pages/default.aspx">Личный кабинет</Link>
         </Hint>
       </Stack>
     </Card>
