@@ -3,9 +3,8 @@ import initReplaceYear from '../middlewares/initReplaceYear';
 import { mappingInitData, savePdfFile } from '../helpers';
 import formStatement from '../middlewares/formStatement';
 import getStatement, { IRequestAttachment } from '../middlewares/getStatement';
-import submitManually from '../middlewares/submitManually';
 import receiveApplications, { IApplications } from '../middlewares/receiveApplications';
-import { decrementYear, incrementYear, toMostBenefit } from './calculatorSlice';
+import submitStatement from '../middlewares/submitStatement';
 
 export enum STATUS_APPLICATION {
   Error = 'Error',
@@ -38,6 +37,7 @@ export interface GlobalState {
   formStatementLoading: boolean;
   paramsStatement: InitData;
   paramsAttachment: IRequestAttachment | undefined;
+  isSigned: boolean;
   statementAttachmentId: string | false;
   isHandSignature: boolean | undefined;
   pdfFileLoading: boolean;
@@ -56,6 +56,7 @@ const initialState: GlobalState = {
   isHandSignature: undefined,
   pdfFileLoading: false,
   paramsAttachment: undefined,
+  isSigned: false,
   date: new Date().toLocaleDateString(),
 };
 
@@ -75,20 +76,27 @@ export const globalStateSlice = createSlice({
     switchOnHasAlreadyOne: (state) => {
       state.hasAlreadyOneMessage = '';
     },
-    attachFile: (state, action: PayloadAction<{ base64: string }>) => {
+    attachFile: (
+      state,
+      action: PayloadAction<{ base64: string; cert?: string; singBase64?: string }>,
+    ) => {
       if (state.paramsStatement) {
         // @ts-ignore
         state.paramsAttachment = {
           ...state.paramsAttachment,
           base64: action.payload.base64,
           action: 'U',
+          cert: action.payload.cert,
+          singBase64: action.payload.singBase64,
         };
       }
+      state.isSigned = true;
     },
     resetStatementData: (state) => {
       state.paramsAttachment = undefined;
       state.isHandSignature = undefined;
       state.statementAttachmentId = '';
+      state.isSigned = false;
     },
   },
   extraReducers: (builder) => {
@@ -106,21 +114,6 @@ export const globalStateSlice = createSlice({
     builder.addCase(initReplaceYear.rejected, (state, action) => {
       state.accessApplication = action.payload;
       state.initLoading = false;
-    });
-    builder.addCase(toMostBenefit, (state) => {
-      state.paramsAttachment = undefined;
-      state.isHandSignature = undefined;
-      state.statementAttachmentId = '';
-    });
-    builder.addCase(incrementYear, (state) => {
-      state.paramsAttachment = undefined;
-      state.isHandSignature = undefined;
-      state.statementAttachmentId = '';
-    });
-    builder.addCase(decrementYear, (state) => {
-      state.paramsAttachment = undefined;
-      state.isHandSignature = undefined;
-      state.statementAttachmentId = '';
     });
     builder.addCase(formStatement.pending, (state) => {
       state.formStatementLoading = true;
@@ -152,10 +145,10 @@ export const globalStateSlice = createSlice({
     builder.addCase(getStatement.rejected, (state) => {
       state.pdfFileLoading = false;
     });
-    builder.addCase(submitManually.fulfilled, (state) => {
+    builder.addCase(submitStatement.fulfilled, (state) => {
       state.statusApplication = STATUS_APPLICATION.Success;
     });
-    builder.addCase(submitManually.rejected, (state) => {
+    builder.addCase(submitStatement.rejected, (state) => {
       state.statusApplication = STATUS_APPLICATION.Error;
     });
     builder.addCase(

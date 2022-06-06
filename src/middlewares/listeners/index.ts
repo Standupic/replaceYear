@@ -1,10 +1,15 @@
-import { createListenerMiddleware } from '@reduxjs/toolkit';
+import { createListenerMiddleware, isAnyOf } from '@reduxjs/toolkit';
 import initReplaceYear from '../initReplaceYear';
 import getHelperList from '../getHelperList';
 import { checkIsThereMoreThanOneNotSelectableYear } from '../../helpers';
-import { ACCESS_APPLICATION, setAccessToApplication } from '../../store/globalStateSlice';
+import {
+  ACCESS_APPLICATION,
+  resetStatementData,
+  setAccessToApplication,
+} from '../../store/globalStateSlice';
 import { RootState } from '../../store';
 import getStatement from '../getStatement';
+import { decrementYear, incrementYear, toMostBenefit } from '../../store/calculatorSlice';
 
 const listenerMiddleware = createListenerMiddleware();
 
@@ -41,12 +46,20 @@ listenerMiddleware.startListening({
   },
 });
 
+// Взять данные заявление под копотом если подписываем заявление в ручную. Формуруем -> под копотом берем даныые файла.
 listenerMiddleware.startListening({
   type: 'formStatement/fulfilled',
   effect: async (action: any, api) => {
     if (!action.payload.anotherEmployer) {
       api.dispatch(getStatement(action.payload.Id));
     }
+  },
+});
+
+listenerMiddleware.startListening({
+  matcher: isAnyOf(toMostBenefit, incrementYear, decrementYear),
+  effect: async (_action: any, api) => {
+    api.dispatch(resetStatementData());
   },
 });
 

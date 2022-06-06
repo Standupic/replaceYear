@@ -23,3 +23,6 @@ export const selectPdfFileLoading = (state: RootState) => state.globalState.pdfF
 export const selectParamsAttachment = (state: RootState) => state.globalState.paramsAttachment;
 
 export const selectCurrentDate = (state: RootState) => state.globalState.date;
+
+export const selectIsSigned = (state: RootState) => state.globalState.isSigned;
+

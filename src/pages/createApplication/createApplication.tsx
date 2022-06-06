@@ -8,19 +8,20 @@ import Calculator from '../../components/common/Calculator/Calculator';
 import HasAlreadyOne from '../../components/common/HasAlreadyOne/HasAlreadyOne';
 import {
   selectAttachmentId,
-  selectHasAlreadyOneMessage,
+  selectHasAlreadyOneMessage, selectIsSigned,
   selectParamsAttachment,
 } from '../../selectors/globalSelector';
 import { selectDelta } from '../../selectors/calculatorSelector';
 import SwitcherToApply from '../../components/common/SwitcherToApply';
-import submitManually from '../../middlewares/submitManually';
 import User from '../../components/common/User';
+import submitStatement from '../../middlewares/submitStatement';
 
 const createApplication = () => {
   const hasAlreadyOne = useSelector(selectHasAlreadyOneMessage);
   const attachmentId = useSelector(selectAttachmentId);
   const delta = useSelector(selectDelta);
   const paramsAttachment = useSelector(selectParamsAttachment);
+  const isSigned = useSelector(selectIsSigned);
   const dispatch = useDispatch();
   return (
     <Permission>
@@ -38,10 +39,10 @@ const createApplication = () => {
       {!hasAlreadyOne && (
         <StickyButton>
           <Button
-            disabled={delta <= 0}
+            disabled={delta <= 0 || !isSigned}
             onClick={() => {
               dispatch(
-                submitManually({
+                submitStatement({
                   attachments: { ...paramsAttachment },
                   id: attachmentId,
                 }),

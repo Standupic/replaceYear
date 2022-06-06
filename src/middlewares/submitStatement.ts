@@ -23,8 +23,8 @@ interface ISubmitManually {
   attachments: IRequestAttachment[];
 }
 
-const submitManually = createAsyncThunk<any, any, { rejectValue: any }>(
-  'submitManually',
+const submitStatement = createAsyncThunk<any, any, { rejectValue: any }>(
+  'submitStatement',
   async (props: IPropsSubmit, api) => {
     try {
       const init = await Axios.post(
@@ -32,6 +32,7 @@ const submitManually = createAsyncThunk<any, any, { rejectValue: any }>(
         {
           Id: props.id,
           attachments: [props.attachments],
+          event: 'IN_PROCESS',
         },
         { headers: { 'Content-Type': 'application/json;odata.metadata=minimal;charset=utf-8' } },
       );
@@ -42,4 +43,4 @@ const submitManually = createAsyncThunk<any, any, { rejectValue: any }>(
   },
 );
 
-export default submitManually;
+export default submitStatement;
