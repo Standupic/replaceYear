@@ -1,7 +1,12 @@
 import { createListenerMiddleware, isAnyOf } from '@reduxjs/toolkit';
 import initReplaceYear from '../initReplaceYear';
 import getHelperList from '../getHelperList';
-import { checkIsThereMoreThanOneNotSelectableYear } from '../../helpers';
+import {
+  checkIsThereMoreThanOneNotSelectableYear,
+  getDelta,
+  totalActiveYears,
+  totalNotActiveYears,
+} from '../../helpers';
 import {
   ACCESS_APPLICATION,
   resetStatementData,
@@ -10,6 +15,7 @@ import {
 import { RootState } from '../../store';
 import getStatement from '../getStatement';
 import { decrementYear, incrementYear, toMostBenefit } from '../../store/calculatorSlice';
+import formStatement from '../formStatement';
 
 const listenerMiddleware = createListenerMiddleware();
 
@@ -59,7 +65,32 @@ listenerMiddleware.startListening({
 listenerMiddleware.startListening({
   matcher: isAnyOf(toMostBenefit, incrementYear, decrementYear),
   effect: async (_action: any, api) => {
-    api.dispatch(resetStatementData());
+    const store = api.getState() as RootState;
+    const { statementAttachmentId } = store.globalState;
+    const { topActiveYear, bottomActiveYear, helperList, previousTwoYears } = store.calculator;
+    const totalActive = totalActiveYears(topActiveYear, bottomActiveYear, helperList);
+    const totalNotActive = totalNotActiveYears(previousTwoYears);
+    const delta = getDelta(totalActive, totalNotActive);
+    if (statementAttachmentId) {
+      if (delta > 0) {
+        const params = {
+          ...store.globalState.paramsStatement,
+          NextYear1: topActiveYear.value.toString(),
+          NextYear2: bottomActiveYear.value.toString(),
+          CurrentAmount: totalActive,
+          currency: 'RUB',
+          Id: statementAttachmentId,
+        };
+        api.dispatch(formStatement(params));
+      }
+    }
+  },
+});
+
+listenerMiddleware.startListening({
+  type: 'submitStatement/fulfilled',
+  effect: async (_action: any, api) => {
+    api.dispatch(resetStatementData({ reset: 'complete' }));
   },
 });
 

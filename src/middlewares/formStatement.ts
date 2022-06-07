@@ -14,6 +14,7 @@ interface IStatementParams {
   NextAmount: number;
   currency: string;
   event: string;
+  Id?: string;
 }
 
 const formStatement = createAsyncThunk<any, any, { rejectValue: any }>(

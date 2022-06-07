@@ -6,6 +6,8 @@ import getStatement, { IRequestAttachment } from '../middlewares/getStatement';
 import receiveApplications, { IApplications } from '../middlewares/receiveApplications';
 import submitStatement from '../middlewares/submitStatement';
 
+export type ResetType = 'partial' | 'complete';
+
 export enum STATUS_APPLICATION {
   Error = 'Error',
   Success = 'Success',
@@ -17,7 +19,6 @@ export enum ACCESS_APPLICATION {
   ToApply = 'ToApply',
   BestYears = 'BestYears',
   DataWrong = 'DataWrong',
-  NoApplications = 'NoApplications',
 }
 
 export interface InitData {
@@ -92,10 +93,13 @@ export const globalStateSlice = createSlice({
       }
       state.isSigned = true;
     },
-    resetStatementData: (state) => {
+    resetStatementData: (state, action: PayloadAction<{ reset: ResetType }>) => {
+      if (action.payload.reset === 'complete') {
+        state.statementAttachmentId = '';
+        state.statusApplication = undefined;
+      }
       state.paramsAttachment = undefined;
       state.isHandSignature = undefined;
-      state.statementAttachmentId = '';
       state.isSigned = false;
     },
   },
@@ -117,7 +121,6 @@ export const globalStateSlice = createSlice({
     });
     builder.addCase(formStatement.pending, (state) => {
       state.formStatementLoading = true;
-      state.statementAttachmentId = '';
     });
     builder.addCase(formStatement.fulfilled, (state, action) => {
       state.formStatementLoading = false;
@@ -125,7 +128,6 @@ export const globalStateSlice = createSlice({
     });
     builder.addCase(formStatement.rejected, (state) => {
       state.formStatementLoading = false;
-      state.statementAttachmentId = '';
     });
     builder.addCase(getStatement.fulfilled, (state, action) => {
       state.pdfFileLoading = false;
@@ -151,14 +153,6 @@ export const globalStateSlice = createSlice({
     builder.addCase(submitStatement.rejected, (state) => {
       state.statusApplication = STATUS_APPLICATION.Error;
     });
-    builder.addCase(
-      receiveApplications.fulfilled,
-      (state, action: PayloadAction<IApplications[]>) => {
-        if (!action.payload.length) {
-          state.accessApplication = ACCESS_APPLICATION.NoApplications;
-        }
-      },
-    );
   },
 });
 export const {

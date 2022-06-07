@@ -3,17 +3,18 @@ import { useSelector } from 'react-redux';
 import { ACCESS_APPLICATION } from '../../store/globalStateSlice';
 import { selectAccessApplication } from '../../selectors/globalSelector';
 import SomethingWrong from '../SomethingWrong';
+import { PERMISSION_APPLICATIONS } from '../../store/applicationsSlice';
+import { selectAccessApplications } from '../../selectors/applicationsSelector';
 
-const HeadingValues = {
+const HeadingValuesCreateApplication = {
   [ACCESS_APPLICATION.NoRight]: 'К сожалению, у вас нет права на замену лет',
   [ACCESS_APPLICATION.ToApply]: 'Свяжитесь с ОРЗПиИВ',
   [ACCESS_APPLICATION.NeedOriginalReference]: 'Необходим оригинал справки 182н',
   [ACCESS_APPLICATION.BestYears]: 'Текущее сочетание самое выгодное для вас',
   [ACCESS_APPLICATION.DataWrong]: 'Ошибка предоставленых данных с сервера',
-  [ACCESS_APPLICATION.NoApplications]: 'Заявки отсутствуют',
 };
 
-const TextValues = {
+const TextValuesCreateApplication = {
   [ACCESS_APPLICATION.NoRight]:
     'В двух предыдущих календарных годах вы не находились в отпуске по беременности и родам и/или по уходу за ребенком',
   [ACCESS_APPLICATION.ToApply]: `Ранее вы предоставили справку 182н, если вы находились в декрете или отпуске по уходу за ребенком у другого работодателя, пожалуйста, свяжитесь с Отделом расчёта заработной платы и иных выплат для уточнения возможности и порядка оформления заявления на замену лет для расчёта больничного
@@ -24,23 +25,52 @@ const TextValues = {
     'В случае возникновения возможности для замены лет в будущем вы сможете обратиться к данному сервису.',
   [ACCESS_APPLICATION.DataWrong]:
     'Cервис получил данные, которые не овтечает условиям работы сервиса.',
-  [ACCESS_APPLICATION.NoApplications]: '',
 };
 
-const Permission: FC = ({ children }) => {
-  const accessApplication = useSelector(selectAccessApplication);
-  return (
-    <>
-      {accessApplication ? (
-        <SomethingWrong
-          heading={HeadingValues[accessApplication]}
-          text={TextValues[accessApplication]}
-        />
-      ) : (
-        children
-      )}
-    </>
-  );
+const HeadingValuesApplications = {
+  [PERMISSION_APPLICATIONS.NoApplications]: 'Заявки отсутствуют',
+};
+
+const TextValuesApplications = {
+  [PERMISSION_APPLICATIONS.NoApplications]: '',
+};
+
+interface IPermission {
+  mode: 'create' | 'applications';
+}
+
+const Permission: FC<IPermission> = ({ children, mode }) => {
+  const accessCreateApplication = useSelector(selectAccessApplication);
+  const accessApplications = useSelector(selectAccessApplications);
+  if (mode === 'create') {
+    return (
+      <>
+        {accessCreateApplication ? (
+          <SomethingWrong
+            heading={HeadingValuesCreateApplication[accessCreateApplication]}
+            text={TextValuesCreateApplication[accessCreateApplication]}
+          />
+        ) : (
+          children
+        )}
+      </>
+    );
+  }
+  if (mode === 'applications') {
+    return (
+      <>
+        {accessApplications ? (
+          <SomethingWrong
+            heading={HeadingValuesApplications[accessApplications]}
+            text={TextValuesApplications[accessApplications]}
+          />
+        ) : (
+          children
+        )}
+      </>
+    );
+  }
+  return null;
 };
 
 export default Permission;

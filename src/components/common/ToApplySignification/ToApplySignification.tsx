@@ -1,14 +1,29 @@
 import React from 'react';
-import { Signification } from 'juicyfront';
+import { Signification, Preloader } from 'juicyfront';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCurrentDate, selectParamsAttachment } from '../../../selectors/globalSelector';
+import {
+  selectCurrentDate,
+  selectFormingApplicationLoading,
+  selectParamsAttachment,
+} from '../../../selectors/globalSelector';
 import { IRequestAttachment } from '../../../middlewares/getStatement';
 import { attachFile, resetStatementData } from '../../../store/globalStateSlice';
+import { Card, Center } from '../../styledComponents';
 
 const ToApplySignification = () => {
   const statement = useSelector(selectParamsAttachment);
   const currentDate = useSelector(selectCurrentDate);
+  const formingLoading = useSelector(selectFormingApplicationLoading);
   const dispatch = useDispatch();
+  if (formingLoading) {
+    return (
+      <Card>
+        <Center>
+          <Preloader />
+        </Center>
+      </Card>
+    );
+  }
   return (
     <>
       <Signification
@@ -21,7 +36,7 @@ const ToApplySignification = () => {
           }
         }}
         onSignCancel={() => {
-          dispatch(resetStatementData());
+          dispatch(resetStatementData({ reset: 'partial' }));
         }}
         data={statement ? statement : ({} as IRequestAttachment)}
         hideButtons={['reject', 'rejectManual']}

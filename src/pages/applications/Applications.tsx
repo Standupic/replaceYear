@@ -26,7 +26,7 @@ const Applications = () => {
     );
   });
   return (
-    <Permission>
+    <Permission mode={'applications'}>
       <Stack as={PadBox} padding={[KEY_SPACING.lg, KEY_SPACING.zero, KEY_SPACING.zero]}>
         <Filters />
         {data}

@@ -1,7 +1,13 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import { checkMostBenefitYear, controllerArrow } from '../helpers';
-import { selectParamsStatement } from './globalSelector';
+import {
+  checkMostBenefitYear,
+  controllerArrow,
+  getDelta,
+  totalActiveYears,
+  totalNotActiveYears,
+} from '../helpers';
+import { selectAttachmentId, selectParamsStatement } from './globalSelector';
 
 export const selectHelperList = (state: RootState) => state.calculator.helperList;
 export const selectTopYear = (state: RootState) => state.calculator.topActiveYear;
@@ -13,11 +19,8 @@ export const selectPreviousTwoYears = (state: RootState) => state.calculator.pre
 export const selectMinMax = (state: RootState) => state.calculator.minMaxYears;
 export const selectIsOnlyOneYearActive = (state: RootState) => state.calculator.isOnlyOneYearActive;
 
-
 export const selectTotalNotActiveYears = createSelector(selectPreviousTwoYears, (items) => {
-  return items?.reduce((acc: any, item) => {
-    return acc + item.dailyAmount;
-  }, 0);
+  return totalNotActiveYears(items);
 });
 
 export const selectTotalActiveYears = createSelector(
@@ -25,13 +28,7 @@ export const selectTotalActiveYears = createSelector(
   selectBottomYear,
   selectHelperList,
   (topYear, bottomYear, helperList) => {
-    return helperList
-      .filter((item) => {
-        return item.year === topYear.value || item.year === bottomYear.value;
-      })
-      .reduce((acc: any, item) => {
-        return acc + item.dailyAmount;
-      }, 0);
+    return totalActiveYears(topYear, bottomYear, helperList);
   },
 );
 
@@ -39,7 +36,7 @@ export const selectDelta = createSelector(
   selectTotalActiveYears,
   selectTotalNotActiveYears,
   (active, notActive) => {
-    return Number((active - notActive).toFixed(2));
+    return getDelta(active, notActive);
   },
 );
 
@@ -95,13 +92,23 @@ export const selectPostData = createSelector(
   selectBottomYear,
   selectTotalActiveYears,
   selectParamsStatement,
-  (top, bottom, total, initData) => {
-    return {
+  selectAttachmentId,
+  (top, bottom, total, initData, attachmentId) => {
+    const params = {
       ...initData,
       NextYear1: top.value.toString(),
       NextYear2: bottom.value.toString(),
       CurrentAmount: total,
       currency: 'RUB',
     };
+    console.log(params, 'params');
+    if (attachmentId) {
+      return {
+        ...params,
+        Id: attachmentId,
+      };
+    } else {
+      return params;
+    }
   },
 );

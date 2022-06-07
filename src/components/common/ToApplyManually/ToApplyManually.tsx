@@ -7,6 +7,7 @@ import { ReactComponent as DownLoadSVG } from '../../../assets/images/download.s
 import getStatement from '../../../middlewares/getStatement';
 import {
   selectAttachmentId,
+  selectFormingApplicationLoading,
   selectParamsAttachment,
   selectPdfFileLoading,
 } from '../../../selectors/globalSelector';
@@ -17,6 +18,7 @@ const ToApplyManually = () => {
   const attachmentId = useSelector(selectAttachmentId);
   const pdfLoading = useSelector(selectPdfFileLoading);
   const parasAttachment = useSelector(selectParamsAttachment);
+  const formingLoading = useSelector(selectFormingApplicationLoading);
   const [isAttachable, setAttachable] = useState(false);
   return (
     <>
@@ -53,7 +55,7 @@ const ToApplyManually = () => {
               </Box>
               <Button
                 buttonType={'outline'}
-                preloader={pdfLoading}
+                preloader={pdfLoading || formingLoading}
                 onClick={() => dispatch(getStatement(attachmentId))}
                 startAdornment={<DownLoadSVG />}>
                 Шаблон заявления

@@ -224,3 +224,23 @@ export const mappingApplications = (data: IApplications[]): IApplicationMapped[]
     ];
   }, []);
 };
+
+export const totalActiveYears = (topYear: IYear, bottomYear: IYear, helperList: IHelperList[]) => {
+  return helperList
+    .filter((item) => {
+      return item.year === topYear.value || item.year === bottomYear.value;
+    })
+    .reduce((acc: any, item) => {
+      return acc + item.dailyAmount;
+    }, 0);
+};
+
+export const totalNotActiveYears = (items: IHelperList[]) => {
+  return items?.reduce((acc: any, item) => {
+    return acc + item.dailyAmount;
+  }, 0);
+};
+
+export const getDelta = (active: number, notActive: number) => {
+  return Number((active - notActive).toFixed(2));
+};

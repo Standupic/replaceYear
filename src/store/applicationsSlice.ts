@@ -3,6 +3,10 @@ import { Variant } from 'juicyfront/types';
 import receiveApplications, { IApplications } from '../middlewares/receiveApplications';
 import { mappingApplications } from '../helpers';
 
+export enum PERMISSION_APPLICATIONS {
+  NoApplications = 'NoApplications',
+}
+
 export interface IApplicationMapped {
   id: string;
   date: string;
@@ -16,18 +20,24 @@ export interface ApplicationsState {
   applications: IApplicationMapped[] | undefined;
   loading: boolean;
   error: undefined | string[];
+  accessApplications: PERMISSION_APPLICATIONS | undefined;
 }
 
 const initialState: ApplicationsState = {
   applications: undefined,
   loading: false,
   error: undefined,
+  accessApplications: undefined,
 };
 
 const applicationsSlice = createSlice({
   name: 'applications',
   initialState,
-  reducers: {},
+  reducers: {
+    searching: (state, action: PayloadAction<string>) => {
+      console.log(state);
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(receiveApplications.pending, (state) => {
       state.loading = true;
@@ -38,6 +48,8 @@ const applicationsSlice = createSlice({
         state.loading = false;
         if (action.payload.length) {
           state.applications = mappingApplications(action.payload);
+        } else {
+          state.accessApplications = PERMISSION_APPLICATIONS.NoApplications;
         }
       },
     );

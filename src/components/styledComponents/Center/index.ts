@@ -12,6 +12,7 @@ const Center = styled.div`
   box-sizing: content-box;
   margin-inline-start: auto;
   margin-inline-end: auto;
+  position: relative;
 
   max-inline-size: ${(props: IPropsCenter) => props.maxWidth && props.maxWidth};
 
