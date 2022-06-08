@@ -29,10 +29,12 @@ const TextValuesCreateApplication = {
 
 const HeadingValuesApplications = {
   [PERMISSION_APPLICATIONS.NoApplications]: 'Заявки отсутствуют',
+  [PERMISSION_APPLICATIONS.SomeThingWrong]: 'Что то не так!',
 };
 
 const TextValuesApplications = {
   [PERMISSION_APPLICATIONS.NoApplications]: '',
+  [PERMISSION_APPLICATIONS.SomeThingWrong]: 'Попробуйте позже или обратитесь к в службу поддержки.',
 };
 
 interface IPermission {

@@ -9,7 +9,7 @@ import {
 } from '../../helpers';
 import {
   ACCESS_APPLICATION,
-  resetStatementData,
+  cancelSign,
   setAccessToApplication,
 } from '../../store/globalStateSlice';
 import { RootState } from '../../store';
@@ -63,7 +63,7 @@ listenerMiddleware.startListening({
 });
 
 listenerMiddleware.startListening({
-  matcher: isAnyOf(toMostBenefit, incrementYear, decrementYear),
+  matcher: isAnyOf(toMostBenefit, incrementYear, decrementYear, cancelSign),
   effect: async (_action: any, api) => {
     const store = api.getState() as RootState;
     const { statementAttachmentId } = store.globalState;
@@ -87,10 +87,22 @@ listenerMiddleware.startListening({
   },
 });
 
+// listenerMiddleware.startListening({
+//   actionCreator: modalHandler,
+//   effect: async (_action, api) => {
+//     const store = api.getState() as RootState;
+//     if (state.statusApplication === STATUS_APPLICATION.Success) {
+//       return initialState;
+//     }
+//     console.log(store.globalState.statusApplication, 'listener');
+//   },
+// });
+
 listenerMiddleware.startListening({
   type: 'submitStatement/fulfilled',
-  effect: async (_action: any, api) => {
-    api.dispatch(resetStatementData({ reset: 'complete' }));
+  effect: async (action: any, api) => {
+    console.log(action.payload);
+    // api.dispatch(resetStatementData({ reset: 'complete' }));
   },
 });
 

@@ -5,13 +5,18 @@ import { KEY_SPACING } from '../../components/styledComponents/constants';
 import useReceiveApplications from '../../hooks/useRecieveApplications';
 import Permission from '../../components/Permission';
 import ApplicationCard from '../../components/common/ApplicationCard';
-import { selectApplications } from '../../selectors/applicationsSelector';
+import {
+  selectApplications,
+  selectLoadingApplications,
+} from '../../selectors/applicationsSelector';
 import { IApplicationMapped } from '../../store/applicationsSlice';
 import Filters from '../../components/common/Filters';
+import PagePreloader from '../../components/common/PagePreloader';
 
 const Applications = () => {
   useReceiveApplications();
   const applications = useSelector(selectApplications);
+  const loadingApplication = useSelector(selectLoadingApplications);
   const data = applications?.map((item: IApplicationMapped) => {
     return (
       <ApplicationCard
@@ -26,12 +31,14 @@ const Applications = () => {
     );
   });
   return (
-    <Permission mode={'applications'}>
-      <Stack as={PadBox} padding={[KEY_SPACING.lg, KEY_SPACING.zero, KEY_SPACING.zero]}>
-        <Filters />
-        {data}
-      </Stack>
-    </Permission>
+    <PagePreloader loader={loadingApplication}>
+      <Permission mode={'applications'}>
+        <Stack as={PadBox} padding={[KEY_SPACING.lg, KEY_SPACING.zero, KEY_SPACING.zero]}>
+          <Filters />
+          {data}
+        </Stack>
+      </Permission>
+    </PagePreloader>
   );
 };
 

@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { useHistory } from 'react-router-dom';
 import initReplaceYear from '../middlewares/initReplaceYear';
-import { mappingInitData, savePdfFile } from '../helpers';
+import { mappingGetStatement, mappingInitData, savePdfFile } from '../helpers';
 import formStatement from '../middlewares/formStatement';
 import getStatement, { IRequestAttachment } from '../middlewares/getStatement';
-import receiveApplications, { IApplications } from '../middlewares/receiveApplications';
 import submitStatement from '../middlewares/submitStatement';
+
+export type LocalHistory = ReturnType<typeof useHistory>;
 
 export type ResetType = 'partial' | 'complete';
 
@@ -35,7 +37,7 @@ export interface GlobalState {
   statusApplication: STATUS_APPLICATION | undefined;
   accessApplication: ACCESS_APPLICATION | undefined;
   hasAlreadyOneMessage: string;
-  formStatementLoading: boolean;
+  date: string;
   paramsStatement: InitData;
   paramsAttachment: IRequestAttachment | undefined;
   isSigned: boolean;
@@ -43,22 +45,24 @@ export interface GlobalState {
   isHandSignature: boolean | undefined;
   pdfFileLoading: boolean;
   initLoading: boolean;
-  date: string;
+  formStatementLoading: boolean;
+  submitLoading: boolean;
 }
 
 const initialState: GlobalState = {
   statusApplication: undefined,
   accessApplication: undefined,
   hasAlreadyOneMessage: '',
-  initLoading: true,
-  formStatementLoading: false,
   paramsStatement: {} as InitData,
   statementAttachmentId: '',
   isHandSignature: undefined,
-  pdfFileLoading: false,
   paramsAttachment: undefined,
   isSigned: false,
   date: new Date().toLocaleDateString(),
+  initLoading: false,
+  pdfFileLoading: false,
+  formStatementLoading: false,
+  submitLoading: false,
 };
 
 export const globalStateSlice = createSlice({
@@ -102,6 +106,22 @@ export const globalStateSlice = createSlice({
       state.isHandSignature = undefined;
       state.isSigned = false;
     },
+    cancelSign: (state) => {
+      state.isSigned = false;
+    },
+    resetState: () => {
+      return initialState;
+    },
+    modalHandler: (state, action: PayloadAction<LocalHistory>) => {
+      if (state.statusApplication === STATUS_APPLICATION.Success) {
+        action.payload.push('/replaceyears/viewApplication');
+        return initialState;
+      }
+      if (state.statusApplication === STATUS_APPLICATION.Error) {
+        state.statusApplication = undefined;
+      }
+      return state;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(initReplaceYear.pending, (state) => {
@@ -131,11 +151,12 @@ export const globalStateSlice = createSlice({
     });
     builder.addCase(getStatement.fulfilled, (state, action) => {
       state.pdfFileLoading = false;
-      state.paramsAttachment = action.payload;
+      const mappedData = mappingGetStatement(action.payload);
+      state.paramsAttachment = mappedData;
       if (!state.isHandSignature) {
         return state;
       } else {
-        const { base64, fileName } = action.payload;
+        const { base64, fileName } = mappedData;
         if (base64 && fileName) {
           savePdfFile(base64, fileName);
         }
@@ -147,11 +168,16 @@ export const globalStateSlice = createSlice({
     builder.addCase(getStatement.rejected, (state) => {
       state.pdfFileLoading = false;
     });
+    builder.addCase(submitStatement.pending, (state) => {
+      state.submitLoading = true;
+    });
     builder.addCase(submitStatement.fulfilled, (state) => {
       state.statusApplication = STATUS_APPLICATION.Success;
+      state.submitLoading = false;
     });
     builder.addCase(submitStatement.rejected, (state) => {
       state.statusApplication = STATUS_APPLICATION.Error;
+      state.submitLoading = false;
     });
   },
 });
@@ -161,5 +187,7 @@ export const {
   attachFile,
   setAccessToApplication,
   resetStatementData,
+  cancelSign,
+  modalHandler,
 } = globalStateSlice.actions;
 export default globalStateSlice.reducer;

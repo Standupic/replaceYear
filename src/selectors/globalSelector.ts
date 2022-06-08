@@ -26,3 +26,5 @@ export const selectCurrentDate = (state: RootState) => state.globalState.date;
 
 export const selectIsSigned = (state: RootState) => state.globalState.isSigned;
 
+export const selectSubmitLoading = (state: RootState) => state.globalState.submitLoading;
+

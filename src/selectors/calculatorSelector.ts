@@ -101,7 +101,6 @@ export const selectPostData = createSelector(
       CurrentAmount: total,
       currency: 'RUB',
     };
-    console.log(params, 'params');
     if (attachmentId) {
       return {
         ...params,

@@ -5,14 +5,14 @@ import { ReactComponent as JackdawSuccessSVG } from '../../../assets/images/jack
 import { ReactComponent as CrossSVG } from '../../../assets/images/cross.svg';
 import './styles.sass';
 import {
-  resetStatementData,
-  setStatusApplication,
+  modalHandler,
   STATUS_APPLICATION,
 } from '../../../store/globalStateSlice';
 import { selectStatusApplication } from '../../../selectors/globalSelector';
 import { KEY_SPACING } from '../../styledComponents/constants';
 import { Center, Stack, Heading } from '../../styledComponents';
 import { Text } from './Modal-parts';
+import {useHistory} from "react-router-dom";
 
 const HeadingValues = {
   [STATUS_APPLICATION.Error]: 'Заявка не была исполнена',
@@ -33,6 +33,7 @@ const Images = {
 const ModalContainer: FC = () => {
   const statusApplication = useSelector(selectStatusApplication);
   const dispatch = useDispatch();
+  const history = useHistory();
   return (
     <>
       {statusApplication && (
@@ -40,8 +41,7 @@ const ModalContainer: FC = () => {
           size="s"
           header
           onClose={() => {
-            dispatch(setStatusApplication(undefined));
-            dispatch(resetStatementData());
+            dispatch(modalHandler(history));
           }}>
           <Center as={Stack} gutter={KEY_SPACING.lg} centerChildren>
             {Images[statusApplication]}
@@ -56,8 +56,7 @@ const ModalContainer: FC = () => {
             <Button
               fullWidth
               onClick={() => {
-                dispatch(setStatusApplication(undefined));
-                dispatch(resetStatementData());
+                dispatch(modalHandler(history));
               }}>
               Продолжить
             </Button>

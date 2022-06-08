@@ -7,7 +7,7 @@ import {
   selectParamsAttachment,
 } from '../../../selectors/globalSelector';
 import { IRequestAttachment } from '../../../middlewares/getStatement';
-import { attachFile, resetStatementData } from '../../../store/globalStateSlice';
+import { attachFile, cancelSign } from '../../../store/globalStateSlice';
 import { Card, Center } from '../../styledComponents';
 
 const ToApplySignification = () => {
@@ -36,7 +36,7 @@ const ToApplySignification = () => {
           }
         }}
         onSignCancel={() => {
-          dispatch(resetStatementData({ reset: 'partial' }));
+          dispatch(cancelSign());
         }}
         data={statement ? statement : ({} as IRequestAttachment)}
         hideButtons={['reject', 'rejectManual']}

@@ -11,6 +11,7 @@ import { InitData } from '../store/globalStateSlice';
 import { IApplications } from '../middlewares/receiveApplications';
 import { IApplicationMapped } from '../store/applicationsSlice';
 
+
 export const setDefaultHeadersRequest = (
   config: AxiosRequestConfig,
   options: Record<string, string>,
@@ -243,4 +244,22 @@ export const totalNotActiveYears = (items: IHelperList[]) => {
 
 export const getDelta = (active: number, notActive: number) => {
   return Number((active - notActive).toFixed(2));
+};
+
+export const mappingGetStatement = (data: any) => {
+  return data.attachments.reduce((acc: any, item: any) => {
+    return { ...acc, ...item };
+  }, {});
+};
+
+export const mappingGetApplication = (data: any) => {
+  return {
+    previousYear: data.CurrentYear1,
+    beforePreviousYear: data.CurrentYear2,
+    topActiveYear: data.NextYear1,
+    bottomActiveYear: data.NextYear2,
+    totalNotActive: data.CurrentAmount,
+    totalActive: data.NextAmount,
+    attachment: data.attachments[0],
+  };
 };

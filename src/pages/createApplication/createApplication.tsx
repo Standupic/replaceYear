@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from 'juicyfront';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { PadBox, Stack, StickyButton } from '../../components/styledComponents';
 import Permission from '../../components/Permission';
 import { KEY_SPACING } from '../../components/styledComponents/constants';
@@ -11,6 +12,7 @@ import {
   selectHasAlreadyOneMessage,
   selectIsSigned,
   selectParamsAttachment,
+  selectSubmitLoading,
 } from '../../selectors/globalSelector';
 import { selectDelta } from '../../selectors/calculatorSelector';
 import SwitcherToApply from '../../components/common/SwitcherToApply';
@@ -23,6 +25,7 @@ const createApplication = () => {
   const delta = useSelector(selectDelta);
   const paramsAttachment = useSelector(selectParamsAttachment);
   const isSigned = useSelector(selectIsSigned);
+  const submitLoading = useSelector(selectSubmitLoading);
   const dispatch = useDispatch();
   return (
     <Permission mode={'create'}>
@@ -40,6 +43,7 @@ const createApplication = () => {
       {!hasAlreadyOne && (
         <StickyButton>
           <Button
+            preloader={submitLoading}
             disabled={delta <= 0 || !isSigned}
             onClick={() => {
               dispatch(

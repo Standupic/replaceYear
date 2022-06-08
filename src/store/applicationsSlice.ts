@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Variant } from 'juicyfront/types';
 import receiveApplications, { IApplications } from '../middlewares/receiveApplications';
-import { mappingApplications } from '../helpers';
+import { mappingApplications, mappingGetApplication } from '../helpers';
+import getApplication, { IApplication } from '../middlewares/getApplication';
 
 export enum PERMISSION_APPLICATIONS {
   NoApplications = 'NoApplications',
+  SomeThingWrong = 'SomeThingWrong',
 }
 
 export interface IApplicationMapped {
@@ -21,6 +23,8 @@ export interface ApplicationsState {
   loading: boolean;
   error: undefined | string[];
   accessApplications: PERMISSION_APPLICATIONS | undefined;
+  viewApplication: IApplication;
+  guid: string | undefined;
 }
 
 const initialState: ApplicationsState = {
@@ -28,6 +32,8 @@ const initialState: ApplicationsState = {
   loading: false,
   error: undefined,
   accessApplications: undefined,
+  viewApplication: {} as IApplication,
+  guid: undefined,
 };
 
 const applicationsSlice = createSlice({
@@ -36,6 +42,9 @@ const applicationsSlice = createSlice({
   reducers: {
     searching: (state, action: PayloadAction<string>) => {
       console.log(state);
+    },
+    viewApplication: (state, action: PayloadAction<string>) => {
+      state.guid = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -53,8 +62,20 @@ const applicationsSlice = createSlice({
         }
       },
     );
+    builder.addCase(getApplication.fulfilled, (state, action: PayloadAction<IApplication>) => {
+      state.viewApplication = mappingGetApplication(action.payload);
+      state.loading = false;
+    });
+    builder.addCase(getApplication.rejected, (state) => {
+      state.loading = false;
+      state.accessApplications = PERMISSION_APPLICATIONS.SomeThingWrong;
+    });
+    builder.addCase(getApplication.pending, (state) => {
+      state.loading = true;
+    });
     builder.addCase(receiveApplications.rejected, (state) => {
       state.loading = false;
+      state.accessApplications = PERMISSION_APPLICATIONS.SomeThingWrong;
     });
   },
 });

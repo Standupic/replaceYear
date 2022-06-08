@@ -1,19 +1,19 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from '../api/interceptor';
+import { IRequestAttachment } from './getStatement';
 
-export interface IRequestAttachment {
-  id?: string;
-  attType?: string;
-  attTypeText?: string;
-  fileName: string;
-  base64: string;
-  action?: string;
-  singBase64?: string;
-  cert?: string;
+export interface IApplication {
+  previousYear: string;
+  beforePreviousYear: string;
+  topActiveYear: string;
+  bottomActiveYear: string;
+  totalNotActive: number;
+  totalActive: number;
+  attachment: IRequestAttachment;
 }
 
-const getStatement = createAsyncThunk<IRequestAttachment, any, { rejectValue: any }>(
-  'getStatement',
+const getApplication = createAsyncThunk<IApplication, any, { rejectValue: string }>(
+  'getApplication',
   async (id: string, api) => {
     try {
       const { data } = await Axios.get(
@@ -26,5 +26,4 @@ const getStatement = createAsyncThunk<IRequestAttachment, any, { rejectValue: an
   },
 );
 
-export default getStatement;
-export type IGetStatement = ReturnType<typeof getStatement>;
+export default getApplication;

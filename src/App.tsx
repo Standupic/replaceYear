@@ -9,8 +9,10 @@ import MainTittle from './components/common/MainTittle';
 import { Stack, Box } from './components/styledComponents';
 import EntryPoint from './components/common/EntryPoint';
 import useNotificationApp from './hooks/useNotificationApp';
+import AccessibleSection from './components/AccessibleSection';
 const Applications = React.lazy(() => import('./pages/applications'));
 const CreateApplication = React.lazy(() => import('./pages/createApplication'));
+const ViewApplication = React.lazy(() => import('./pages/ViewApplication'));
 
 const App = () => {
   useNotificationApp();
@@ -19,17 +21,22 @@ const App = () => {
     <Box width={'880px'}>
       <EntryPoint>
         <Stack>
-          <Box>
-            <MainTittle />
-          </Box>
-          <Box>
-            <NavigationTabs />
-          </Box>
+          <AccessibleSection notIncludes={['/replaceyears', '/replaceyears/applications']}>
+            <Box>
+              <MainTittle />
+            </Box>
+          </AccessibleSection>
+          <AccessibleSection notIncludes={['/replaceyears/viewApplication']}>
+            <Box>
+              <NavigationTabs />
+            </Box>
+          </AccessibleSection>
         </Stack>
         <Switch>
           <Suspense fallback={<Preloader />}>
             <Route path="/replaceyears" component={CreateApplication} exact />
             <Route path="/replaceyears/applications" component={Applications} />
+            <Route path="/replaceyears/application/:id" component={ViewApplication} />
           </Suspense>
         </Switch>
         <ModalContainer />
