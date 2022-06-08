@@ -20,18 +20,6 @@ const App = () => {
   return (
     <Box width={'880px'}>
       <EntryPoint>
-        <Stack>
-          <AccessibleSection notIncludes={['/replaceyears', '/replaceyears/applications']}>
-            <Box>
-              <MainTittle />
-            </Box>
-          </AccessibleSection>
-          <AccessibleSection notIncludes={['/replaceyears/viewApplication']}>
-            <Box>
-              <NavigationTabs />
-            </Box>
-          </AccessibleSection>
-        </Stack>
         <Switch>
           <Suspense fallback={<Preloader />}>
             <Route path="/replaceyears" component={CreateApplication} exact />

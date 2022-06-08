@@ -1,6 +1,4 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { Preloader } from 'juicyfront';
+import React, { FC } from 'react';
 import { Card, Split, Stack } from '../../styledComponents';
 import { Line, SumBox, YearsBox } from '../Calculator/calculator-parts';
 import { TotalBoxNotActive } from '../Calculator/TotalBox';
@@ -8,20 +6,24 @@ import { getCurrency } from '../../../helpers';
 import { KEY_SPACING } from '../../styledComponents/constants';
 import { YearNotActive } from '../Calculator/Years';
 import Hints from '../Hints';
-import {
-  selectViewApplication,
-} from '../../../selectors/applicationsSelector';
 
-const ViewApplicationCard = () => {
-  const viewApplication = useSelector(selectViewApplication);
-  const {
-    previousYear,
-    beforePreviousYear,
-    topActiveYear,
-    bottomActiveYear,
-    totalNotActive,
-    totalActive,
-  } = viewApplication;
+interface IProps {
+  previousYear: string;
+  beforePreviousYear: string;
+  topActiveYear: string;
+  bottomActiveYear: string;
+  totalNotActive: number;
+  totalActive: number;
+}
+
+const ViewApplicationCard: FC<IProps> = ({
+  previousYear,
+  beforePreviousYear,
+  topActiveYear,
+  bottomActiveYear,
+  totalNotActive,
+  totalActive,
+}) => {
   return (
     <Card>
       <Stack>
@@ -35,9 +37,9 @@ const ViewApplicationCard = () => {
             </SumBox>
             <YearsBox>
               <Stack gutter={KEY_SPACING.sm}>
-                <YearNotActive year={Number(previousYear)} />
+                <YearNotActive year={previousYear} />
                 <Line />
-                <YearNotActive year={Number(beforePreviousYear)} />
+                <YearNotActive year={beforePreviousYear} />
               </Stack>
             </YearsBox>
           </Stack>
@@ -50,9 +52,9 @@ const ViewApplicationCard = () => {
             </SumBox>
             <YearsBox>
               <Stack gutter={KEY_SPACING.sm}>
-                <YearNotActive year={Number(topActiveYear)} />
+                <YearNotActive year={topActiveYear} />
                 <Line />
-                <YearNotActive year={Number(bottomActiveYear)} />
+                <YearNotActive year={bottomActiveYear} />
               </Stack>
             </YearsBox>
           </Stack>

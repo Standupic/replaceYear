@@ -109,12 +109,9 @@ export const globalStateSlice = createSlice({
     cancelSign: (state) => {
       state.isSigned = false;
     },
-    resetState: () => {
-      return initialState;
-    },
-    modalHandler: (state, action: PayloadAction<LocalHistory>) => {
+    modalHandler: (state, action: PayloadAction<LocalHistory['push']>) => {
       if (state.statusApplication === STATUS_APPLICATION.Success) {
-        action.payload.push('/replaceyears/viewApplication');
+        action.payload('/replaceyears/applications');
         return initialState;
       }
       if (state.statusApplication === STATUS_APPLICATION.Error) {
@@ -186,7 +183,6 @@ export const {
   switchOnHasAlreadyOne,
   attachFile,
   setAccessToApplication,
-  resetStatementData,
   cancelSign,
   modalHandler,
 } = globalStateSlice.actions;

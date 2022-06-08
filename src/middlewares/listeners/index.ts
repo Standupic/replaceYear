@@ -87,23 +87,4 @@ listenerMiddleware.startListening({
   },
 });
 
-// listenerMiddleware.startListening({
-//   actionCreator: modalHandler,
-//   effect: async (_action, api) => {
-//     const store = api.getState() as RootState;
-//     if (state.statusApplication === STATUS_APPLICATION.Success) {
-//       return initialState;
-//     }
-//     console.log(store.globalState.statusApplication, 'listener');
-//   },
-// });
-
-listenerMiddleware.startListening({
-  type: 'submitStatement/fulfilled',
-  effect: async (action: any, api) => {
-    console.log(action.payload);
-    // api.dispatch(resetStatementData({ reset: 'complete' }));
-  },
-});
-
 export default listenerMiddleware;

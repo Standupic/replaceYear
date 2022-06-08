@@ -108,7 +108,7 @@ const YearActive: FC<IYearProps> = ({
 };
 
 interface IYearNotActiveProps {
-  year: number;
+  year: string;
 }
 
 const YearNotActive: FC<IYearNotActiveProps> = ({ year }) => {

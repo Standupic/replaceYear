@@ -1,18 +1,15 @@
 import { Modal, Button } from 'juicyfront';
 import React, { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { ReactComponent as JackdawSuccessSVG } from '../../../assets/images/jackdawSuccess.svg';
 import { ReactComponent as CrossSVG } from '../../../assets/images/cross.svg';
 import './styles.sass';
-import {
-  modalHandler,
-  STATUS_APPLICATION,
-} from '../../../store/globalStateSlice';
+import { modalHandler, STATUS_APPLICATION } from '../../../store/globalStateSlice';
 import { selectStatusApplication } from '../../../selectors/globalSelector';
 import { KEY_SPACING } from '../../styledComponents/constants';
 import { Center, Stack, Heading } from '../../styledComponents';
 import { Text } from './Modal-parts';
-import {useHistory} from "react-router-dom";
 
 const HeadingValues = {
   [STATUS_APPLICATION.Error]: 'Заявка не была исполнена',
@@ -34,6 +31,7 @@ const ModalContainer: FC = () => {
   const statusApplication = useSelector(selectStatusApplication);
   const dispatch = useDispatch();
   const history = useHistory();
+  const { push } = history;
   return (
     <>
       {statusApplication && (
@@ -41,7 +39,7 @@ const ModalContainer: FC = () => {
           size="s"
           header
           onClose={() => {
-            dispatch(modalHandler(history));
+            dispatch(modalHandler(push));
           }}>
           <Center as={Stack} gutter={KEY_SPACING.lg} centerChildren>
             {Images[statusApplication]}
@@ -56,7 +54,7 @@ const ModalContainer: FC = () => {
             <Button
               fullWidth
               onClick={() => {
-                dispatch(modalHandler(history));
+                dispatch(modalHandler(push));
               }}>
               Продолжить
             </Button>

@@ -80,5 +80,4 @@ const applicationsSlice = createSlice({
   },
 });
 
-// export const { changeName } = userSlice.actions;
 export default applicationsSlice.reducer;
