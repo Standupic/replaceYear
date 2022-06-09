@@ -30,6 +30,7 @@ Axios.interceptors.request.use((config: AxiosRequestConfig): AxiosRequestConfig 
       ['Cache-Control']: 'no-cache',
       ['Expires']: '-1',
       ['Authorization']: process.env.REACT_APP_ENV === 'dev' ? logins[ILogin.user] : '',
+      ['Content-Type']: 'application/json;odata.metadata=minimal;charset=utf-8',
     });
   }
   return config;

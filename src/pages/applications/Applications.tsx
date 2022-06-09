@@ -1,12 +1,12 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Box, PadBox, Stack } from '../../components/styledComponents';
+import { PadBox, Stack } from '../../components/styledComponents';
 import { KEY_SPACING } from '../../components/styledComponents/constants';
 import useReceiveApplications from '../../hooks/useRecieveApplications';
 import Permission from '../../components/Permission';
 import ApplicationCard from '../../components/common/ApplicationCard';
 import {
-  selectApplications,
+  selectGetApplications,
   selectLoadingApplications,
 } from '../../selectors/applicationsSelector';
 import { IApplicationMapped } from '../../store/applicationsSlice';
@@ -15,7 +15,7 @@ import PagePreloader from '../../components/common/PagePreloader';
 
 const Applications = () => {
   useReceiveApplications();
-  const applications = useSelector(selectApplications);
+  const applications = useSelector(selectGetApplications);
   const loadingApplication = useSelector(selectLoadingApplications);
   const data = applications?.map((item: IApplicationMapped) => {
     return (
@@ -27,6 +27,7 @@ const Applications = () => {
         statusText={item.statusText}
         title={item.title}
         date={item.date}
+        user={item.user}
       />
     );
   });

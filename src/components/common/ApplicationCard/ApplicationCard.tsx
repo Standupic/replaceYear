@@ -1,14 +1,11 @@
 import React, { FC } from 'react';
 import { Card } from 'juicyfront';
-import { useSelector } from 'react-redux';
 import { IUser } from 'juicyfront/types/projects.types';
 import { useHistory } from 'react-router-dom';
-import { selectUser } from '../../../selectors/userSelector';
 import { IApplicationMapped } from '../../../store/applicationsSlice';
 
 const ApplicationCard: FC<IApplicationMapped> = (props) => {
-  const user = useSelector(selectUser);
-  const { id, date, requestNumber, title, statusText, statusColor } = props;
+  const { id, date, requestNumber, title, statusText, statusColor, user } = props;
   const history = useHistory();
   return (
     <Card

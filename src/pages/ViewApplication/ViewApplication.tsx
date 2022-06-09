@@ -3,7 +3,7 @@ import { PDFViewer } from 'juicyfront';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import User from '../../components/common/User';
-import {Box, PadBox, Stack} from '../../components/styledComponents';
+import { PadBox, Stack } from '../../components/styledComponents';
 import { KEY_SPACING } from '../../components/styledComponents/constants';
 import {
   selectLoadingApplications,
@@ -11,9 +11,7 @@ import {
 } from '../../selectors/applicationsSelector';
 import ViewApplicationCard from '../../components/common/ViewApplicationCard';
 import PagePreloader from '../../components/common/PagePreloader/PagePreloader';
-import Permission from '../../components/Permission';
 import getApplication from '../../middlewares/getApplication';
-import MainTittle from "../../components/common/MainTittle";
 
 const ViewApplication = () => {
   const viewApplication = useSelector(selectViewApplication);

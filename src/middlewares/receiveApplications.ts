@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from '../api/interceptor';
+import {IUser} from "../types/user";
 
 export interface IApplications {
   CurrentAmount: number;
@@ -21,6 +22,7 @@ export interface IApplications {
   scenarioStage: string;
   statusId: string;
   statusText: string;
+  initiator: IUser;
 }
 
 const receiveApplications = createAsyncThunk<IApplications[], any, { rejectValue: any }>(
@@ -28,8 +30,7 @@ const receiveApplications = createAsyncThunk<IApplications[], any, { rejectValue
   async (_: {}, api) => {
     try {
       const applications = await Axios.get(
-        'sap/opu/odata4/sap/zhrxss/default/sap/zhrxss_0837_req_yrep/0001/IYearReplacement',
-        { headers: { 'Content-Type': 'application/json;odata.metadata=minimal;charset=utf-8' } },
+        'sap/opu/odata4/sap/zhrxss/default/sap/zhrxss_0837_req_yrep/0001/IYearReplacement?$expand=initiator',
       );
       return applications.data.value;
     } catch (e: any) {

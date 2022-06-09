@@ -3,6 +3,7 @@ import { Variant } from 'juicyfront/types';
 import receiveApplications, { IApplications } from '../middlewares/receiveApplications';
 import { mappingApplications, mappingGetApplication } from '../helpers';
 import getApplication, { IApplication } from '../middlewares/getApplication';
+import { IUser } from '../types/user';
 
 export enum PERMISSION_APPLICATIONS {
   NoApplications = 'NoApplications',
@@ -16,6 +17,7 @@ export interface IApplicationMapped {
   requestNumber: string;
   statusText: string;
   statusColor: Variant;
+  user: IUser;
 }
 
 export interface ApplicationsState {

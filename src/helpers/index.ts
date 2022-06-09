@@ -225,6 +225,7 @@ export const mappingApplications = (data: IApplications[]): IApplicationMapped[]
         requestNumber: `${item.reqId}`,
         statusText: `${item.statusText}`,
         statusColor: 'yellow',
+        user: item.initiator,
       },
     ];
   }, []);
