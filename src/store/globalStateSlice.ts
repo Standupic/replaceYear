@@ -128,9 +128,9 @@ export const globalStateSlice = createSlice({
       if (action.payload.message) {
         state.hasAlreadyOneMessage = action.payload.message;
       }
-      state.initLoading = false;
       state.paramsStatement = mappingInitData(action.payload);
       state.isHandSignature = action.payload.anotherEmployer;
+      state.initLoading = false;
     });
     builder.addCase(initReplaceYear.rejected, (state, action) => {
       state.accessApplication = action.payload;

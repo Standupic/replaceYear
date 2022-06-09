@@ -9,6 +9,7 @@ import HasAlreadyOne from '../../components/common/HasAlreadyOne/HasAlreadyOne';
 import {
   selectAttachmentId,
   selectHasAlreadyOneMessage,
+  selectInitLoading,
   selectIsSigned,
   selectParamsAttachment,
   selectSubmitLoading,
@@ -17,9 +18,8 @@ import { selectDelta } from '../../selectors/calculatorSelector';
 import SwitcherToApply from '../../components/common/SwitcherToApply';
 import User from '../../components/common/User';
 import submitStatement from '../../middlewares/submitStatement';
-import AccessibleSection from '../../components/AccessibleSection';
-import MainTittle from '../../components/common/MainTittle';
 import NavigationTabs from '../../components/common/NavigationTabs';
+import PagePreloader from '../../components/common/PagePreloader';
 
 const createApplication = () => {
   const hasAlreadyOne = useSelector(selectHasAlreadyOneMessage);
@@ -29,42 +29,43 @@ const createApplication = () => {
   const isSigned = useSelector(selectIsSigned);
   const submitLoading = useSelector(selectSubmitLoading);
   const dispatch = useDispatch();
+  const initLoading = useSelector(selectInitLoading);
   return (
-    <Permission mode={'create'}>
-      <Stack>
-        <Box>
-          <NavigationTabs />
-        </Box>
-      </Stack>
-      <Stack as={PadBox} padding={[KEY_SPACING.lg, KEY_SPACING.zero, KEY_SPACING.zero]}>
-        {hasAlreadyOne ? (
-          <HasAlreadyOne />
-        ) : (
-          <>
-            <User />
-            <Calculator />
-            <SwitcherToApply />
-          </>
+    <PagePreloader loader={initLoading}>
+      <Permission mode={'create'}>
+        <Stack as={PadBox} padding={[KEY_SPACING.lg, KEY_SPACING.zero, KEY_SPACING.zero]}>
+          {hasAlreadyOne ? (
+            <>
+              <User />
+              <HasAlreadyOne />
+            </>
+          ) : (
+            <>
+              <User />
+              <Calculator />
+              <SwitcherToApply />
+            </>
+          )}
+        </Stack>
+        {!hasAlreadyOne && (
+          <StickyButton>
+            <Button
+              preloader={submitLoading}
+              disabled={delta <= 0 || !isSigned}
+              onClick={() => {
+                dispatch(
+                  submitStatement({
+                    attachments: { ...paramsAttachment },
+                    id: attachmentId,
+                  }),
+                );
+              }}>
+              Отправить
+            </Button>
+          </StickyButton>
         )}
-      </Stack>
-      {!hasAlreadyOne && (
-        <StickyButton>
-          <Button
-            preloader={submitLoading}
-            disabled={delta <= 0 || !isSigned}
-            onClick={() => {
-              dispatch(
-                submitStatement({
-                  attachments: { ...paramsAttachment },
-                  id: attachmentId,
-                }),
-              );
-            }}>
-            Отправить
-          </Button>
-        </StickyButton>
-      )}
-    </Permission>
+      </Permission>
+    </PagePreloader>
   );
 };
 

@@ -19,6 +19,18 @@ const App = () => {
   useAuthorization();
   return (
     <Box width={'880px'}>
+      <Stack>
+        <AccessibleSection notIncludes={['/replaceyears/applications', '/replaceyears']}>
+          <Box>
+            <MainTittle />
+          </Box>
+        </AccessibleSection>
+        <AccessibleSection notIncludes={['/replaceyears/application/:id']}>
+          <Box>
+            <NavigationTabs />
+          </Box>
+        </AccessibleSection>
+      </Stack>
       <EntryPoint>
         <Switch>
           <Suspense fallback={<Preloader />}>

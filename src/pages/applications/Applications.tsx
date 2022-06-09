@@ -12,7 +12,6 @@ import {
 import { IApplicationMapped } from '../../store/applicationsSlice';
 import Filters from '../../components/common/Filters';
 import PagePreloader from '../../components/common/PagePreloader';
-import NavigationTabs from '../../components/common/NavigationTabs';
 
 const Applications = () => {
   useReceiveApplications();
@@ -35,9 +34,6 @@ const Applications = () => {
     <PagePreloader loader={loadingApplication}>
       <Permission mode={'applications'}>
         <Stack as={PadBox} padding={[KEY_SPACING.lg, KEY_SPACING.zero, KEY_SPACING.zero]}>
-          <Box>
-            <NavigationTabs />
-          </Box>
           <Filters />
           {data}
         </Stack>

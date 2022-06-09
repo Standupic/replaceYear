@@ -6,7 +6,6 @@ import { Box } from '../../styledComponents';
 const NavigationTabs = () => {
   const history = useHistory();
   const location = useLocation();
-  console.log(location);
   const data = useMemo(() => {
     return [
       {

@@ -37,9 +37,9 @@ const Calculator: FC = () => {
             </SumBox>
             <YearsBox>
               <Stack gutter={KEY_SPACING.sm}>
-                <YearNotActive year={previousYear} />
+                <YearNotActive year={String(previousYear)} />
                 <Line />
-                <YearNotActive year={beforePreviousYear} />
+                <YearNotActive year={String(beforePreviousYear)} />
               </Stack>
             </YearsBox>
           </Stack>
