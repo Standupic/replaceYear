@@ -3,6 +3,7 @@ import { RootState } from '../store';
 import {
   checkMostBenefitYear,
   controllerArrow,
+  getCurrency,
   getDelta,
   totalActiveYears,
   totalNotActiveYears,
@@ -98,7 +99,7 @@ export const selectPostData = createSelector(
       ...initData,
       NextYear1: top.value.toString(),
       NextYear2: bottom.value.toString(),
-      CurrentAmount: total,
+      CurrentAmount: getCurrency(total, { toNumber: true }),
       currency: 'RUB',
     };
     if (attachmentId) {

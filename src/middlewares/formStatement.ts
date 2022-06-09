@@ -25,7 +25,6 @@ const formStatement = createAsyncThunk<any, any, { rejectValue: any }>(
         'sap/opu/odata4/sap/zhrxss/default/sap/zhrxss_0837_req_yrep/0001/IYearReplacement',
         {
           ...data,
-          event: 'PRINT',
         },
         { headers: { 'Content-Type': 'application/json;odata.metadata=minimal;charset=utf-8' } },
       );

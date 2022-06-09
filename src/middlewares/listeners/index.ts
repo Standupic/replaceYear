@@ -2,7 +2,7 @@ import { createListenerMiddleware, isAnyOf } from '@reduxjs/toolkit';
 import initReplaceYear from '../initReplaceYear';
 import getHelperList from '../getHelperList';
 import {
-  checkIsThereMoreThanOneNotSelectableYear,
+  checkIsThereMoreThanOneNotSelectableYear, getCurrency,
   getDelta,
   totalActiveYears,
   totalNotActiveYears,
@@ -77,9 +77,10 @@ listenerMiddleware.startListening({
           ...store.globalState.paramsStatement,
           NextYear1: topActiveYear.value.toString(),
           NextYear2: bottomActiveYear.value.toString(),
-          CurrentAmount: totalActive,
+          CurrentAmount: getCurrency(totalActive, { toNumber: true }),
           currency: 'RUB',
           Id: statementAttachmentId,
+          event: '',
         };
         api.dispatch(formStatement(params));
       }

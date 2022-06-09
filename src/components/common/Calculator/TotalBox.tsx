@@ -10,7 +10,7 @@ import ReasonableBox from './Reasonable';
 
 interface IPropsTotalBox {
   tittle: string;
-  total: string;
+  total: string | number;
   diff?: number;
   isTheBest?: boolean;
 }

@@ -11,7 +11,6 @@ import { InitData } from '../store/globalStateSlice';
 import { IApplications } from '../middlewares/receiveApplications';
 import { IApplicationMapped } from '../store/applicationsSlice';
 
-
 export const setDefaultHeadersRequest = (
   config: AxiosRequestConfig,
   options: Record<string, string>,
@@ -32,8 +31,13 @@ export const domElementGetter = () => {
   return div;
 };
 
-export const getCurrency = (income: number) => {
-  if (income) return income.toLocaleString('ru-Ru', { style: 'currency', currency: 'RUB' });
+export const getCurrency = (income: number, options?: { toNumber: boolean }) => {
+  if (income) {
+    if (options && options.toNumber) {
+      return Number(income.toLocaleString('ru-Ru').replace(',', '.'));
+    }
+    return income.toLocaleString('ru-Ru', { style: 'currency', currency: 'RUB' });
+  }
   return '';
 };
 

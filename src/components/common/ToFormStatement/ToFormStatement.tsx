@@ -28,7 +28,7 @@ const ToFormStatement = () => {
             width={'32px'}
             disabled={delta <= 0}
             onClick={() => {
-              dispatch(formStatement(params));
+              dispatch(formStatement({ ...params, event: 'PRINT' }));
             }}>
             Сформировать
           </Button>

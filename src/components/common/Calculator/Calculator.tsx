@@ -33,7 +33,10 @@ const Calculator: FC = () => {
         <Split>
           <Stack>
             <SumBox>
-              <TotalBoxNotActive tittle={'До замены лет'} total={getCurrency(totalNotActiveYear)} />
+              <TotalBoxNotActive
+                tittle={'До замены лет'}
+                total={getCurrency(totalNotActiveYear) || 0}
+              />
             </SumBox>
             <YearsBox>
               <Stack gutter={KEY_SPACING.sm}>
@@ -47,7 +50,7 @@ const Calculator: FC = () => {
             <SumBox isActive>
               <TotalBoxActive
                 tittle={'После замены лет'}
-                total={getCurrency(total)}
+                total={getCurrency(total) || 0}
                 diff={diff}
                 isTheBest={isTheBest}
               />

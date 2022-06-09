@@ -32,7 +32,7 @@ const ViewApplicationCard: FC<IProps> = ({
             <SumBox>
               <TotalBoxNotActive
                 tittle={'До замены лет'}
-                total={getCurrency(totalNotActive / 730)}
+                total={getCurrency(totalNotActive / 730) || '0'}
               />
             </SumBox>
             <YearsBox>
@@ -47,7 +47,7 @@ const ViewApplicationCard: FC<IProps> = ({
             <SumBox>
               <TotalBoxNotActive
                 tittle={'После замены лет'}
-                total={getCurrency(totalActive / 730)}
+                total={getCurrency(totalActive / 730) || '0'}
               />
             </SumBox>
             <YearsBox>
