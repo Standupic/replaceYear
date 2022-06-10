@@ -64,6 +64,10 @@ const applicationsSlice = createSlice({
         }
       },
     );
+    builder.addCase(receiveApplications.rejected, (state) => {
+      state.loading = false;
+      state.accessApplications = PERMISSION_APPLICATIONS.SomeThingWrong;
+    });
     builder.addCase(getApplication.fulfilled, (state, action: PayloadAction<IApplication>) => {
       state.viewApplication = mappingGetApplication(action.payload);
       state.loading = false;
@@ -74,10 +78,6 @@ const applicationsSlice = createSlice({
     });
     builder.addCase(getApplication.pending, (state) => {
       state.loading = true;
-    });
-    builder.addCase(receiveApplications.rejected, (state) => {
-      state.loading = false;
-      state.accessApplications = PERMISSION_APPLICATIONS.SomeThingWrong;
     });
   },
 });

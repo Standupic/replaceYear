@@ -8,8 +8,6 @@ import submitStatement from '../middlewares/submitStatement';
 
 export type LocalHistory = ReturnType<typeof useHistory>;
 
-export type ResetType = 'partial' | 'complete';
-
 export enum STATUS_APPLICATION {
   Error = 'Error',
   Success = 'Success',
@@ -96,15 +94,6 @@ export const globalStateSlice = createSlice({
         };
       }
       state.isSigned = true;
-    },
-    resetStatementData: (state, action: PayloadAction<{ reset: ResetType }>) => {
-      if (action.payload.reset === 'complete') {
-        state.statementAttachmentId = '';
-        state.statusApplication = undefined;
-      }
-      state.paramsAttachment = undefined;
-      state.isHandSignature = undefined;
-      state.isSigned = false;
     },
     cancelSign: (state) => {
       state.isSigned = false;

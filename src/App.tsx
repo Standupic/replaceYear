@@ -14,29 +14,35 @@ const Applications = React.lazy(() => import('./pages/applications'));
 const CreateApplication = React.lazy(() => import('./pages/createApplication'));
 const ViewApplication = React.lazy(() => import('./pages/ViewApplication'));
 
+export enum IRoutes {
+  createApplication = '/replaceyears',
+  listApplications = '/replaceyears/applications',
+  viewApplication = '/replaceyears/application/:id',
+}
+
 const App = () => {
   useNotificationApp();
   useAuthorization();
   return (
     <Box width={'880px'}>
-      <Stack>
-        <AccessibleSection notIncludes={['/replaceyears/applications', '/replaceyears']}>
-          <Box>
-            <MainTittle />
-          </Box>
-        </AccessibleSection>
-        <AccessibleSection notIncludes={['/replaceyears/application/:id']}>
-          <Box>
-            <NavigationTabs />
-          </Box>
-        </AccessibleSection>
-      </Stack>
       <EntryPoint>
+        <Stack>
+          <AccessibleSection blackList={[IRoutes.listApplications, IRoutes.createApplication]}>
+            <Box>
+              <MainTittle />
+            </Box>
+          </AccessibleSection>
+          <AccessibleSection blackList={[IRoutes.viewApplication]}>
+            <Box>
+              <NavigationTabs />
+            </Box>
+          </AccessibleSection>
+        </Stack>
         <Switch>
           <Suspense fallback={<Preloader />}>
-            <Route path="/replaceyears" component={CreateApplication} exact />
-            <Route path="/replaceyears/applications" component={Applications} />
-            <Route path="/replaceyears/application/:id" component={ViewApplication} />
+            <Route path={IRoutes.createApplication} component={CreateApplication} exact />
+            <Route path={IRoutes.listApplications} component={Applications} />
+            <Route path={IRoutes.viewApplication} component={ViewApplication} />
           </Suspense>
         </Switch>
         <ModalContainer />
