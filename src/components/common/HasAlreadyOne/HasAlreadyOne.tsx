@@ -3,7 +3,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Card, Heading, Stack } from '../../styledComponents';
 import { selectHasAlreadyOneMessage } from '../../../selectors/globalSelector';
-import { switchOnHasAlreadyOne } from '../../../store/globalStateSlice';
+import { toggleHasAlreadyOne } from '../../../store/globalStateSlice';
 
 const HasAlreadyOne = () => {
   const hasAlreadyMessage = useSelector(selectHasAlreadyOneMessage);
@@ -22,7 +22,7 @@ const HasAlreadyOne = () => {
             size={'s'}
             width={'32px'}
             onClick={() => {
-              dispatch(switchOnHasAlreadyOne());
+              dispatch(toggleHasAlreadyOne());
             }}>
             Продолжить
           </Button>

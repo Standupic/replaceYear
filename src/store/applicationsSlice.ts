@@ -4,6 +4,9 @@ import receiveApplications, { IApplications } from '../middlewares/receiveApplic
 import { mappingApplications, mappingGetApplication } from '../helpers';
 import getApplication, { IApplication } from '../middlewares/getApplication';
 import { IUser } from '../types/user';
+import { IScenarioStage } from '../components/common/ApplicationCard/ApplicationCard';
+import searchingApplications from '../middlewares/searchingApplications';
+import { InitData } from './globalStateSlice';
 
 export enum PERMISSION_APPLICATIONS {
   NoApplications = 'NoApplications',
@@ -18,6 +21,8 @@ export interface IApplicationMapped {
   statusText: string;
   statusColor: Variant;
   user: IUser;
+  scenarioStage: IScenarioStage;
+  initData: InitData;
 }
 
 export interface ApplicationsState {
@@ -42,20 +47,47 @@ const applicationsSlice = createSlice({
   name: 'applications',
   initialState,
   reducers: {
-    searching: (state, action: PayloadAction<string>) => {
-      console.log(state);
-    },
-    viewApplication: (state, action: PayloadAction<string>) => {
+    viewApplication: (state: ApplicationsState, action: PayloadAction<string>) => {
       state.guid = action.payload;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(receiveApplications.pending, (state) => {
+    builder.addCase(receiveApplications.pending, (state: ApplicationsState) => {
       state.loading = true;
     });
     builder.addCase(
       receiveApplications.fulfilled,
-      (state, action: PayloadAction<IApplications[]>) => {
+      (state: ApplicationsState, action: PayloadAction<IApplications[]>) => {
+        state.loading = false;
+        if (action.payload.length) {
+          state.applications = mappingApplications(action.payload);
+          state.accessApplications = undefined;
+        } else {
+          state.accessApplications = PERMISSION_APPLICATIONS.NoApplications;
+        }
+      },
+    );
+    builder.addCase(receiveApplications.rejected, (state: ApplicationsState) => {
+      state.loading = false;
+      state.accessApplications = PERMISSION_APPLICATIONS.SomeThingWrong;
+    });
+    builder.addCase(
+      getApplication.fulfilled,
+      (state: ApplicationsState, action: PayloadAction<IApplication>) => {
+        state.viewApplication = mappingGetApplication(action.payload);
+        state.loading = false;
+      },
+    );
+    builder.addCase(getApplication.rejected, (state: ApplicationsState) => {
+      state.loading = false;
+      state.accessApplications = PERMISSION_APPLICATIONS.SomeThingWrong;
+    });
+    builder.addCase(getApplication.pending, (state: ApplicationsState) => {
+      state.loading = true;
+    });
+    builder.addCase(
+      searchingApplications.fulfilled,
+      (state: ApplicationsState, action: PayloadAction<IApplications[]>) => {
         state.loading = false;
         if (action.payload.length) {
           state.applications = mappingApplications(action.payload);
@@ -64,20 +96,11 @@ const applicationsSlice = createSlice({
         }
       },
     );
-    builder.addCase(receiveApplications.rejected, (state) => {
-      state.loading = false;
-      state.accessApplications = PERMISSION_APPLICATIONS.SomeThingWrong;
-    });
-    builder.addCase(getApplication.fulfilled, (state, action: PayloadAction<IApplication>) => {
-      state.viewApplication = mappingGetApplication(action.payload);
-      state.loading = false;
-    });
-    builder.addCase(getApplication.rejected, (state) => {
-      state.loading = false;
-      state.accessApplications = PERMISSION_APPLICATIONS.SomeThingWrong;
-    });
-    builder.addCase(getApplication.pending, (state) => {
+    builder.addCase(searchingApplications.pending, (state: ApplicationsState) => {
       state.loading = true;
+    });
+    builder.addCase(searchingApplications.rejected, (state: ApplicationsState) => {
+      state.loading = false;
     });
   },
 });

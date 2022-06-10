@@ -4,29 +4,25 @@ import { Card, Split, Stack } from '../../styledComponents';
 import { KEY_SPACING } from '../../styledComponents/constants';
 import {
   selectTotalNotActiveYears,
-  selectBottomYear,
-  selectTopYear,
   selectDataActiveYears,
   selectIncomeActiveYears,
-  selectPreviousYear,
-  selectBeforePreviousYear,
 } from '../../../selectors/calculatorSelector';
 import { getCurrency } from '../../../helpers';
 import { YEARS_KEY } from '../../../store/calculatorSlice';
 import Hints from '../Hints';
+import { RootState } from '../../../store';
 import { Line, SumBox, YearsBox } from './calculator-parts';
 import TotalBoxActive, { TotalBoxNotActive } from './TotalBox';
 import { YearActive, YearNotActive } from './Years';
 
 const Calculator: FC = () => {
+  const { topActiveYear, bottomActiveYear, previousYear, beforePreviousYear } = useSelector(
+    (state: RootState) => state.calculator,
+  );
   const totalNotActiveYear = useSelector(selectTotalNotActiveYears);
-  const topActiveYear = useSelector(selectTopYear);
-  const bottomActiveYear = useSelector(selectBottomYear);
   const dataActiveYears = useSelector(selectDataActiveYears);
   const { total, diff, isTheBest, controller } = dataActiveYears;
   const { topYearIncome, bottomYearIncome } = useSelector(selectIncomeActiveYears);
-  const previousYear = useSelector(selectPreviousYear);
-  const beforePreviousYear = useSelector(selectBeforePreviousYear);
   return (
     <Card>
       <Stack>

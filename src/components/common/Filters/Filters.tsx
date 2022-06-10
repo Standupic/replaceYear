@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { Card, Inline, Box } from '../../styledComponents';
 import { KEY_JUSTIFYING } from '../../styledComponents/constants';
 import searchingApplications from '../../../middlewares/searchingApplications';
+import receiveApplications from '../../../middlewares/receiveApplications';
 
 const Filters = () => {
   const dispatch = useDispatch();
@@ -20,7 +21,11 @@ const Filters = () => {
               startAdornment={<AllSearch />}
               placeholder={'ID, ФИО, TH'}
               onDebounce={(result) => {
-                dispatch(searchingApplications(result.debounceString));
+                if (!result.debounceString) {
+                  dispatch(receiveApplications({}));
+                } else {
+                  dispatch(searchingApplications(result.debounceString));
+                }
               }}
             />
           </Box>

@@ -1,21 +1,16 @@
 import { createListenerMiddleware, isAnyOf } from '@reduxjs/toolkit';
 import initReplaceYear from '../initReplaceYear';
 import getHelperList from '../getHelperList';
-import {
-  checkIsThereMoreThanOneNotSelectableYear, getCurrency,
-  getDelta,
-  totalActiveYears,
-  totalNotActiveYears,
-} from '../../helpers';
+import { checkIsThereMoreThanOneNotSelectableYear } from '../../helpers';
 import {
   ACCESS_APPLICATION,
   cancelSign,
   setAccessToApplication,
+  toggleIsVisibleFormStatement,
 } from '../../store/globalStateSlice';
 import { RootState } from '../../store';
 import getStatement from '../getStatement';
 import { decrementYear, incrementYear, toMostBenefit } from '../../store/calculatorSlice';
-import formStatement from '../formStatement';
 
 const listenerMiddleware = createListenerMiddleware();
 
@@ -56,6 +51,7 @@ listenerMiddleware.startListening({
 listenerMiddleware.startListening({
   type: 'formStatement/fulfilled',
   effect: async (action: any, api) => {
+    api.dispatch(toggleIsVisibleFormStatement(false));
     if (!action.payload.anotherEmployer) {
       api.dispatch(getStatement(action.payload.Id));
     }
@@ -67,23 +63,8 @@ listenerMiddleware.startListening({
   effect: async (_action: any, api) => {
     const store = api.getState() as RootState;
     const { statementAttachmentId } = store.globalState;
-    const { topActiveYear, bottomActiveYear, helperList, previousTwoYears } = store.calculator;
-    const totalActive = totalActiveYears(topActiveYear, bottomActiveYear, helperList);
-    const totalNotActive = totalNotActiveYears(previousTwoYears);
-    const delta = getDelta(totalActive, totalNotActive);
     if (statementAttachmentId) {
-      if (delta > 0) {
-        const params = {
-          ...store.globalState.paramsStatement,
-          NextYear1: topActiveYear.value.toString(),
-          NextYear2: bottomActiveYear.value.toString(),
-          CurrentAmount: getCurrency(totalActive, { toNumber: true }),
-          currency: 'RUB',
-          Id: statementAttachmentId,
-          event: '',
-        };
-        api.dispatch(formStatement(params));
-      }
+      api.dispatch(toggleIsVisibleFormStatement(true));
     }
   },
 });

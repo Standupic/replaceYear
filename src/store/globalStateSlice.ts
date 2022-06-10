@@ -5,6 +5,7 @@ import { mappingGetStatement, mappingInitData, savePdfFile } from '../helpers';
 import formStatement from '../middlewares/formStatement';
 import getStatement, { IRequestAttachment } from '../middlewares/getStatement';
 import submitStatement from '../middlewares/submitStatement';
+import { computingDraftApplication } from './calculatorSlice';
 
 export type LocalHistory = ReturnType<typeof useHistory>;
 
@@ -41,6 +42,7 @@ export interface GlobalState {
   isSigned: boolean;
   statementAttachmentId: string | false;
   isHandSignature: boolean | undefined;
+  isVisibleFormStatement: boolean;
   pdfFileLoading: boolean;
   initLoading: boolean;
   formStatementLoading: boolean;
@@ -57,6 +59,7 @@ const initialState: GlobalState = {
   paramsAttachment: undefined,
   isSigned: false,
   date: new Date().toLocaleDateString(),
+  isVisibleFormStatement: true,
   initLoading: false,
   pdfFileLoading: false,
   formStatementLoading: false,
@@ -76,8 +79,11 @@ export const globalStateSlice = createSlice({
     setAccessToApplication: (state: GlobalState, action: PayloadAction<ACCESS_APPLICATION>) => {
       state.accessApplication = action.payload;
     },
-    switchOnHasAlreadyOne: (state) => {
+    toggleHasAlreadyOne: (state) => {
       state.hasAlreadyOneMessage = '';
+    },
+    toggleIsVisibleFormStatement: (state: GlobalState, action: PayloadAction<boolean>) => {
+      state.isVisibleFormStatement = action.payload;
     },
     attachFile: (
       state,
@@ -95,10 +101,10 @@ export const globalStateSlice = createSlice({
       }
       state.isSigned = true;
     },
-    cancelSign: (state) => {
+    cancelSign: (state: GlobalState) => {
       state.isSigned = false;
     },
-    modalHandler: (state, action: PayloadAction<LocalHistory['push']>) => {
+    modalHandler: (state: GlobalState, action: PayloadAction<LocalHistory['push']>) => {
       if (state.statusApplication === STATUS_APPLICATION.Success) {
         action.payload('/replaceyears/applications');
         return initialState;
@@ -110,10 +116,10 @@ export const globalStateSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(initReplaceYear.pending, (state) => {
+    builder.addCase(initReplaceYear.pending, (state: GlobalState) => {
       state.initLoading = true;
     });
-    builder.addCase(initReplaceYear.fulfilled, (state, action) => {
+    builder.addCase(initReplaceYear.fulfilled, (state: GlobalState, action) => {
       if (action.payload.message) {
         state.hasAlreadyOneMessage = action.payload.message;
       }
@@ -121,21 +127,21 @@ export const globalStateSlice = createSlice({
       state.isHandSignature = action.payload.anotherEmployer;
       state.initLoading = false;
     });
-    builder.addCase(initReplaceYear.rejected, (state, action) => {
+    builder.addCase(initReplaceYear.rejected, (state: GlobalState, action) => {
       state.accessApplication = action.payload;
       state.initLoading = false;
     });
-    builder.addCase(formStatement.pending, (state) => {
+    builder.addCase(formStatement.pending, (state: GlobalState) => {
       state.formStatementLoading = true;
     });
-    builder.addCase(formStatement.fulfilled, (state, action) => {
+    builder.addCase(formStatement.fulfilled, (state: GlobalState, action) => {
       state.formStatementLoading = false;
       state.statementAttachmentId = action.payload.Id;
     });
-    builder.addCase(formStatement.rejected, (state) => {
+    builder.addCase(formStatement.rejected, (state: GlobalState) => {
       state.formStatementLoading = false;
     });
-    builder.addCase(getStatement.fulfilled, (state, action) => {
+    builder.addCase(getStatement.fulfilled, (state: GlobalState, action) => {
       state.pdfFileLoading = false;
       const mappedData = mappingGetStatement(action.payload);
       state.paramsAttachment = mappedData;
@@ -148,31 +154,40 @@ export const globalStateSlice = createSlice({
         }
       }
     });
-    builder.addCase(getStatement.pending, (state) => {
+    builder.addCase(getStatement.pending, (state: GlobalState) => {
       state.pdfFileLoading = true;
     });
-    builder.addCase(getStatement.rejected, (state) => {
+    builder.addCase(getStatement.rejected, (state: GlobalState) => {
       state.pdfFileLoading = false;
     });
-    builder.addCase(submitStatement.pending, (state) => {
+    builder.addCase(submitStatement.pending, (state: GlobalState) => {
       state.submitLoading = true;
     });
-    builder.addCase(submitStatement.fulfilled, (state) => {
+    builder.addCase(submitStatement.fulfilled, (state: GlobalState) => {
       state.statusApplication = STATUS_APPLICATION.Success;
       state.submitLoading = false;
     });
-    builder.addCase(submitStatement.rejected, (state) => {
+    builder.addCase(submitStatement.rejected, (state: GlobalState) => {
       state.statusApplication = STATUS_APPLICATION.Error;
       state.submitLoading = false;
     });
+    builder.addCase(
+      computingDraftApplication,
+      (state: GlobalState, action: PayloadAction<InitData & { id?: string }>) => {
+        if (action.payload.id) {
+          state.statementAttachmentId = action.payload.id;
+        }
+      },
+    );
   },
 });
 export const {
   setStatusApplication,
-  switchOnHasAlreadyOne,
+  toggleHasAlreadyOne,
   attachFile,
   setAccessToApplication,
   cancelSign,
   modalHandler,
+  toggleIsVisibleFormStatement,
 } = globalStateSlice.actions;
 export default globalStateSlice.reducer;

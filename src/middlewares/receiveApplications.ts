@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from '../api/interceptor';
-import {IUser} from "../types/user";
+import { IUser } from '../types/user';
 
 export interface IApplications {
   CurrentAmount: number;

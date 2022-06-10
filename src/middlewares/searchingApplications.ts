@@ -9,7 +9,6 @@ const searchingApplications = createAsyncThunk<any, any, { rejectValue: ACCESS_A
       const { data } = await Axios.get(
         `sap/opu/odata4/sap/zhrxss/default/sap/zhrxss_0837_req_yrep/0001/IYearReplacement?$search=${str}`,
       );
-      console.log(data);
       return data;
     } catch (e: any) {
       return api.rejectWithValue(e.response.data.error.details[0].message);

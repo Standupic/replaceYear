@@ -13,7 +13,6 @@ interface IReasonable {
 
 const ReasonableBox: FC<IReasonable> = ({ svg, text, handleToBenefit, isTheBest }) => {
   const dispatch = useDispatch();
-  console.log(isTheBest);
   return (
     <Reasonable
       onClick={() => {

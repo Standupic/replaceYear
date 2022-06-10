@@ -5,20 +5,13 @@ import { IFileData } from 'juicyfront/types';
 import { Box, Card, Heading, Stack, Inline } from '../../styledComponents';
 import { ReactComponent as DownLoadSVG } from '../../../assets/images/download.svg';
 import getStatement from '../../../middlewares/getStatement';
-import {
-  selectAttachmentId,
-  selectFormingApplicationLoading,
-  selectParamsAttachment,
-  selectPdfFileLoading,
-} from '../../../selectors/globalSelector';
 import { attachFile } from '../../../store/globalStateSlice';
+import { RootState } from '../../../store';
 
 const ToApplyManually = () => {
   const dispatch = useDispatch();
-  const attachmentId = useSelector(selectAttachmentId);
-  const pdfLoading = useSelector(selectPdfFileLoading);
-  const parasAttachment = useSelector(selectParamsAttachment);
-  const formingLoading = useSelector(selectFormingApplicationLoading);
+  const { statementAttachmentId, pdfFileLoading, paramsAttachment, formStatementLoading } =
+    useSelector((state: RootState) => state.globalState);
   const [isAttachable, setAttachable] = useState(false);
   return (
     <>
@@ -39,7 +32,7 @@ const ToApplyManually = () => {
               <Box>
                 <InputFile
                   buttonType="light"
-                  disabled={isAttachable || !parasAttachment}
+                  disabled={isAttachable || !paramsAttachment}
                   fullWidth={false}
                   name={'file'}
                   placeholder={'Прикрепить файл'}
@@ -55,8 +48,8 @@ const ToApplyManually = () => {
               </Box>
               <Button
                 buttonType={'outline'}
-                preloader={pdfLoading || formingLoading}
-                onClick={() => dispatch(getStatement(attachmentId))}
+                preloader={pdfFileLoading || formStatementLoading}
+                onClick={() => dispatch(getStatement(statementAttachmentId))}
                 startAdornment={<DownLoadSVG />}>
                 Шаблон заявления
               </Button>

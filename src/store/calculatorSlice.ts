@@ -2,14 +2,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import getHelperList from '../middlewares/getHelperList';
 import {
   checkIsThereNotSelectableYear,
-  getMostBenefitYear,
-  getMostBenefitYears,
+  computingOnlyOneYearActive,
+  computingTwoYearsActive,
   getPreviousTwoYears,
   mappingHelperList,
-  minMaxYear,
-  minMaxYears,
 } from '../helpers';
 import initReplaceYear from '../middlewares/initReplaceYear';
+import { InitData } from './globalStateSlice';
 
 export interface ITwoPreviousYears {
   previousYear: number;
@@ -50,7 +49,7 @@ export interface IHelperList {
   selectable: boolean;
 }
 
-interface CalculatorState {
+export interface CalculatorState {
   previousYear: number;
   beforePreviousYear: number;
   topActiveYear: IYear;
@@ -78,7 +77,7 @@ const calculatorSlice = createSlice({
   name: 'calculator',
   initialState,
   reducers: {
-    toMostBenefit: (state) => {
+    toMostBenefit: (state: CalculatorState) => {
       if (state.isOnlyOneYearActive) {
         if (!state.topActiveYear.isSelectable) {
           state.bottomActiveYear.value = state.mostBenefitYears[0].year;
@@ -91,7 +90,7 @@ const calculatorSlice = createSlice({
         state.bottomActiveYear.value = state.mostBenefitYears[1].year;
       }
     },
-    incrementYear: (state, action: PayloadAction<YEARS_KEY>) => {
+    incrementYear: (state: CalculatorState, action: PayloadAction<YEARS_KEY>) => {
       switch (action.payload) {
         case YEARS_KEY.topYear:
           if (
@@ -122,7 +121,7 @@ const calculatorSlice = createSlice({
           return state;
       }
     },
-    decrementYear: (state, action: PayloadAction<YEARS_KEY>) => {
+    decrementYear: (state: CalculatorState, action: PayloadAction<YEARS_KEY>) => {
       switch (action.payload) {
         case YEARS_KEY.topYear:
           if (
@@ -153,6 +152,27 @@ const calculatorSlice = createSlice({
           return state;
       }
     },
+    computingDraftApplication: (
+      state: CalculatorState,
+      action: PayloadAction<InitData & { id?: string }>,
+    ) => {
+      state.previousTwoYears = getPreviousTwoYears(mappingHelperList(state.helperList), {
+        previousYear: Number(action.payload.CurrentYear1),
+        beforePreviousYear: Number(action.payload.CurrentYear2),
+      });
+      const isThereNotSelectable = checkIsThereNotSelectableYear(state.helperList, {
+        previousYear: Number(action.payload.CurrentYear1),
+        beforePreviousYear: Number(action.payload.CurrentYear2),
+      });
+      if (isThereNotSelectable) {
+        console.log('Only one year in daft');
+        const { year, value } = isThereNotSelectable;
+        return computingOnlyOneYearActive(state, year, value);
+      } else {
+        console.log('Two active years in draft');
+        return computingTwoYearsActive(state);
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getHelperList.fulfilled, (state, action) => {
@@ -168,39 +188,11 @@ const calculatorSlice = createSlice({
       });
       if (isThereNotSelectable) {
         console.log('Only one year');
-        state.isOnlyOneYearActive = true;
-        const mostBenefitYear = getMostBenefitYear(action.payload, isThereNotSelectable.year);
-        if (mostBenefitYear.length) {
-          state.mostBenefitYears = mostBenefitYear;
-        }
-        state.minMaxYears = minMaxYear(action.payload);
-        switch (isThereNotSelectable.value) {
-          case YEARS_KEY.bottomYear:
-            state.bottomActiveYear.value = isThereNotSelectable.year;
-            state.bottomActiveYear.isSelectable = false;
-            state.topActiveYear.value = mostBenefitYear[0].year;
-            state.topActiveYear.stepLimitYear = state.minMaxYears.top.max - 2;
-            return state;
-          case YEARS_KEY.topYear:
-            state.topActiveYear.value = isThereNotSelectable.year;
-            state.topActiveYear.isSelectable = false;
-            state.bottomActiveYear.value = mostBenefitYear[0].year;
-            return state;
-          default:
-            return state;
-        }
+        const { year, value } = isThereNotSelectable;
+        return computingOnlyOneYearActive(state, year, value);
       } else {
         console.log('Two active years');
-        const theBestYears = getMostBenefitYears(mappingHelperList(action.payload), {
-          previousYear: state.previousYear,
-          beforePreviousYear: state.beforePreviousYear,
-        });
-        if (theBestYears.length) {
-          state.topActiveYear.value = theBestYears[0].year;
-          state.bottomActiveYear.value = theBestYears[1].year;
-        }
-        state.minMaxYears = minMaxYears(action.payload);
-        state.mostBenefitYears = theBestYears;
+        return computingTwoYearsActive(state);
       }
     });
     builder.addCase(initReplaceYear.fulfilled, (state, action) => {
@@ -209,5 +201,6 @@ const calculatorSlice = createSlice({
     });
   },
 });
-export const { incrementYear, decrementYear, toMostBenefit } = calculatorSlice.actions;
+export const { incrementYear, decrementYear, toMostBenefit, computingDraftApplication } =
+  calculatorSlice.actions;
 export default calculatorSlice.reducer;

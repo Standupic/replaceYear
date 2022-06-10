@@ -1,5 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import {
+  CalculatorState,
   IHelperList,
   IHelperListAPI,
   IMinMaxYear,
@@ -112,7 +113,7 @@ export const checkIsThereNotSelectableYear = (
       return {
         ...acc,
         year: item.year,
-        value: previousYear - item.year === 1 ? YEARS_KEY.topYear : YEARS_KEY.bottomYear,
+        value: previousYear - item.year === 1 ? YEARS_KEY.bottomYear : YEARS_KEY.topYear,
       };
     }, {});
   }
@@ -224,8 +225,18 @@ export const mappingApplications = (data: IApplications[]): IApplicationMapped[]
         ).getFullYear()} год`,
         requestNumber: `${item.reqId}`,
         statusText: `${item.statusText}`,
-        statusColor: 'yellow',
+        statusColor: item.statusId === '10' ? 'yellow' : 'blue',
         user: item.initiator,
+        scenarioStage: item.scenarioStage,
+        initData: {
+          reqId: item.reqId,
+          statusId: item.statusId,
+          CurrentYear1: item.CurrentYear1,
+          CurrentYear1Repl: item.CurrentYear1Repl,
+          CurrentYear2: item.CurrentYear2,
+          CurrentYear2Repl: item.CurrentYear2Repl,
+          CurrentAmount: item.CurrentAmount,
+        },
       },
     ];
   }, []);
@@ -266,5 +277,43 @@ export const mappingGetApplication = (data: any) => {
     totalNotActive: data.CurrentAmount,
     totalActive: data.NextAmount,
     attachment: data.attachments[0],
+    scenarioStage: data.scenarioStage,
   };
+};
+
+export const computingOnlyOneYearActive = (state: CalculatorState, year: number, value: string) => {
+  state.isOnlyOneYearActive = true;
+  const mostBenefitYear = getMostBenefitYear(state.helperList, year);
+  if (mostBenefitYear.length) {
+    state.mostBenefitYears = mostBenefitYear;
+  }
+  state.minMaxYears = minMaxYear(state.helperList);
+  switch (value) {
+    case YEARS_KEY.bottomYear:
+      state.bottomActiveYear.value = year;
+      state.bottomActiveYear.isSelectable = false;
+      state.topActiveYear.value = mostBenefitYear[0].year;
+      state.topActiveYear.stepLimitYear = state.minMaxYears.top.max - 2;
+      return state;
+    case YEARS_KEY.topYear:
+      state.topActiveYear.value = year;
+      state.topActiveYear.isSelectable = false;
+      state.bottomActiveYear.value = mostBenefitYear[0].year;
+      return state;
+    default:
+      return state;
+  }
+};
+
+export const computingTwoYearsActive = (state: CalculatorState) => {
+  const theBestYears = getMostBenefitYears(mappingHelperList(state.helperList), {
+    previousYear: state.previousYear,
+    beforePreviousYear: state.beforePreviousYear,
+  });
+  if (theBestYears.length) {
+    state.topActiveYear.value = theBestYears[0].year;
+    state.bottomActiveYear.value = theBestYears[1].year;
+  }
+  state.minMaxYears = minMaxYears(state.helperList);
+  state.mostBenefitYears = theBestYears;
 };

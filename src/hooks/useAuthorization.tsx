@@ -5,11 +5,7 @@ import authorization from '../middlewares/authorization';
 const useAuthorization = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    const promise = dispatch(authorization({}));
-    return () => {
-      // @ts-ignore
-      promise.abort();
-    };
+    dispatch(authorization({}));
   }, []);
 };
 

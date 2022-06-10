@@ -28,3 +28,5 @@ export const selectIsSigned = (state: RootState) => state.globalState.isSigned;
 
 export const selectSubmitLoading = (state: RootState) => state.globalState.submitLoading;
 
+export const selectIsVisibleFormStatement = (state: RootState) =>
+  state.globalState.isVisibleFormStatement;
