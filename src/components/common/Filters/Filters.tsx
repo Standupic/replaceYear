@@ -6,6 +6,7 @@ import { Card, Inline, Box } from '../../styledComponents';
 import { KEY_JUSTIFYING } from '../../styledComponents/constants';
 import searchingApplications from '../../../middlewares/searchingApplications';
 import receiveApplications from '../../../middlewares/receiveApplications';
+import { setFilterDate } from '../../../store/applicationsSlice';
 
 const Filters = () => {
   const dispatch = useDispatch();
@@ -17,7 +18,13 @@ const Filters = () => {
             range
             placeholder={'Выберите период'}
             onChange={(value) => {
-              console.log(value);
+              dispatch(
+                setFilterDate({
+                  from: value.timestamp.from,
+                  to: value.timestamp.to,
+                  value: value.value,
+                }),
+              );
             }}
           />
         </Box>

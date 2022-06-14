@@ -104,16 +104,8 @@ export const globalStateSlice = createSlice({
     cancelSign: (state: GlobalState) => {
       state.isSigned = false;
     },
-    modalHandler: (state: GlobalState, action: PayloadAction<LocalHistory['push']>) => {
-      if (state.statusApplication === STATUS_APPLICATION.Success) {
-        action.payload('/replaceyears/applications');
-        return initialState;
-      }
-      if (state.statusApplication === STATUS_APPLICATION.Error) {
-        state.statusApplication = undefined;
-        return initialState;
-      }
-      return state;
+    modalHandler: () => {
+      return initialState;
     },
   },
   extraReducers: (builder) => {

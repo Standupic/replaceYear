@@ -23,6 +23,7 @@ export interface IApplicationsMapped {
   user: IUser;
   scenarioStage: IScenarioStage;
   initData: InitData & { id?: string; topActiveYear: number; bottomActiveYear: number };
+  timeStamp: number;
 }
 
 export interface ApplicationsState {
@@ -32,6 +33,7 @@ export interface ApplicationsState {
   accessApplications: PERMISSION_APPLICATIONS | undefined;
   viewApplication: IApplication;
   guid: string | undefined;
+  filterDate: { from: number; to: number; value: string } | undefined;
 }
 
 const initialState: ApplicationsState = {
@@ -41,6 +43,7 @@ const initialState: ApplicationsState = {
   accessApplications: undefined,
   viewApplication: {} as IApplication,
   guid: undefined,
+  filterDate: undefined,
 };
 
 const applicationsSlice = createSlice({
@@ -49,6 +52,14 @@ const applicationsSlice = createSlice({
   reducers: {
     viewApplication: (state: ApplicationsState, action: PayloadAction<string>) => {
       state.guid = action.payload;
+    },
+    setFilterDate: (
+      state: ApplicationsState,
+      action: PayloadAction<{ from: number; to: number; value: string }>,
+    ) => {
+      if (action.payload) {
+        state.filterDate = action.payload;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -105,4 +116,5 @@ const applicationsSlice = createSlice({
   },
 });
 
+export const { setFilterDate } = applicationsSlice.actions;
 export default applicationsSlice.reducer;

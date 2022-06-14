@@ -17,8 +17,7 @@ const HeadingValues = {
 };
 
 const TextValues = {
-  [STATUS_APPLICATION.Error]:
-    'Табельный номер был блокирован пользователем Ивановым Иваном. Попробуйте создать заявку позже.',
+  [STATUS_APPLICATION.Error]: 'Произошла техническая проблема.',
   [STATUS_APPLICATION.Success]: 'Созданные заявки будут отображаться в раздел «Мои заявки»',
 };
 
@@ -39,7 +38,10 @@ const ModalContainer: FC = () => {
           size="s"
           header
           onClose={() => {
-            dispatch(modalHandler(push));
+            dispatch(modalHandler());
+            if (statusApplication === STATUS_APPLICATION.Success) {
+              history.push('replaceyears/applications');
+            }
           }}>
           <Center as={Stack} gutter={KEY_SPACING.lg} centerChildren>
             {Images[statusApplication]}
@@ -54,7 +56,10 @@ const ModalContainer: FC = () => {
             <Button
               fullWidth
               onClick={() => {
-                dispatch(modalHandler(push));
+                dispatch(modalHandler());
+                if (statusApplication === STATUS_APPLICATION.Success) {
+                  history.push('replaceyears/applications');
+                }
               }}>
               Продолжить
             </Button>

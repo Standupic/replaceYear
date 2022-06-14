@@ -9,10 +9,12 @@ import { IApplicationsMapped } from '../../store/applicationsSlice';
 import Filters from '../../components/common/Filters';
 import PagePreloader from '../../components/common/PagePreloader';
 import { RootState } from '../../store';
+import { selectFilteredDate } from '../../selectors/applicationsSelector';
 
 const Applications = () => {
   useReceiveApplications();
-  const { applications, loading } = useSelector((state: RootState) => state.applications);
+  const { loading } = useSelector((state: RootState) => state.applications);
+  const applications = useSelector(selectFilteredDate);
   const data = applications?.map((item: IApplicationsMapped) => {
     return (
       <ApplicationCard
@@ -26,6 +28,7 @@ const Applications = () => {
         user={item.user}
         scenarioStage={item.scenarioStage}
         initData={item.initData}
+        timeStamp={item.timeStamp}
       />
     );
   });

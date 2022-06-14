@@ -220,6 +220,7 @@ export const mappingApplications = (data: IApplications[]): IApplicationsMapped[
       {
         id: item.Id,
         date: new Date(item.createDateTime).toLocaleDateString(),
+        timeStamp: item.createDateTime,
         title: `Заявка на замену лет для расчёта больничного на ${new Date(
           item.createDateTime,
         ).getFullYear()} год`,
