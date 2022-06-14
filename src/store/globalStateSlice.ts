@@ -111,6 +111,7 @@ export const globalStateSlice = createSlice({
       }
       if (state.statusApplication === STATUS_APPLICATION.Error) {
         state.statusApplication = undefined;
+        return initialState;
       }
       return state;
     },

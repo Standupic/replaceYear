@@ -13,7 +13,7 @@ export enum PERMISSION_APPLICATIONS {
   SomeThingWrong = 'SomeThingWrong',
 }
 
-export interface IApplicationMapped {
+export interface IApplicationsMapped {
   id: string;
   date: string;
   title: string;
@@ -22,11 +22,11 @@ export interface IApplicationMapped {
   statusColor: Variant;
   user: IUser;
   scenarioStage: IScenarioStage;
-  initData: InitData;
+  initData: InitData & { id?: string; topActiveYear: number; bottomActiveYear: number };
 }
 
 export interface ApplicationsState {
-  applications: IApplicationMapped[] | undefined;
+  applications: IApplicationsMapped[] | undefined;
   loading: boolean;
   error: undefined | string[];
   accessApplications: PERMISSION_APPLICATIONS | undefined;

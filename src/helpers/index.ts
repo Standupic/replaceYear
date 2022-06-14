@@ -10,7 +10,7 @@ import {
 } from '../store/calculatorSlice';
 import { InitData } from '../store/globalStateSlice';
 import { IApplications } from '../middlewares/receiveApplications';
-import { IApplicationMapped } from '../store/applicationsSlice';
+import { IApplicationsMapped } from '../store/applicationsSlice';
 
 export const setDefaultHeadersRequest = (
   config: AxiosRequestConfig,
@@ -213,18 +213,18 @@ export const savePdfFile = (base64: string, fileName: string) => {
   a.click();
 };
 
-export const mappingApplications = (data: IApplications[]): IApplicationMapped[] => {
+export const mappingApplications = (data: IApplications[]): IApplicationsMapped[] => {
   return data?.reduce((acc: any, item) => {
     return [
       ...acc,
       {
-        id: `${item.Id}`,
+        id: item.Id,
         date: new Date(item.createDateTime).toLocaleDateString(),
         title: `Заявка на замену лет для расчёта больничного на ${new Date(
           item.createDateTime,
         ).getFullYear()} год`,
-        requestNumber: `${item.reqId}`,
-        statusText: `${item.statusText}`,
+        requestNumber: item.reqId,
+        statusText: item.statusText,
         statusColor: item.statusId === '10' ? 'yellow' : 'blue',
         user: item.initiator,
         scenarioStage: item.scenarioStage,
@@ -236,6 +236,9 @@ export const mappingApplications = (data: IApplications[]): IApplicationMapped[]
           CurrentYear2: item.CurrentYear2,
           CurrentYear2Repl: item.CurrentYear2Repl,
           CurrentAmount: item.CurrentAmount,
+          id: item.Id,
+          topActiveYear: Number(item.NextYear1),
+          bottomActiveYear: Number(item.NextYear2),
         },
       },
     ];
@@ -279,6 +282,55 @@ export const mappingGetApplication = (data: any) => {
     attachment: data.attachments[0],
     scenarioStage: data.scenarioStage,
   };
+};
+
+interface IComputingDraftProps {
+  notActiveYear: number;
+  notActiveYearValue: string;
+  topActiveYear: number;
+  bottomActiveYear: number;
+}
+
+export const computingDraftOnlyOneYearActive = (
+  state: CalculatorState,
+  params: IComputingDraftProps,
+) => {
+  const { notActiveYear, notActiveYearValue, topActiveYear, bottomActiveYear } = params;
+  state.isOnlyOneYearActive = true;
+  const mostBenefitYear = getMostBenefitYear(state.helperList, notActiveYear);
+  if (mostBenefitYear.length) {
+    state.mostBenefitYears = mostBenefitYear;
+  }
+  state.minMaxYears = minMaxYear(state.helperList);
+  switch (notActiveYearValue) {
+    case YEARS_KEY.bottomYear:
+      state.bottomActiveYear.value = notActiveYear;
+      state.bottomActiveYear.isSelectable = false;
+      state.topActiveYear.value = topActiveYear;
+      state.topActiveYear.stepLimitYear = state.minMaxYears.top.max - 2;
+      return state;
+    case YEARS_KEY.topYear:
+      state.topActiveYear.value = notActiveYear;
+      state.topActiveYear.isSelectable = false;
+      state.bottomActiveYear.value = bottomActiveYear;
+      return state;
+    default:
+      return state;
+  }
+};
+
+export const computingDraftTwoYearActive = (
+  state: CalculatorState,
+  params: Omit<IComputingDraftProps, 'notActiveYear' | 'notActiveYearValue'>,
+) => {
+  const { topActiveYear, bottomActiveYear } = params;
+  state.topActiveYear.value = topActiveYear;
+  state.bottomActiveYear.value = bottomActiveYear;
+  state.minMaxYears = minMaxYears(state.helperList);
+  state.mostBenefitYears = getMostBenefitYears(mappingHelperList(state.helperList), {
+    previousYear: state.previousYear,
+    beforePreviousYear: state.beforePreviousYear,
+  });
 };
 
 export const computingOnlyOneYearActive = (state: CalculatorState, year: number, value: string) => {

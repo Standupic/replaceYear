@@ -13,7 +13,13 @@ const Filters = () => {
     <Card>
       <Inline stretch={1}>
         <Box>
-          <Datepicker range placeholder={'Выберите период'} />
+          <Datepicker
+            range
+            placeholder={'Выберите период'}
+            onChange={(value) => {
+              console.log(value);
+            }}
+          />
         </Box>
         <Inline justify={KEY_JUSTIFYING.end}>
           <Box width={'280px'}>

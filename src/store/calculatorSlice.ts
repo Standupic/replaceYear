@@ -2,6 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import getHelperList from '../middlewares/getHelperList';
 import {
   checkIsThereNotSelectableYear,
+  computingDraftOnlyOneYearActive,
+  computingDraftTwoYearActive,
   computingOnlyOneYearActive,
   computingTwoYearsActive,
   getPreviousTwoYears,
@@ -154,7 +156,9 @@ const calculatorSlice = createSlice({
     },
     computingDraftApplication: (
       state: CalculatorState,
-      action: PayloadAction<InitData & { id?: string }>,
+      action: PayloadAction<
+        InitData & { id?: string; topActiveYear: number; bottomActiveYear: number }
+      >,
     ) => {
       state.previousTwoYears = getPreviousTwoYears(mappingHelperList(state.helperList), {
         previousYear: Number(action.payload.CurrentYear1),
@@ -164,13 +168,24 @@ const calculatorSlice = createSlice({
         previousYear: Number(action.payload.CurrentYear1),
         beforePreviousYear: Number(action.payload.CurrentYear2),
       });
+      const { topActiveYear, bottomActiveYear } = action.payload;
       if (isThereNotSelectable) {
         console.log('Only one year in daft');
         const { year, value } = isThereNotSelectable;
-        return computingOnlyOneYearActive(state, year, value);
+        const params = {
+          notActiveYear: year,
+          notActiveYearValue: value,
+          topActiveYear,
+          bottomActiveYear,
+        };
+        return computingDraftOnlyOneYearActive(state, params);
       } else {
         console.log('Two active years in draft');
-        return computingTwoYearsActive(state);
+        const params = {
+          topActiveYear,
+          bottomActiveYear,
+        };
+        return computingDraftTwoYearActive(state, params);
       }
     },
   },

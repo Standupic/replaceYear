@@ -12,7 +12,7 @@ import useNotificationApp from './hooks/useNotificationApp';
 import AccessibleSection from './components/AccessibleSection';
 const Applications = React.lazy(() => import('./pages/applications'));
 const CreateApplication = React.lazy(() => import('./pages/createApplication'));
-const ViewApplication = React.lazy(() => import('./pages/ViewApplication'));
+const ViewApplication = React.lazy(() => import('./pages/viewApplication'));
 
 export enum IRoutes {
   createApplication = '/replaceyears',

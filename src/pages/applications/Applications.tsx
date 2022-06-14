@@ -5,7 +5,7 @@ import { KEY_SPACING } from '../../components/styledComponents/constants';
 import useReceiveApplications from '../../hooks/useRecieveApplications';
 import Permission from '../../components/Permission';
 import ApplicationCard from '../../components/common/ApplicationCard';
-import { IApplicationMapped } from '../../store/applicationsSlice';
+import { IApplicationsMapped } from '../../store/applicationsSlice';
 import Filters from '../../components/common/Filters';
 import PagePreloader from '../../components/common/PagePreloader';
 import { RootState } from '../../store';
@@ -13,7 +13,7 @@ import { RootState } from '../../store';
 const Applications = () => {
   useReceiveApplications();
   const { applications, loading } = useSelector((state: RootState) => state.applications);
-  const data = applications?.map((item: IApplicationMapped) => {
+  const data = applications?.map((item: IApplicationsMapped) => {
     return (
       <ApplicationCard
         key={item.id}

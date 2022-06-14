@@ -3,12 +3,12 @@ import { Card } from 'juicyfront';
 import { IUser } from 'juicyfront/types/projects.types';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { IApplicationMapped } from '../../../store/applicationsSlice';
+import { IApplicationsMapped } from '../../../store/applicationsSlice';
 import { computingDraftApplication } from '../../../store/calculatorSlice';
 
 export type IScenarioStage = 'INIT' | 'DISPLAY';
 
-const ApplicationCard: FC<IApplicationMapped> = (props) => {
+const ApplicationCard: FC<IApplicationsMapped> = (props) => {
   const { id, date, requestNumber, title, statusText, statusColor, user, scenarioStage, initData } =
     props;
   const dispatch = useDispatch();
@@ -27,7 +27,7 @@ const ApplicationCard: FC<IApplicationMapped> = (props) => {
           history.push(`/replaceyears/application/${id}`);
         }
         if (scenarioStage === 'INIT') {
-          dispatch(computingDraftApplication({ ...initData, id: id }));
+          dispatch(computingDraftApplication(initData));
           history.push(`/replaceyears`);
         }
       }}
