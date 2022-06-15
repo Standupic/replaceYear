@@ -10,7 +10,7 @@ import {
 } from '../store/calculatorSlice';
 import { InitData } from '../store/globalStateSlice';
 import { IApplications } from '../middlewares/receiveApplications';
-import { IApplicationsMapped } from '../store/applicationsSlice';
+import { IApplicationMapped, IApplicationsMapped } from '../store/applicationsSlice';
 
 export const setDefaultHeadersRequest = (
   config: AxiosRequestConfig,
@@ -229,18 +229,6 @@ export const mappingApplications = (data: IApplications[]): IApplicationsMapped[
         statusColor: item.statusId === '10' ? 'yellow' : 'blue',
         user: item.initiator,
         scenarioStage: item.scenarioStage,
-        initData: {
-          reqId: item.reqId,
-          statusId: item.statusId,
-          CurrentYear1: item.CurrentYear1,
-          CurrentYear1Repl: item.CurrentYear1Repl,
-          CurrentYear2: item.CurrentYear2,
-          CurrentYear2Repl: item.CurrentYear2Repl,
-          CurrentAmount: item.CurrentAmount,
-          id: item.Id,
-          topActiveYear: Number(item.NextYear1),
-          bottomActiveYear: Number(item.NextYear2),
-        },
       },
     ];
   }, []);
@@ -272,7 +260,7 @@ export const mappingGetStatement = (data: any) => {
   }, {});
 };
 
-export const mappingGetApplication = (data: any) => {
+export const mappingGetApplication = (data: any): IApplicationMapped => {
   return {
     previousYear: data.CurrentYear1,
     beforePreviousYear: data.CurrentYear2,
@@ -282,6 +270,8 @@ export const mappingGetApplication = (data: any) => {
     totalActive: data.NextAmount,
     attachment: data.attachments[0],
     scenarioStage: data.scenarioStage,
+    id: data.Id,
+    timeStamp: data.createDateTime,
   };
 };
 

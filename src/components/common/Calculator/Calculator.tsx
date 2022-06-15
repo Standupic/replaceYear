@@ -1,28 +1,45 @@
 import React, { FC } from 'react';
-import { useSelector } from 'react-redux';
 import { Card, Split, Stack } from '../../styledComponents';
 import { KEY_SPACING } from '../../styledComponents/constants';
-import {
-  selectTotalNotActiveYears,
-  selectDataActiveYears,
-  selectIncomeActiveYears,
-} from '../../../selectors/calculatorSelector';
 import { getCurrency } from '../../../helpers';
-import { YEARS_KEY } from '../../../store/calculatorSlice';
+import { IYear, YEARS_KEY } from '../../../store/calculatorSlice';
 import Hints from '../Hints';
-import { RootState } from '../../../store';
 import { Line, SumBox, YearsBox } from './calculator-parts';
 import TotalBoxActive, { TotalBoxNotActive } from './TotalBox';
 import { YearActive, YearNotActive } from './Years';
 
-const Calculator: FC = () => {
-  const { topActiveYear, bottomActiveYear, previousYear, beforePreviousYear } = useSelector(
-    (state: RootState) => state.calculator,
-  );
-  const totalNotActiveYear = useSelector(selectTotalNotActiveYears);
-  const dataActiveYears = useSelector(selectDataActiveYears);
-  const { total, diff, isTheBest, controller } = dataActiveYears;
-  const { topYearIncome, bottomYearIncome } = useSelector(selectIncomeActiveYears);
+interface IController {
+  top: { left: boolean; right: boolean };
+  bottom: { left: boolean; right: boolean };
+}
+
+interface IProps {
+  topActiveYear: IYear;
+  bottomActiveYear: IYear;
+  previousYear: number;
+  beforePreviousYear: number;
+  totalNotActiveYear: number;
+  total: number;
+  diff: number;
+  isTheBest: boolean;
+  controller: IController;
+  topYearIncome: number;
+  bottomYearIncome: number;
+}
+
+const Calculator: FC<IProps> = ({
+  topActiveYear,
+  bottomActiveYear,
+  previousYear,
+  beforePreviousYear,
+  totalNotActiveYear,
+  total,
+  diff,
+  isTheBest,
+  controller,
+  topYearIncome,
+  bottomYearIncome,
+}) => {
   return (
     <Card>
       <Stack>

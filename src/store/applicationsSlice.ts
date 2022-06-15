@@ -2,15 +2,28 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Variant } from 'juicyfront/types';
 import receiveApplications, { IApplications } from '../middlewares/receiveApplications';
 import { mappingApplications, mappingGetApplication } from '../helpers';
-import getApplication, { IApplication } from '../middlewares/getApplication';
+import getApplication from '../middlewares/getApplication';
 import { IUser } from '../types/user';
 import { IScenarioStage } from '../components/common/ApplicationCard/ApplicationCard';
 import searchingApplications from '../middlewares/searchingApplications';
-import { InitData } from './globalStateSlice';
+import { IAttachment } from '../middlewares/getStatement';
 
 export enum PERMISSION_APPLICATIONS {
   NoApplications = 'NoApplications',
   SomeThingWrong = 'SomeThingWrong',
+}
+
+export interface IApplicationMapped {
+  previousYear: string;
+  beforePreviousYear: string;
+  topActiveYear: string;
+  bottomActiveYear: string;
+  totalNotActive: number;
+  totalActive: number;
+  attachment: IAttachment;
+  scenarioStage: string;
+  id: string;
+  timeStamp: number;
 }
 
 export interface IApplicationsMapped {
@@ -22,7 +35,6 @@ export interface IApplicationsMapped {
   statusColor: Variant;
   user: IUser;
   scenarioStage: IScenarioStage;
-  initData: InitData & { id?: string; topActiveYear: number; bottomActiveYear: number };
   timeStamp: number;
 }
 
@@ -31,8 +43,7 @@ export interface ApplicationsState {
   loading: boolean;
   error: undefined | string[];
   accessApplications: PERMISSION_APPLICATIONS | undefined;
-  viewApplication: IApplication;
-  guid: string | undefined;
+  currentApplication: IApplicationMapped;
   filterDate: { from: number; to: number; value: string } | undefined;
 }
 
@@ -41,8 +52,7 @@ const initialState: ApplicationsState = {
   loading: false,
   error: undefined,
   accessApplications: undefined,
-  viewApplication: {} as IApplication,
-  guid: undefined,
+  currentApplication: {} as IApplicationMapped,
   filterDate: undefined,
 };
 
@@ -50,9 +60,6 @@ const applicationsSlice = createSlice({
   name: 'applications',
   initialState,
   reducers: {
-    viewApplication: (state: ApplicationsState, action: PayloadAction<string>) => {
-      state.guid = action.payload;
-    },
     setFilterDate: (
       state: ApplicationsState,
       action: PayloadAction<{ from: number; to: number; value: string }>,
@@ -60,6 +67,9 @@ const applicationsSlice = createSlice({
       if (action.payload) {
         state.filterDate = action.payload;
       }
+    },
+    resetCurrentApplication: (state: ApplicationsState) => {
+      state.currentApplication = {} as IApplicationMapped;
     },
   },
   extraReducers: (builder) => {
@@ -84,8 +94,8 @@ const applicationsSlice = createSlice({
     });
     builder.addCase(
       getApplication.fulfilled,
-      (state: ApplicationsState, action: PayloadAction<IApplication>) => {
-        state.viewApplication = mappingGetApplication(action.payload);
+      (state: ApplicationsState, action: PayloadAction<any>) => {
+        state.currentApplication = mappingGetApplication(action.payload);
         state.loading = false;
       },
     );
@@ -116,5 +126,5 @@ const applicationsSlice = createSlice({
   },
 });
 
-export const { setFilterDate } = applicationsSlice.actions;
+export const { setFilterDate, resetCurrentApplication } = applicationsSlice.actions;
 export default applicationsSlice.reducer;

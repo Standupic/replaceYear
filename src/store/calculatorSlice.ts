@@ -11,6 +11,7 @@ import {
 } from '../helpers';
 import initReplaceYear from '../middlewares/initReplaceYear';
 import { InitData } from './globalStateSlice';
+import {IApplicationMapped} from "./applicationsSlice";
 
 export interface ITwoPreviousYears {
   previousYear: number;
@@ -156,17 +157,15 @@ const calculatorSlice = createSlice({
     },
     computingDraftApplication: (
       state: CalculatorState,
-      action: PayloadAction<
-        InitData & { id?: string; topActiveYear: number; bottomActiveYear: number }
-      >,
+      action: PayloadAction<IApplicationMapped>,
     ) => {
       state.previousTwoYears = getPreviousTwoYears(mappingHelperList(state.helperList), {
-        previousYear: Number(action.payload.CurrentYear1),
-        beforePreviousYear: Number(action.payload.CurrentYear2),
+        previousYear: Number(action.payload.previousYear),
+        beforePreviousYear: Number(action.payload.beforePreviousYear),
       });
       const isThereNotSelectable = checkIsThereNotSelectableYear(state.helperList, {
-        previousYear: Number(action.payload.CurrentYear1),
-        beforePreviousYear: Number(action.payload.CurrentYear2),
+        previousYear: Number(action.payload.topActiveYear),
+        beforePreviousYear: Number(action.payload.bottomActiveYear),
       });
       const { topActiveYear, bottomActiveYear } = action.payload;
       if (isThereNotSelectable) {
@@ -175,15 +174,15 @@ const calculatorSlice = createSlice({
         const params = {
           notActiveYear: year,
           notActiveYearValue: value,
-          topActiveYear,
-          bottomActiveYear,
+          topActiveYear: Number(topActiveYear),
+          bottomActiveYear: Number(bottomActiveYear),
         };
         return computingDraftOnlyOneYearActive(state, params);
       } else {
         console.log('Two active years in draft');
         const params = {
-          topActiveYear,
-          bottomActiveYear,
+          topActiveYear: Number(topActiveYear),
+          bottomActiveYear: Number(bottomActiveYear),
         };
         return computingDraftTwoYearActive(state, params);
       }

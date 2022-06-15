@@ -5,7 +5,6 @@ import ModalContainer from './components/common/Modal/Modal';
 import './index.scss';
 import useAuthorization from './hooks/useAuthorization';
 import NavigationTabs from './components/common/NavigationTabs';
-import MainTittle from './components/common/MainTittle';
 import { Stack, Box } from './components/styledComponents';
 import EntryPoint from './components/common/EntryPoint';
 import useNotificationApp from './hooks/useNotificationApp';
@@ -13,11 +12,13 @@ import AccessibleSection from './components/AccessibleSection';
 const Applications = React.lazy(() => import('./pages/applications'));
 const CreateApplication = React.lazy(() => import('./pages/createApplication'));
 const ViewApplication = React.lazy(() => import('./pages/viewApplication'));
+const DraftApplication = React.lazy(() => import('./pages/draftApplication'));
 
 export enum IRoutes {
   createApplication = '/replaceyears',
   listApplications = '/replaceyears/applications',
   viewApplication = '/replaceyears/application/:id',
+  draftApplication = '/replaceyears/draft/:id',
 }
 
 const App = () => {
@@ -27,12 +28,7 @@ const App = () => {
     <Box width={'880px'}>
       <EntryPoint>
         <Stack>
-          <AccessibleSection blackList={[IRoutes.listApplications, IRoutes.createApplication]}>
-            <Box>
-              <MainTittle />
-            </Box>
-          </AccessibleSection>
-          <AccessibleSection blackList={[IRoutes.viewApplication]}>
+          <AccessibleSection blackList={[IRoutes.viewApplication, IRoutes.draftApplication]}>
             <Box>
               <NavigationTabs />
             </Box>
@@ -43,6 +39,7 @@ const App = () => {
             <Route path={IRoutes.createApplication} component={CreateApplication} exact />
             <Route path={IRoutes.listApplications} component={Applications} />
             <Route path={IRoutes.viewApplication} component={ViewApplication} />
+            <Route path={IRoutes.draftApplication} component={DraftApplication} />
           </Suspense>
         </Switch>
         <ModalContainer />

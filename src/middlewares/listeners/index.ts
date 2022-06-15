@@ -10,7 +10,12 @@ import {
 } from '../../store/globalStateSlice';
 import { RootState } from '../../store';
 import getStatement from '../getStatement';
-import { decrementYear, incrementYear, toMostBenefit } from '../../store/calculatorSlice';
+import {
+  computingDraftApplication,
+  decrementYear,
+  incrementYear,
+  toMostBenefit,
+} from '../../store/calculatorSlice';
 
 const listenerMiddleware = createListenerMiddleware();
 
@@ -65,6 +70,16 @@ listenerMiddleware.startListening({
     const { statementAttachmentId } = store.globalState;
     if (statementAttachmentId) {
       api.dispatch(toggleIsVisibleFormStatement(true));
+    }
+  },
+});
+
+listenerMiddleware.startListening({
+  type: 'getApplication/fulfilled',
+  effect: async (action: any, api) => {
+    const store = api.getState() as RootState;
+    if (action.meta.arg.isDraft) {
+      api.dispatch(computingDraftApplication(store.applications.currentApplication));
     }
   },
 });

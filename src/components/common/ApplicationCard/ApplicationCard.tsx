@@ -9,9 +9,7 @@ import { computingDraftApplication } from '../../../store/calculatorSlice';
 export type IScenarioStage = 'INIT' | 'DISPLAY';
 
 const ApplicationCard: FC<IApplicationsMapped> = (props) => {
-  const { id, date, requestNumber, title, statusText, statusColor, user, scenarioStage, initData } =
-    props;
-  const dispatch = useDispatch();
+  const { id, date, requestNumber, title, statusText, statusColor, user, scenarioStage } = props;
   const history = useHistory();
   return (
     <Card
@@ -27,8 +25,7 @@ const ApplicationCard: FC<IApplicationsMapped> = (props) => {
           history.push(`/replaceyears/application/${id}`);
         }
         if (scenarioStage === 'INIT') {
-          dispatch(computingDraftApplication(initData));
-          history.push(`/replaceyears`);
+          history.push(`/replaceyears/draft/${id}`);
         }
       }}
     />

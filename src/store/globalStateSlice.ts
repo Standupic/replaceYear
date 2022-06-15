@@ -3,9 +3,10 @@ import { useHistory } from 'react-router-dom';
 import initReplaceYear from '../middlewares/initReplaceYear';
 import { mappingGetStatement, mappingInitData, savePdfFile } from '../helpers';
 import formStatement from '../middlewares/formStatement';
-import getStatement, { IRequestAttachment } from '../middlewares/getStatement';
+import getStatement, { IAttachment } from '../middlewares/getStatement';
 import submitStatement from '../middlewares/submitStatement';
 import { computingDraftApplication } from './calculatorSlice';
+import { IApplicationMapped } from './applicationsSlice';
 
 export type LocalHistory = ReturnType<typeof useHistory>;
 
@@ -38,7 +39,7 @@ export interface GlobalState {
   hasAlreadyOneMessage: string;
   date: string;
   paramsStatement: InitData;
-  paramsAttachment: IRequestAttachment | undefined;
+  paramsAttachment: IAttachment | undefined;
   isSigned: boolean;
   statementAttachmentId: string | false;
   isHandSignature: boolean | undefined;
@@ -166,7 +167,7 @@ export const globalStateSlice = createSlice({
     });
     builder.addCase(
       computingDraftApplication,
-      (state: GlobalState, action: PayloadAction<InitData & { id?: string }>) => {
+      (state: GlobalState, action: PayloadAction<IApplicationMapped>) => {
         if (action.payload.id) {
           state.statementAttachmentId = action.payload.id;
         }

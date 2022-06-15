@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from '../api/interceptor';
 
-export interface IRequestAttachment {
+export interface IAttachment {
   id?: string;
   attType?: string;
   attTypeText?: string;
@@ -12,7 +12,7 @@ export interface IRequestAttachment {
   cert?: string;
 }
 
-const getStatement = createAsyncThunk<IRequestAttachment, any, { rejectValue: any }>(
+const getStatement = createAsyncThunk<IAttachment, any, { rejectValue: any }>(
   'getStatement',
   async (id: string, api) => {
     try {

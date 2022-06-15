@@ -27,7 +27,6 @@ const Applications = () => {
         date={item.date}
         user={item.user}
         scenarioStage={item.scenarioStage}
-        initData={item.initData}
         timeStamp={item.timeStamp}
       />
     );
