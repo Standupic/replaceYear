@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { AllTrash } from 'juicyfront/indexIcon';
+import { useHistory } from 'react-router-dom';
 import PagePreloader from '../../components/common/PagePreloader';
 import { PadBox, Stack, StickyButton, Inline } from '../../components/styledComponents';
 import { KEY_SPACING } from '../../components/styledComponents/constants';
@@ -23,7 +24,6 @@ import { resetCurrentApplication } from '../../store/applicationsSlice';
 import MainTittle from '../../components/common/MainTittle';
 import DeleteButton from '../../components/styledComponents/DeleteButton/index.';
 import deleteDraft from '../../middlewares/deleteDraft';
-import {useHistory} from "react-router-dom";
 
 const DraftApplication = () => {
   const { statementAttachmentId, paramsAttachment, isSigned, submitLoading } = useSelector(
