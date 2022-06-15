@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from '../api/interceptor';
-import { IRequestAttachment } from './getStatement';
+import { IAttachment } from './getStatement';
 
 interface IPropsSubmit {
   attachments: ISubmitManually;
@@ -20,7 +20,7 @@ interface ISubmitManually {
   NextAmount: number;
   currency: string;
   event: string;
-  attachments: IRequestAttachment[];
+  attachments: IAttachment[];
 }
 
 const submitStatement = createAsyncThunk<any, any, { rejectValue: any }>(
@@ -34,7 +34,6 @@ const submitStatement = createAsyncThunk<any, any, { rejectValue: any }>(
           attachments: [props.attachments],
           event: 'IN_PROCESS',
         },
-        { headers: { 'Content-Type': 'application/json;odata.metadata=minimal;charset=utf-8' } },
       );
       return init.data;
     } catch (e: any) {

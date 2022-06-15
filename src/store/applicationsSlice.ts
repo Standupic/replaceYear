@@ -7,6 +7,7 @@ import { IUser } from '../types/user';
 import { IScenarioStage } from '../components/common/ApplicationCard/ApplicationCard';
 import searchingApplications from '../middlewares/searchingApplications';
 import { IAttachment } from '../middlewares/getStatement';
+import deleteDraft from '../middlewares/deleteDraft';
 
 export enum PERMISSION_APPLICATIONS {
   NoApplications = 'NoApplications',
@@ -121,6 +122,16 @@ const applicationsSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(searchingApplications.rejected, (state: ApplicationsState) => {
+      state.loading = false;
+    });
+    builder.addCase(deleteDraft.fulfilled, (state: ApplicationsState) => {
+      state.loading = false;
+      state.currentApplication = {} as IApplicationMapped;
+    });
+    builder.addCase(deleteDraft.pending, (state: ApplicationsState) => {
+      state.loading = true;
+    });
+    builder.addCase(deleteDraft.rejected, (state: ApplicationsState) => {
       state.loading = false;
     });
   },

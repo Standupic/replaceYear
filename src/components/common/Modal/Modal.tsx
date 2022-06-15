@@ -30,7 +30,6 @@ const ModalContainer: FC = () => {
   const statusApplication = useSelector(selectStatusApplication);
   const dispatch = useDispatch();
   const history = useHistory();
-  const { push } = history;
   return (
     <>
       {statusApplication && (

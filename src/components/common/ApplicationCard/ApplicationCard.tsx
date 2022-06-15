@@ -2,9 +2,7 @@ import React, { FC } from 'react';
 import { Card } from 'juicyfront';
 import { IUser } from 'juicyfront/types/projects.types';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { IApplicationsMapped } from '../../../store/applicationsSlice';
-import { computingDraftApplication } from '../../../store/calculatorSlice';
 
 export type IScenarioStage = 'INIT' | 'DISPLAY';
 

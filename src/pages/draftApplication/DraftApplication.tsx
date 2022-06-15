@@ -2,14 +2,16 @@ import { Button } from 'juicyfront';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
+import { AllTrash } from 'juicyfront/indexIcon';
 import PagePreloader from '../../components/common/PagePreloader';
-import { PadBox, Stack, StickyButton } from '../../components/styledComponents';
+import { PadBox, Stack, StickyButton, Inline } from '../../components/styledComponents';
 import { KEY_SPACING } from '../../components/styledComponents/constants';
 import User from '../../components/common/User';
 import Calculator from '../../components/common/Calculator/Calculator';
 import SwitcherToApply from '../../components/common/SwitcherToApply';
 import submitStatement from '../../middlewares/submitStatement';
 import { RootState } from '../../store';
+
 import {
   selectDataActiveYears,
   selectDelta,
@@ -19,10 +21,14 @@ import {
 import getApplication from '../../middlewares/getApplication';
 import { resetCurrentApplication } from '../../store/applicationsSlice';
 import MainTittle from '../../components/common/MainTittle';
+import DeleteButton from '../../components/styledComponents/DeleteButton/index.';
+import deleteDraft from '../../middlewares/deleteDraft';
+import {useHistory} from "react-router-dom";
 
 const DraftApplication = () => {
-  const { hasAlreadyOneMessage, statementAttachmentId, paramsAttachment, isSigned, submitLoading } =
-    useSelector((state: RootState) => state.globalState);
+  const { statementAttachmentId, paramsAttachment, isSigned, submitLoading } = useSelector(
+    (state: RootState) => state.globalState,
+  );
   const { loading, currentApplication } = useSelector((state: RootState) => state.applications);
   const { timeStamp } = currentApplication;
   const { topActiveYear, bottomActiveYear, previousYear, beforePreviousYear } = useSelector(
@@ -35,6 +41,7 @@ const DraftApplication = () => {
   const { total, diff, isTheBest, controller } = dataActiveYears;
   const { topYearIncome, bottomYearIncome } = useSelector(selectIncomeActiveYears);
   const params = useParams<{ id: string }>();
+  const history = useHistory();
   useEffect(() => {
     if (params && params.id) {
       dispatch(getApplication({ id: params.id, isDraft: true }));
@@ -69,10 +76,9 @@ const DraftApplication = () => {
           />
           <SwitcherToApply />
         </>
-        )
       </Stack>
-      {!hasAlreadyOneMessage && (
-        <StickyButton>
+      <StickyButton>
+        <Inline gutter={KEY_SPACING.sm}>
           <Button
             preloader={submitLoading}
             disabled={delta <= 0 || !isSigned}
@@ -86,8 +92,15 @@ const DraftApplication = () => {
             }}>
             Отправить
           </Button>
-        </StickyButton>
-      )}
+          <DeleteButton
+            onClick={() => {
+              dispatch(deleteDraft({ id: params.id }));
+              history.goBack();
+            }}>
+            <AllTrash color={'red'} />
+          </DeleteButton>
+        </Inline>
+      </StickyButton>
     </PagePreloader>
   );
 };
