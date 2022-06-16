@@ -17,16 +17,15 @@ import User from '../../components/common/User';
 import submitStatement from '../../middlewares/submitStatement';
 import PagePreloader from '../../components/common/PagePreloader';
 import { RootState } from '../../store';
-import initReplaceYear from '../../middlewares/initReplaceYear';
 
 const createApplication = () => {
   const {
-    hasAlreadyOneMessage,
     statementAttachmentId,
     paramsAttachment,
     isSigned,
     submitLoading,
     initLoading,
+    toContinue,
   } = useSelector((state: RootState) => state.globalState);
   const delta = useSelector(selectDelta);
   const dispatch = useDispatch();
@@ -37,19 +36,11 @@ const createApplication = () => {
   const dataActiveYears = useSelector(selectDataActiveYears);
   const { total, diff, isTheBest, controller } = dataActiveYears;
   const { topYearIncome, bottomYearIncome } = useSelector(selectIncomeActiveYears);
-  useEffect(() => {
-    dispatch(initReplaceYear({}));
-  }, []);
   return (
     <PagePreloader loader={initLoading}>
       <Permission mode={'create'}>
         <Stack as={PadBox} padding={[KEY_SPACING.lg, KEY_SPACING.zero, KEY_SPACING.zero]}>
-          {hasAlreadyOneMessage ? (
-            <>
-              <User />
-              <HasAlreadyOne />
-            </>
-          ) : (
+          {toContinue ? (
             <>
               <User />
               <Calculator
@@ -67,9 +58,14 @@ const createApplication = () => {
               />
               <SwitcherToApply />
             </>
+          ) : (
+            <>
+              <User />
+              <HasAlreadyOne />
+            </>
           )}
         </Stack>
-        {!hasAlreadyOneMessage && (
+        {toContinue && (
           <StickyButton>
             <Button
               preloader={submitLoading}

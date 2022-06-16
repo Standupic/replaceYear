@@ -5,7 +5,11 @@ import { useHistory } from 'react-router-dom';
 import { ReactComponent as JackdawSuccessSVG } from '../../../assets/images/jackdawSuccess.svg';
 import { ReactComponent as CrossSVG } from '../../../assets/images/cross.svg';
 import './styles.sass';
-import { modalHandler, STATUS_APPLICATION } from '../../../store/globalStateSlice';
+import {
+  modalHandler,
+  setStatusApplication,
+  STATUS_APPLICATION,
+} from '../../../store/globalStateSlice';
 import { selectStatusApplication } from '../../../selectors/globalSelector';
 import { KEY_SPACING } from '../../styledComponents/constants';
 import { Center, Stack, Heading } from '../../styledComponents';
@@ -26,22 +30,21 @@ const Images = {
   [STATUS_APPLICATION.Success]: <JackdawSuccessSVG />,
 };
 
-const ModalContainer: FC = () => {
+const ModalCreateApplication: FC = () => {
   const statusApplication = useSelector(selectStatusApplication);
   const dispatch = useDispatch();
   const history = useHistory();
+  const handlerClick = () => {
+    dispatch(modalHandler());
+    if (statusApplication === STATUS_APPLICATION.Success) {
+      history.goBack();
+    }
+    dispatch(setStatusApplication(undefined));
+  };
   return (
     <>
       {statusApplication && (
-        <Modal
-          size="s"
-          header
-          onClose={() => {
-            dispatch(modalHandler());
-            if (statusApplication === STATUS_APPLICATION.Success) {
-              history.push('replaceyears/applications');
-            }
-          }}>
+        <Modal size="s" header onClose={handlerClick}>
           <Center as={Stack} gutter={KEY_SPACING.lg} centerChildren>
             {Images[statusApplication]}
             <Center as={Stack} centerChildren gutter={KEY_SPACING.sm}>
@@ -52,14 +55,7 @@ const ModalContainer: FC = () => {
                 {TextValues[statusApplication]}
               </Text>
             </Center>
-            <Button
-              fullWidth
-              onClick={() => {
-                dispatch(modalHandler());
-                if (statusApplication === STATUS_APPLICATION.Success) {
-                  history.push('replaceyears/applications');
-                }
-              }}>
+            <Button fullWidth onClick={handlerClick}>
               Продолжить
             </Button>
           </Center>
@@ -69,4 +65,4 @@ const ModalContainer: FC = () => {
   );
 };
 
-export default ModalContainer;
+export default ModalCreateApplication;

@@ -2,11 +2,11 @@ import { Button, Hint } from 'juicyfront';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Card, Heading, Stack } from '../../styledComponents';
-import { selectHasAlreadyOneMessage } from '../../../selectors/globalSelector';
-import { toggleHasAlreadyOne } from '../../../store/globalStateSlice';
+import { toggleToContinue } from '../../../store/globalStateSlice';
+import { RootState } from '../../../store';
 
 const HasAlreadyOne = () => {
-  const hasAlreadyMessage = useSelector(selectHasAlreadyOneMessage);
+  const { hasAlreadyOneMessage } = useSelector((state: RootState) => state.globalState);
   const dispatch = useDispatch();
   return (
     <Card>
@@ -15,14 +15,14 @@ const HasAlreadyOne = () => {
           Заявление на замену лет
         </Heading>
         <Hint variant={'blue'} maxWidth={'100%'}>
-          {hasAlreadyMessage}
+          {hasAlreadyOneMessage}
         </Hint>
         <Box>
           <Button
             size={'s'}
             width={'32px'}
             onClick={() => {
-              dispatch(toggleHasAlreadyOne());
+              dispatch(toggleToContinue(true));
             }}>
             Продолжить
           </Button>

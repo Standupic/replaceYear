@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { useHistory } from 'react-router-dom';
 import initReplaceYear from '../middlewares/initReplaceYear';
 import { mappingGetStatement, mappingInitData, savePdfFile } from '../helpers';
 import formStatement from '../middlewares/formStatement';
@@ -7,8 +6,6 @@ import getStatement, { IAttachment } from '../middlewares/getStatement';
 import submitStatement from '../middlewares/submitStatement';
 import { computingDraftApplication } from './calculatorSlice';
 import { IApplicationMapped } from './applicationsSlice';
-
-export type LocalHistory = ReturnType<typeof useHistory>;
 
 export enum STATUS_APPLICATION {
   Error = 'Error',
@@ -44,6 +41,7 @@ export interface GlobalState {
   statementAttachmentId: string | false;
   isHandSignature: boolean | undefined;
   isVisibleFormStatement: boolean;
+  toContinue: boolean;
   pdfFileLoading: boolean;
   initLoading: boolean;
   formStatementLoading: boolean;
@@ -61,6 +59,7 @@ const initialState: GlobalState = {
   isSigned: false,
   date: new Date().toLocaleDateString(),
   isVisibleFormStatement: true,
+  toContinue: false,
   initLoading: false,
   pdfFileLoading: false,
   formStatementLoading: false,
@@ -80,8 +79,11 @@ export const globalStateSlice = createSlice({
     setAccessToApplication: (state: GlobalState, action: PayloadAction<ACCESS_APPLICATION>) => {
       state.accessApplication = action.payload;
     },
-    toggleHasAlreadyOne: (state) => {
-      state.hasAlreadyOneMessage = '';
+    resetStatementAttachmentId: (state: GlobalState) => {
+      state.statementAttachmentId = '';
+    },
+    toggleToContinue: (state: GlobalState, action: PayloadAction<boolean>) => {
+      state.toContinue = action.payload;
     },
     toggleIsVisibleFormStatement: (state: GlobalState, action: PayloadAction<boolean>) => {
       state.isVisibleFormStatement = action.payload;
@@ -105,7 +107,14 @@ export const globalStateSlice = createSlice({
     cancelSign: (state: GlobalState) => {
       state.isSigned = false;
     },
-    modalHandler: () => {
+    modalHandler: (state: GlobalState) => {
+      state.statementAttachmentId = '';
+      state.paramsAttachment = undefined;
+      state.isSigned = false;
+      state.isVisibleFormStatement = true;
+      state.toContinue = false;
+    },
+    reset: () => {
       return initialState;
     },
   },
@@ -177,11 +186,13 @@ export const globalStateSlice = createSlice({
 });
 export const {
   setStatusApplication,
-  toggleHasAlreadyOne,
+  toggleToContinue,
   attachFile,
   setAccessToApplication,
   cancelSign,
-  modalHandler,
   toggleIsVisibleFormStatement,
+  reset,
+  modalHandler,
+  resetStatementAttachmentId,
 } = globalStateSlice.actions;
 export default globalStateSlice.reducer;

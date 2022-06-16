@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react';
 import { Preloader } from 'juicyfront';
 import { Route, Switch } from 'react-router-dom';
-import ModalContainer from './components/common/Modal/Modal';
 import './index.scss';
 import useAuthorization from './hooks/useAuthorization';
 import NavigationTabs from './components/common/NavigationTabs';
@@ -9,6 +8,8 @@ import { Stack, Box } from './components/styledComponents';
 import EntryPoint from './components/common/EntryPoint';
 import useNotificationApp from './hooks/useNotificationApp';
 import AccessibleSection from './components/AccessibleSection';
+import useResetApp from './hooks/useResetApp';
+import ModalCreateApplication from './components/common/Modal/Modal';
 const Applications = React.lazy(() => import('./pages/applications'));
 const CreateApplication = React.lazy(() => import('./pages/createApplication'));
 const ViewApplication = React.lazy(() => import('./pages/viewApplication'));
@@ -24,6 +25,7 @@ export enum IRoutes {
 const App = () => {
   useNotificationApp();
   useAuthorization();
+  useResetApp();
   return (
     <Box width={'880px'}>
       <EntryPoint>
@@ -42,7 +44,7 @@ const App = () => {
             <Route path={IRoutes.draftApplication} component={DraftApplication} />
           </Suspense>
         </Switch>
-        <ModalContainer />
+        <ModalCreateApplication />
       </EntryPoint>
     </Box>
   );

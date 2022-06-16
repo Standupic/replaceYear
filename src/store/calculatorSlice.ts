@@ -10,8 +10,9 @@ import {
   mappingHelperList,
 } from '../helpers';
 import initReplaceYear from '../middlewares/initReplaceYear';
-import { InitData } from './globalStateSlice';
-import {IApplicationMapped} from "./applicationsSlice";
+import modal from '../components/common/Modal';
+import { InitData, modalHandler, reset } from './globalStateSlice';
+import { IApplicationMapped } from './applicationsSlice';
 
 export interface ITwoPreviousYears {
   previousYear: number;
@@ -212,6 +213,9 @@ const calculatorSlice = createSlice({
     builder.addCase(initReplaceYear.fulfilled, (state, action) => {
       state.previousYear = Number(action.payload.CurrentYear1);
       state.beforePreviousYear = Number(action.payload.CurrentYear2);
+    });
+    builder.addCase(reset, () => {
+      return initialState;
     });
   },
 });

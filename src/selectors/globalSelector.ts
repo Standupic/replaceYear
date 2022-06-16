@@ -4,11 +4,6 @@ export const selectStatusApplication = (state: RootState) => state.globalState.s
 
 export const selectAccessApplication = (state: RootState) => state.globalState.accessApplication;
 
-export const selectInitLoading = (state: RootState) => state.globalState.initLoading;
-
-export const selectHasAlreadyOneMessage = (state: RootState) =>
-  state.globalState.hasAlreadyOneMessage;
-
 export const selectParamsStatement = (state: RootState) => state.globalState.paramsStatement;
 
 export const selectFormingApplicationLoading = (state: RootState) =>

@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IUser } from 'juicyfront/types/projects.types';
 import authorization from '../middlewares/authorization';
 import getHelperList from '../middlewares/getHelperList';
+import { reset } from './globalStateSlice';
 
 export interface UserState {
   loading: boolean;
@@ -57,8 +58,10 @@ const userSlice = createSlice({
     builder.addCase(getHelperList.rejected, (state, action) => {
       state.error = action.payload;
     });
+    builder.addCase(reset, () => {
+      return initialState;
+    });
   },
 });
 
-// export const { changeName } = userSlice.actions;
 export default userSlice.reducer;

@@ -8,10 +8,16 @@ import { IScenarioStage } from '../components/common/ApplicationCard/Application
 import searchingApplications from '../middlewares/searchingApplications';
 import { IAttachment } from '../middlewares/getStatement';
 import deleteDraft from '../middlewares/deleteDraft';
+import { reset } from './globalStateSlice';
 
 export enum PERMISSION_APPLICATIONS {
   NoApplications = 'NoApplications',
   SomeThingWrong = 'SomeThingWrong',
+}
+
+export enum STATUS_DRAFT_APPLICATION {
+  Error = 'Error',
+  Success = 'Success',
 }
 
 export interface IApplicationMapped {
@@ -46,6 +52,7 @@ export interface ApplicationsState {
   accessApplications: PERMISSION_APPLICATIONS | undefined;
   currentApplication: IApplicationMapped;
   filterDate: { from: number; to: number; value: string } | undefined;
+  statusDraftApplication: STATUS_DRAFT_APPLICATION | undefined;
 }
 
 const initialState: ApplicationsState = {
@@ -55,6 +62,7 @@ const initialState: ApplicationsState = {
   accessApplications: undefined,
   currentApplication: {} as IApplicationMapped,
   filterDate: undefined,
+  statusDraftApplication: undefined,
 };
 
 const applicationsSlice = createSlice({
@@ -71,6 +79,12 @@ const applicationsSlice = createSlice({
     },
     resetCurrentApplication: (state: ApplicationsState) => {
       state.currentApplication = {} as IApplicationMapped;
+    },
+    setStatusDraftApplication: (
+      state: ApplicationsState,
+      action: PayloadAction<STATUS_DRAFT_APPLICATION | undefined>,
+    ) => {
+      state.statusDraftApplication = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -126,16 +140,20 @@ const applicationsSlice = createSlice({
     });
     builder.addCase(deleteDraft.fulfilled, (state: ApplicationsState) => {
       state.loading = false;
-      state.currentApplication = {} as IApplicationMapped;
+      state.statusDraftApplication = STATUS_DRAFT_APPLICATION.Success;
     });
     builder.addCase(deleteDraft.pending, (state: ApplicationsState) => {
       state.loading = true;
     });
     builder.addCase(deleteDraft.rejected, (state: ApplicationsState) => {
       state.loading = false;
+      state.statusDraftApplication = STATUS_DRAFT_APPLICATION.Error;
+    });
+    builder.addCase(reset, () => {
+      return initialState;
     });
   },
 });
 
-export const { setFilterDate, resetCurrentApplication } = applicationsSlice.actions;
+export const { setFilterDate, resetCurrentApplication, setStatusDraftApplication } = applicationsSlice.actions;
 export default applicationsSlice.reducer;

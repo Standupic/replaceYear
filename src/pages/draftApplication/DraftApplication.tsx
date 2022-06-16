@@ -24,6 +24,8 @@ import { resetCurrentApplication } from '../../store/applicationsSlice';
 import MainTittle from '../../components/common/MainTittle';
 import DeleteButton from '../../components/styledComponents/DeleteButton/index.';
 import deleteDraft from '../../middlewares/deleteDraft';
+import ModalDraft from '../../components/common/ModalDraft/ModalDraft';
+import {resetStatementAttachmentId} from "../../store/globalStateSlice";
 
 const DraftApplication = () => {
   const { statementAttachmentId, paramsAttachment, isSigned, submitLoading } = useSelector(
@@ -41,13 +43,13 @@ const DraftApplication = () => {
   const { total, diff, isTheBest, controller } = dataActiveYears;
   const { topYearIncome, bottomYearIncome } = useSelector(selectIncomeActiveYears);
   const params = useParams<{ id: string }>();
-  const history = useHistory();
   useEffect(() => {
     if (params && params.id) {
       dispatch(getApplication({ id: params.id, isDraft: true }));
     }
     return () => {
       dispatch(resetCurrentApplication());
+      dispatch(resetStatementAttachmentId());
     };
   }, [params, params.id, dispatch]);
 
@@ -95,12 +97,12 @@ const DraftApplication = () => {
           <DeleteButton
             onClick={() => {
               dispatch(deleteDraft({ id: params.id }));
-              history.goBack();
             }}>
             <AllTrash color={'red'} />
           </DeleteButton>
         </Inline>
       </StickyButton>
+      <ModalDraft />
     </PagePreloader>
   );
 };
