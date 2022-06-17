@@ -17,6 +17,7 @@ import User from '../../components/common/User';
 import submitStatement from '../../middlewares/submitStatement';
 import PagePreloader from '../../components/common/PagePreloader';
 import { RootState } from '../../store';
+import { toggleIsVisibleFormStatement } from '../../store/globalStateSlice';
 
 const createApplication = () => {
   const {
@@ -36,6 +37,11 @@ const createApplication = () => {
   const dataActiveYears = useSelector(selectDataActiveYears);
   const { total, diff, isTheBest, controller } = dataActiveYears;
   const { topYearIncome, bottomYearIncome } = useSelector(selectIncomeActiveYears);
+  useEffect(() => {
+    return () => {
+      dispatch(toggleIsVisibleFormStatement(true));
+    };
+  }, []);
   return (
     <PagePreloader loader={initLoading}>
       <Permission mode={'create'}>

@@ -7,6 +7,7 @@ import {
   cancelSign,
   setAccessToApplication,
   toggleIsVisibleFormStatement,
+  toggleToContinue,
 } from '../../store/globalStateSlice';
 import { RootState } from '../../store';
 import getStatement from '../getStatement';
@@ -28,8 +29,13 @@ listenerMiddleware.startListening({
 
 listenerMiddleware.startListening({
   type: 'initReplaceYear/fulfilled',
-  effect: async (_action, api) => {
+  effect: async (action: any, api) => {
     api.dispatch(getHelperList({}));
+    if (!action.payload.message) {
+      api.dispatch(toggleToContinue(true));
+    } else {
+      api.dispatch(toggleToContinue(false));
+    }
   },
 });
 

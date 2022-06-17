@@ -4,7 +4,7 @@ export const selectStatusApplication = (state: RootState) => state.globalState.s
 
 export const selectAccessApplication = (state: RootState) => state.globalState.accessApplication;
 
-export const selectParamsStatement = (state: RootState) => state.globalState.paramsStatement;
+// export const selectParamsStatement = (state: RootState) => state.globalState.paramsStatement;
 
 export const selectFormingApplicationLoading = (state: RootState) =>
   state.globalState.formStatementLoading;

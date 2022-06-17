@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import initReplaceYear from '../middlewares/initReplaceYear';
-import { mappingGetStatement, mappingInitData, savePdfFile } from '../helpers';
+import { mappingGetStatement, savePdfFile } from '../helpers';
 import formStatement from '../middlewares/formStatement';
 import getStatement, { IAttachment } from '../middlewares/getStatement';
 import submitStatement from '../middlewares/submitStatement';
@@ -35,7 +35,7 @@ export interface GlobalState {
   accessApplication: ACCESS_APPLICATION | undefined;
   hasAlreadyOneMessage: string;
   date: string;
-  paramsStatement: InitData;
+  // paramsStatement: InitData;
   paramsAttachment: IAttachment | undefined;
   isSigned: boolean;
   statementAttachmentId: string | false;
@@ -52,7 +52,7 @@ const initialState: GlobalState = {
   statusApplication: undefined,
   accessApplication: undefined,
   hasAlreadyOneMessage: '',
-  paramsStatement: {} as InitData,
+  // paramsStatement: {} as InitData,
   statementAttachmentId: '',
   isHandSignature: undefined,
   paramsAttachment: undefined,
@@ -92,16 +92,14 @@ export const globalStateSlice = createSlice({
       state,
       action: PayloadAction<{ base64: string; cert?: string; singBase64?: string }>,
     ) => {
-      if (state.paramsStatement) {
-        // @ts-ignore
-        state.paramsAttachment = {
-          ...state.paramsAttachment,
-          base64: action.payload.base64,
-          action: 'U',
-          cert: action.payload.cert,
-          singBase64: action.payload.singBase64,
-        };
-      }
+      // @ts-ignore
+      state.paramsAttachment = {
+        ...state.paramsAttachment,
+        base64: action.payload.base64,
+        action: 'U',
+        cert: action.payload.cert,
+        singBase64: action.payload.singBase64,
+      };
       state.isSigned = true;
     },
     cancelSign: (state: GlobalState) => {
@@ -126,7 +124,7 @@ export const globalStateSlice = createSlice({
       if (action.payload.message) {
         state.hasAlreadyOneMessage = action.payload.message;
       }
-      state.paramsStatement = mappingInitData(action.payload);
+      // state.paramsStatement = mappingInitData(action.payload);
       state.isHandSignature = action.payload.anotherEmployer;
       state.initLoading = false;
     });

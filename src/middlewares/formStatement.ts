@@ -26,7 +26,6 @@ const formStatement = createAsyncThunk<any, any, { rejectValue: any }>(
         {
           ...data,
         },
-        { headers: { 'Content-Type': 'application/json;odata.metadata=minimal;charset=utf-8' } },
       );
       return init.data;
     } catch (e: any) {

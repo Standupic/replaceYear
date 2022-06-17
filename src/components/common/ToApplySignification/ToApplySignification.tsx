@@ -6,7 +6,7 @@ import {
   selectFormingApplicationLoading,
   selectParamsAttachment,
 } from '../../../selectors/globalSelector';
-import { IRequestAttachment } from '../../../middlewares/getStatement';
+import { IAttachment } from '../../../middlewares/getStatement';
 import { attachFile, cancelSign } from '../../../store/globalStateSlice';
 import { Card, Center } from '../../styledComponents';
 
@@ -38,7 +38,7 @@ const ToApplySignification = () => {
         onSignCancel={() => {
           dispatch(cancelSign());
         }}
-        data={statement ? statement : ({} as IRequestAttachment)}
+        data={statement ? statement : ({} as IAttachment)}
         hideButtons={['reject', 'rejectManual']}
         title={`Заявление на замену лет для расчёта больничного от ${currentDate}`}
       />

@@ -25,7 +25,7 @@ import MainTittle from '../../components/common/MainTittle';
 import DeleteButton from '../../components/styledComponents/DeleteButton/index.';
 import deleteDraft from '../../middlewares/deleteDraft';
 import ModalDraft from '../../components/common/ModalDraft/ModalDraft';
-import {resetStatementAttachmentId} from "../../store/globalStateSlice";
+import { resetStatementAttachmentId } from '../../store/globalStateSlice';
 
 const DraftApplication = () => {
   const { statementAttachmentId, paramsAttachment, isSigned, submitLoading } = useSelector(

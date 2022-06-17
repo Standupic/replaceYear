@@ -3,12 +3,11 @@ import { RootState } from '../store';
 import {
   checkMostBenefitYear,
   controllerArrow,
-  getCurrency,
   getDelta,
   totalActiveYears,
   totalNotActiveYears,
 } from '../helpers';
-import { selectAttachmentId, selectParamsStatement } from './globalSelector';
+import { selectAttachmentId } from './globalSelector';
 
 export const selectHelperList = (state: RootState) => state.calculator.helperList;
 export const selectTopYear = (state: RootState) => state.calculator.topActiveYear;
@@ -91,16 +90,11 @@ export const selectIncomeActiveYears = createSelector(
 export const selectPostData = createSelector(
   selectTopYear,
   selectBottomYear,
-  selectTotalActiveYears,
-  selectParamsStatement,
   selectAttachmentId,
-  (top, bottom, total, initData, attachmentId) => {
+  (top, bottom, attachmentId) => {
     const params = {
-      ...initData,
       NextYear1: top.value.toString(),
       NextYear2: bottom.value.toString(),
-      CurrentAmount: getCurrency(total, { toNumber: true }),
-      currency: 'RUB',
     };
     if (attachmentId) {
       return {
