@@ -13,17 +13,7 @@ import { Card, Center } from '../../styledComponents';
 const ToApplySignification = () => {
   const statement = useSelector(selectParamsAttachment);
   const currentDate = useSelector(selectCurrentDate);
-  const formingLoading = useSelector(selectFormingApplicationLoading);
   const dispatch = useDispatch();
-  if (formingLoading) {
-    return (
-      <Card>
-        <Center>
-          <Preloader />
-        </Center>
-      </Card>
-    );
-  }
   return (
     <>
       <Signification

@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { AllTrash } from 'juicyfront/indexIcon';
-import { useHistory } from 'react-router-dom';
 import PagePreloader from '../../components/common/PagePreloader';
 import { PadBox, Stack, StickyButton, Inline } from '../../components/styledComponents';
 import { KEY_SPACING } from '../../components/styledComponents/constants';
@@ -25,7 +24,10 @@ import MainTittle from '../../components/common/MainTittle';
 import DeleteButton from '../../components/styledComponents/DeleteButton/index.';
 import deleteDraft from '../../middlewares/deleteDraft';
 import ModalDraft from '../../components/common/ModalDraft/ModalDraft';
-import { resetStatementAttachmentId } from '../../store/globalStateSlice';
+import {
+  resetStatementAttachmentId,
+  toggleIsVisibleFormStatement,
+} from '../../store/globalStateSlice';
 
 const DraftApplication = () => {
   const { statementAttachmentId, paramsAttachment, isSigned, submitLoading } = useSelector(
@@ -46,10 +48,12 @@ const DraftApplication = () => {
   useEffect(() => {
     if (params && params.id) {
       dispatch(getApplication({ id: params.id, isDraft: true }));
+      dispatch(toggleIsVisibleFormStatement(false));
     }
     return () => {
       dispatch(resetCurrentApplication());
       dispatch(resetStatementAttachmentId());
+      dispatch(toggleIsVisibleFormStatement(false));
     };
   }, [params, params.id, dispatch]);
 

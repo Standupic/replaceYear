@@ -5,11 +5,16 @@ import { KEY_SPACING } from '../../components/styledComponents/constants';
 import useReceiveApplications from '../../hooks/useRecieveApplications';
 import Permission from '../../components/Permission';
 import ApplicationCard from '../../components/common/ApplicationCard';
-import { IApplicationsMapped } from '../../store/applicationsSlice';
+import { IApplicationsMapped, PERMISSION_APPLICATIONS } from '../../store/applicationsSlice';
 import Filters from '../../components/common/Filters';
 import PagePreloader from '../../components/common/PagePreloader';
 import { RootState } from '../../store';
 import { selectFilteredDate } from '../../selectors/applicationsSelector';
+import SomethingWrong from '../../components/SomethingWrong';
+import {
+  HeadingValuesApplications,
+  TextValuesApplications,
+} from '../../components/Permission/Permission';
 
 const Applications = () => {
   useReceiveApplications();
@@ -35,7 +40,16 @@ const Applications = () => {
     <Stack as={PadBox} padding={[KEY_SPACING.lg, KEY_SPACING.zero, KEY_SPACING.zero]}>
       <Filters />
       <PagePreloader loader={loading}>
-        <Permission mode={'applications'}>{data}</Permission>
+        <Permission mode={'applications'}>
+          {data && data.length ? (
+            data
+          ) : (
+            <SomethingWrong
+              heading={HeadingValuesApplications[PERMISSION_APPLICATIONS.NoApplications]}
+              text={TextValuesApplications[PERMISSION_APPLICATIONS.NoApplications]}
+            />
+          )}
+        </Permission>
       </PagePreloader>
     </Stack>
   );

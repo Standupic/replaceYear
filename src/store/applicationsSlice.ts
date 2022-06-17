@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Variant } from 'juicyfront/types';
+import { IDateVariants } from 'juicyfront/types/projects.types';
 import receiveApplications, { IApplications } from '../middlewares/receiveApplications';
 import { mappingApplications, mappingGetApplication } from '../helpers';
 import getApplication from '../middlewares/getApplication';
@@ -8,6 +9,7 @@ import { IScenarioStage } from '../components/common/ApplicationCard/Application
 import searchingApplications from '../middlewares/searchingApplications';
 import { IAttachment } from '../middlewares/getStatement';
 import deleteDraft from '../middlewares/deleteDraft';
+import App from '../App';
 import { reset } from './globalStateSlice';
 
 export enum PERMISSION_APPLICATIONS {
@@ -86,6 +88,12 @@ const applicationsSlice = createSlice({
     ) => {
       state.statusDraftApplication = action.payload;
     },
+    setAccessApplications: (
+      state: ApplicationsState,
+      action: PayloadAction<PERMISSION_APPLICATIONS | undefined>,
+    ) => {
+      state.accessApplications = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(receiveApplications.pending, (state: ApplicationsState) => {
@@ -155,5 +163,10 @@ const applicationsSlice = createSlice({
   },
 });
 
-export const { setFilterDate, resetCurrentApplication, setStatusDraftApplication } = applicationsSlice.actions;
+export const {
+  setFilterDate,
+  resetCurrentApplication,
+  setStatusDraftApplication,
+  setAccessApplications,
+} = applicationsSlice.actions;
 export default applicationsSlice.reducer;

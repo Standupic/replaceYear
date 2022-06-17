@@ -282,6 +282,20 @@ interface IComputingDraftProps {
   bottomActiveYear: number;
 }
 
+export const computingDraftTwoYearActive = (
+  state: CalculatorState,
+  params: Omit<IComputingDraftProps, 'notActiveYear' | 'notActiveYearValue'>,
+) => {
+  const { topActiveYear, bottomActiveYear } = params;
+  state.topActiveYear.value = topActiveYear;
+  state.bottomActiveYear.value = bottomActiveYear;
+  state.minMaxYears = minMaxYears(state.helperList);
+  state.mostBenefitYears = getMostBenefitYears(mappingHelperList(state.helperList), {
+    previousYear: state.previousYear,
+    beforePreviousYear: state.beforePreviousYear,
+  });
+};
+
 export const computingDraftOnlyOneYearActive = (
   state: CalculatorState,
   params: IComputingDraftProps,
@@ -308,20 +322,6 @@ export const computingDraftOnlyOneYearActive = (
     default:
       return state;
   }
-};
-
-export const computingDraftTwoYearActive = (
-  state: CalculatorState,
-  params: Omit<IComputingDraftProps, 'notActiveYear' | 'notActiveYearValue'>,
-) => {
-  const { topActiveYear, bottomActiveYear } = params;
-  state.topActiveYear.value = topActiveYear;
-  state.bottomActiveYear.value = bottomActiveYear;
-  state.minMaxYears = minMaxYears(state.helperList);
-  state.mostBenefitYears = getMostBenefitYears(mappingHelperList(state.helperList), {
-    previousYear: state.previousYear,
-    beforePreviousYear: state.beforePreviousYear,
-  });
 };
 
 export const computingOnlyOneYearActive = (state: CalculatorState, year: number, value: string) => {

@@ -27,12 +27,12 @@ const TextValuesCreateApplication = {
     'Cервис получил данные, которые не овтечает условиям работы сервиса.',
 };
 
-const HeadingValuesApplications = {
+export const HeadingValuesApplications = {
   [PERMISSION_APPLICATIONS.NoApplications]: 'Заявки отсутствуют',
   [PERMISSION_APPLICATIONS.SomeThingWrong]: 'Что то не так!',
 };
 
-const TextValuesApplications = {
+export const TextValuesApplications = {
   [PERMISSION_APPLICATIONS.NoApplications]: '',
   [PERMISSION_APPLICATIONS.SomeThingWrong]: 'Попробуйте позже или обратитесь к в службу поддержки.',
 };

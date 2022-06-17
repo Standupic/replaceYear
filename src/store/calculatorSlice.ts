@@ -10,8 +10,7 @@ import {
   mappingHelperList,
 } from '../helpers';
 import initReplaceYear from '../middlewares/initReplaceYear';
-import modal from '../components/common/Modal';
-import { InitData, modalHandler, reset } from './globalStateSlice';
+import { reset } from './globalStateSlice';
 import { IApplicationMapped } from './applicationsSlice';
 
 export interface ITwoPreviousYears {
@@ -165,12 +164,12 @@ const calculatorSlice = createSlice({
         beforePreviousYear: Number(action.payload.beforePreviousYear),
       });
       const isThereNotSelectable = checkIsThereNotSelectableYear(state.helperList, {
-        previousYear: Number(action.payload.topActiveYear),
-        beforePreviousYear: Number(action.payload.bottomActiveYear),
+        previousYear: Number(action.payload.previousYear),
+        beforePreviousYear: Number(action.payload.beforePreviousYear),
       });
       const { topActiveYear, bottomActiveYear } = action.payload;
       if (isThereNotSelectable) {
-        console.log('Only one year in daft');
+        console.log('Only one year in draft');
         const { year, value } = isThereNotSelectable;
         const params = {
           notActiveYear: year,

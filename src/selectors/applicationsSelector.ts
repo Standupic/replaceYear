@@ -14,7 +14,11 @@ export const selectFilteredDate = createSelector(
     if (filterDate?.value && applications) {
       return applications.filter((item) => {
         if (filterDate) {
-          return item.timeStamp >= filterDate.from && item.timeStamp <= filterDate.to;
+          return (
+            (item.timeStamp >= filterDate.from && item.timeStamp <= filterDate.to) ||
+            item.date === new Date(filterDate.from).toLocaleDateString() ||
+            item.date === new Date(filterDate.to).toLocaleDateString()
+          );
         }
         return item;
       });

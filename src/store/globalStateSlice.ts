@@ -35,7 +35,6 @@ export interface GlobalState {
   accessApplication: ACCESS_APPLICATION | undefined;
   hasAlreadyOneMessage: string;
   date: string;
-  // paramsStatement: InitData;
   paramsAttachment: IAttachment | undefined;
   isSigned: boolean;
   statementAttachmentId: string | false;
@@ -52,7 +51,6 @@ const initialState: GlobalState = {
   statusApplication: undefined,
   accessApplication: undefined,
   hasAlreadyOneMessage: '',
-  // paramsStatement: {} as InitData,
   statementAttachmentId: '',
   isHandSignature: undefined,
   paramsAttachment: undefined,
@@ -123,7 +121,11 @@ export const globalStateSlice = createSlice({
     builder.addCase(initReplaceYear.fulfilled, (state: GlobalState, action) => {
       if (action.payload.message) {
         state.hasAlreadyOneMessage = action.payload.message;
+        state.toContinue = false;
+      } else {
+        state.toContinue = true;
       }
+
       // state.paramsStatement = mappingInitData(action.payload);
       state.isHandSignature = action.payload.anotherEmployer;
       state.initLoading = false;
@@ -177,6 +179,7 @@ export const globalStateSlice = createSlice({
       (state: GlobalState, action: PayloadAction<IApplicationMapped>) => {
         if (action.payload.id) {
           state.statementAttachmentId = action.payload.id;
+          state.paramsAttachment = action.payload.attachment;
         }
       },
     );

@@ -17,7 +17,7 @@ import User from '../../components/common/User';
 import submitStatement from '../../middlewares/submitStatement';
 import PagePreloader from '../../components/common/PagePreloader';
 import { RootState } from '../../store';
-import { toggleIsVisibleFormStatement } from '../../store/globalStateSlice';
+import { toggleIsVisibleFormStatement, toggleToContinue } from '../../store/globalStateSlice';
 
 const createApplication = () => {
   const {
@@ -27,6 +27,7 @@ const createApplication = () => {
     submitLoading,
     initLoading,
     toContinue,
+    hasAlreadyOneMessage,
   } = useSelector((state: RootState) => state.globalState);
   const delta = useSelector(selectDelta);
   const dispatch = useDispatch();
@@ -38,6 +39,9 @@ const createApplication = () => {
   const { total, diff, isTheBest, controller } = dataActiveYears;
   const { topYearIncome, bottomYearIncome } = useSelector(selectIncomeActiveYears);
   useEffect(() => {
+    if (hasAlreadyOneMessage) {
+      dispatch(toggleToContinue(false));
+    }
     return () => {
       dispatch(toggleIsVisibleFormStatement(true));
     };
