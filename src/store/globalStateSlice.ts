@@ -103,12 +103,12 @@ export const globalStateSlice = createSlice({
     cancelSign: (state: GlobalState) => {
       state.isSigned = false;
     },
-    modalHandler: (state: GlobalState) => {
+    modalHandlerSuccess: (state: GlobalState) => {
       state.statementAttachmentId = '';
       state.paramsAttachment = undefined;
       state.isSigned = false;
       state.isVisibleFormStatement = true;
-      state.toContinue = false;
+      // state.toContinue = false;
     },
     reset: () => {
       return initialState;
@@ -193,7 +193,7 @@ export const {
   cancelSign,
   toggleIsVisibleFormStatement,
   reset,
-  modalHandler,
+  modalHandlerSuccess,
   resetStatementAttachmentId,
 } = globalStateSlice.actions;
 export default globalStateSlice.reducer;

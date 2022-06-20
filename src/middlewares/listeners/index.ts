@@ -30,7 +30,7 @@ listenerMiddleware.startListening({
   type: 'initReplaceYear/fulfilled',
   effect: async (_action: any, api) => {
     api.dispatch(getHelperList({}));
-    api.unsubscribe();
+    // api.unsubscribe();
   },
 });
 
