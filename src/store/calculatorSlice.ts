@@ -187,6 +187,9 @@ const calculatorSlice = createSlice({
         return computingDraftTwoYearActive(state, params);
       }
     },
+    // computingApplication: (state:CalculatorState,action: PayloadAction<IApplicationMapped> ) => {
+    //  
+    // },
   },
   extraReducers: (builder) => {
     builder.addCase(getHelperList.fulfilled, (state, action) => {

@@ -125,8 +125,6 @@ export const globalStateSlice = createSlice({
       } else {
         state.toContinue = true;
       }
-
-      // state.paramsStatement = mappingInitData(action.payload);
       state.isHandSignature = action.payload.anotherEmployer;
       state.initLoading = false;
     });

@@ -17,13 +17,13 @@ Axios.interceptors.request.use((config: AxiosRequestConfig): AxiosRequestConfig 
       return config;
     }
 
-    const CSRF = sessionStorage.getItem(INTERSAPTION.CSRF);
-    if (CSRF && CSRF !== 'undefined') {
-      config.headers['x-csrf-token'] = CSRF;
-    }
-
     if (config.url) {
       config.url = process.env.REACT_APP_HOST + config.url;
+      const requestToken = config.url.includes('IXCSRFToken');
+      const CSRF = sessionStorage.getItem(INTERSAPTION.CSRF);
+      if (CSRF && CSRF !== 'undefined' && !requestToken) {
+        config.headers['x-csrf-token'] = CSRF;
+      }
     }
     setDefaultHeadersRequest(config, {
       ['Accept-Language']: 'ru-RU, ru;q=0.9, en-US;q=0.8, en',

@@ -1,4 +1,4 @@
-import { createListenerMiddleware, isAnyOf } from '@reduxjs/toolkit';
+import { createListenerMiddleware, isAnyOf, isFulfilled } from '@reduxjs/toolkit';
 import initReplaceYear from '../initReplaceYear';
 import getHelperList from '../getHelperList';
 import { checkIsThereMoreThanOneNotSelectableYear } from '../../helpers';
@@ -16,27 +16,32 @@ import {
   incrementYear,
   toMostBenefit,
 } from '../../store/calculatorSlice';
+import authorization from '../authorization';
+import formStatement from '../formStatement';
+import getApplication from '../getApplication';
+import submitStatement from '../submitStatement';
+import deleteDraft from '../deleteDraft';
 
 const listenerMiddleware = createListenerMiddleware();
 
 listenerMiddleware.startListening({
-  type: 'authorization/fulfilled',
+  matcher: isFulfilled(authorization),
   effect: async (_action, api) => {
     api.dispatch(initReplaceYear({}));
   },
 });
 
 listenerMiddleware.startListening({
-  type: 'initReplaceYear/fulfilled',
-  effect: async (_action: any, api) => {
+  matcher: isFulfilled(initReplaceYear),
+  effect: async (_action, api) => {
     api.dispatch(getHelperList({}));
     api.unsubscribe();
   },
 });
 
 listenerMiddleware.startListening({
-  type: 'helperList/fulfilled',
-  effect: async (action: any, api) => {
+  matcher: isFulfilled(getHelperList),
+  effect: async (action, api) => {
     const store = api.getState() as RootState;
     const twoPreviousYears = {
       previousYear: store.calculator.previousYear,
@@ -55,8 +60,8 @@ listenerMiddleware.startListening({
 
 // Взять данные заявление под копотом если подписываем заявление в ручную. Формуруем -> под копотом берем даныые файла.
 listenerMiddleware.startListening({
-  type: 'formStatement/fulfilled',
-  effect: async (action: any, api) => {
+  matcher: isFulfilled(formStatement),
+  effect: async (action, api) => {
     api.dispatch(toggleIsVisibleFormStatement(false));
     if (!action.payload.anotherEmployer) {
       api.dispatch(getStatement(action.payload.Id));
@@ -66,7 +71,7 @@ listenerMiddleware.startListening({
 
 listenerMiddleware.startListening({
   matcher: isAnyOf(toMostBenefit, incrementYear, decrementYear, cancelSign),
-  effect: async (_action: any, api) => {
+  effect: async (_action, api) => {
     const store = api.getState() as RootState;
     const { statementAttachmentId } = store.globalState;
     if (statementAttachmentId) {
@@ -76,8 +81,8 @@ listenerMiddleware.startListening({
 });
 
 listenerMiddleware.startListening({
-  type: 'getApplication/fulfilled',
-  effect: async (action: any, api) => {
+  matcher: isFulfilled(getApplication),
+  effect: async (action, api) => {
     const store = api.getState() as RootState;
     if (action.meta.arg.isDraft) {
       api.dispatch(computingDraftApplication(store.applications.currentApplication));
@@ -86,8 +91,15 @@ listenerMiddleware.startListening({
 });
 
 listenerMiddleware.startListening({
-  type: 'submitStatement/fulfilled',
-  effect: async (_action: any, api) => {
+  matcher: isFulfilled(submitStatement),
+  effect: async (_action, api) => {
+    api.dispatch(initReplaceYear({}));
+  },
+});
+
+listenerMiddleware.startListening({
+  matcher: isFulfilled(deleteDraft),
+  effect: async (_action, api) => {
     api.dispatch(initReplaceYear({}));
   },
 });
