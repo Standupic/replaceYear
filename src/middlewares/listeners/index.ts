@@ -1,6 +1,7 @@
-import { createListenerMiddleware, isAnyOf } from '@reduxjs/toolkit';
+import { createListenerMiddleware, isAnyOf, isFulfilled } from '@reduxjs/toolkit';
 import initReplaceYear from '../initReplaceYear';
 import getHelperList from '../getHelperList';
+import submitStatement from '../submitStatement';
 import { checkIsThereMoreThanOneNotSelectableYear } from '../../helpers';
 import {
   ACCESS_APPLICATION,
@@ -16,6 +17,7 @@ import {
   incrementYear,
   toMostBenefit,
 } from '../../store/calculatorSlice';
+import deleteDraft from '../deleteDraft';
 
 const listenerMiddleware = createListenerMiddleware();
 
@@ -30,7 +32,8 @@ listenerMiddleware.startListening({
   type: 'initReplaceYear/fulfilled',
   effect: async (_action: any, api) => {
     api.dispatch(getHelperList({}));
-    // api.unsubscribe();
+    console.log('helper list');
+    api.unsubscribe();
   },
 });
 
@@ -86,9 +89,10 @@ listenerMiddleware.startListening({
 });
 
 listenerMiddleware.startListening({
-  type: 'submitStatement/fulfilled',
-  effect: async (_action: any, api) => {
+  matcher: isAnyOf(isFulfilled(submitStatement), isFulfilled(deleteDraft)),
+  effect: async (_action, api) => {
     api.dispatch(initReplaceYear({}));
+    console.log('Submit fulfilled');
   },
 });
 

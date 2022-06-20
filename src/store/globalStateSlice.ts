@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import initReplaceYear from '../middlewares/initReplaceYear';
-import { mappingGetStatement, savePdfFile } from '../helpers';
+import {mappingGetStatement, mappingInitData, savePdfFile} from '../helpers';
 import formStatement from '../middlewares/formStatement';
 import getStatement, { IAttachment } from '../middlewares/getStatement';
 import submitStatement from '../middlewares/submitStatement';
@@ -21,18 +21,14 @@ export enum ACCESS_APPLICATION {
 }
 
 export interface InitData {
-  reqId: string;
-  statusId: string;
-  CurrentYear1: string;
-  CurrentYear1Repl: boolean;
-  CurrentYear2: string;
-  CurrentYear2Repl: boolean;
-  CurrentAmount: number;
+  previousYear: number;
+  beforePreviousYear: number;
 }
 
 export interface GlobalState {
   statusApplication: STATUS_APPLICATION | undefined;
   accessApplication: ACCESS_APPLICATION | undefined;
+  initData: InitData;
   hasAlreadyOneMessage: string;
   date: string;
   paramsAttachment: IAttachment | undefined;
@@ -50,6 +46,7 @@ export interface GlobalState {
 const initialState: GlobalState = {
   statusApplication: undefined,
   accessApplication: undefined,
+  initData: {} as InitData,
   hasAlreadyOneMessage: '',
   statementAttachmentId: '',
   isHandSignature: undefined,
@@ -108,7 +105,6 @@ export const globalStateSlice = createSlice({
       state.paramsAttachment = undefined;
       state.isSigned = false;
       state.isVisibleFormStatement = true;
-      // state.toContinue = false;
     },
     reset: () => {
       return initialState;
@@ -121,12 +117,10 @@ export const globalStateSlice = createSlice({
     builder.addCase(initReplaceYear.fulfilled, (state: GlobalState, action) => {
       if (action.payload.message) {
         state.hasAlreadyOneMessage = action.payload.message;
-        state.toContinue = false;
       } else {
         state.toContinue = true;
       }
-
-      // state.paramsStatement = mappingInitData(action.payload);
+      state.initData = mappingInitData(action.payload);
       state.isHandSignature = action.payload.anotherEmployer;
       state.initLoading = false;
     });

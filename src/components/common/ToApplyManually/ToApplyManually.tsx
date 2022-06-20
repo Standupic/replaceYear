@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Button, Hint, InputFile } from 'juicyfront';
 import { useDispatch, useSelector } from 'react-redux';
 import { IFileData } from 'juicyfront/types';
@@ -28,7 +28,7 @@ const ToApplyManually = () => {
             почту <a href="mailto:rszp_iks@vtb.ru">rszp_iks@vtb.ru</a>.
           </Hint>
           <Box>
-            <Inline index={'0'}>
+            <Inline stretch={0}>
               <Box>
                 <InputFile
                   buttonType="light"

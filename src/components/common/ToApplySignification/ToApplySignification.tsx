@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Signification, Preloader } from 'juicyfront';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -7,13 +7,17 @@ import {
   selectParamsAttachment,
 } from '../../../selectors/globalSelector';
 import { IAttachment } from '../../../middlewares/getStatement';
-import { attachFile, cancelSign } from '../../../store/globalStateSlice';
+import { attachFile, cancelSign, GlobalState } from '../../../store/globalStateSlice';
 import { Card, Center } from '../../styledComponents';
+import { IPropsSwitcherToApply } from '../SwitcherToApply/SwitcherToApply';
+import { RootState } from '../../../store';
 
-const ToApplySignification = () => {
-  const statement = useSelector(selectParamsAttachment);
+const ToApplySignification: FC<IPropsSwitcherToApply> = ({ isDraft }) => {
+  const { paramsAttachment } = useSelector((state: RootState) => state.globalState);
+  const { currentApplication } = useSelector((state: RootState) => state.applications);
   const currentDate = useSelector(selectCurrentDate);
   const dispatch = useDispatch();
+  const currentAttachment = isDraft ? currentApplication.attachment : paramsAttachment;
   return (
     <>
       <Signification
@@ -28,7 +32,7 @@ const ToApplySignification = () => {
         onSignCancel={() => {
           dispatch(cancelSign());
         }}
-        data={statement ? statement : ({} as IAttachment)}
+        data={currentAttachment ? currentAttachment : ({} as IAttachment)}
         hideButtons={['reject', 'rejectManual']}
         title={`Заявление на замену лет для расчёта больничного от ${currentDate}`}
       />

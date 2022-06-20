@@ -10,7 +10,7 @@ import {
   mappingHelperList,
 } from '../helpers';
 import initReplaceYear from '../middlewares/initReplaceYear';
-import { reset } from './globalStateSlice';
+import {InitData, reset} from './globalStateSlice';
 import { IApplicationMapped } from './applicationsSlice';
 
 export interface ITwoPreviousYears {
@@ -187,6 +187,24 @@ const calculatorSlice = createSlice({
         return computingDraftTwoYearActive(state, params);
       }
     },
+    computingApplication: (state: CalculatorState, action: PayloadAction<InitData>) => {
+      state.previousTwoYears = getPreviousTwoYears(mappingHelperList(state.helperList), {
+        previousYear: action.payload.previousYear,
+        beforePreviousYear: action.payload.beforePreviousYear,
+      });
+      const isThereNotSelectable = checkIsThereNotSelectableYear(state.helperList, {
+        previousYear: action.payload.previousYear,
+        beforePreviousYear: action.payload.beforePreviousYear,
+      });
+      if (isThereNotSelectable) {
+        console.log('Only one year');
+        const { year, value } = isThereNotSelectable;
+        return computingOnlyOneYearActive(state, year, value);
+      } else {
+        console.log('Two active years');
+        return computingTwoYearsActive(state);
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getHelperList.fulfilled, (state, action) => {
@@ -218,6 +236,11 @@ const calculatorSlice = createSlice({
     });
   },
 });
-export const { incrementYear, decrementYear, toMostBenefit, computingDraftApplication } =
-  calculatorSlice.actions;
+export const {
+  incrementYear,
+  decrementYear,
+  toMostBenefit,
+  computingDraftApplication,
+  computingApplication,
+} = calculatorSlice.actions;
 export default calculatorSlice.reducer;
