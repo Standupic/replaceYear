@@ -1,3 +1,4 @@
+import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 
 export const selectStatusApplication = (state: RootState) => state.globalState.statusApplication;
@@ -23,3 +24,5 @@ export const selectSubmitLoading = (state: RootState) => state.globalState.submi
 
 export const selectIsVisibleFormStatement = (state: RootState) =>
   state.globalState.isVisibleFormStatement;
+
+export const formingLoading = createSelector(selectFormingApplicationLoading, (loading) => loading);

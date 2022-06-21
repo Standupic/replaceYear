@@ -13,8 +13,8 @@ export interface IAttachment {
   cert?: string;
 }
 
-const getStatement = createAsyncThunk<IAttachment, any, { rejectValue: any }>(
-  'getStatement',
+const getEditedDraftStatement = createAsyncThunk<IAttachment, any, { rejectValue: any }>(
+  'getEditedDraftStatement',
   async (id: string, api) => {
     try {
       const { data } = await Axios.get(
@@ -27,4 +27,4 @@ const getStatement = createAsyncThunk<IAttachment, any, { rejectValue: any }>(
   },
 );
 
-export default getStatement;
+export default getEditedDraftStatement;

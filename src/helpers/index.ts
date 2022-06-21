@@ -196,13 +196,8 @@ export const mostBenefitYears = (data: IMostBenefitYear): boolean => {
 
 export const mappingInitData = (data: any): InitData => {
   return {
-    reqId: data.reqId,
-    statusId: data.statusId,
-    CurrentYear1: data.CurrentYear1,
-    CurrentYear1Repl: data.CurrentYear1Repl,
-    CurrentYear2: data.CurrentYear2,
-    CurrentYear2Repl: data.CurrentYear2Repl,
-    CurrentAmount: data.CurrentAmount,
+    previousYear: Number(data.CurrentYear1),
+    beforePreviousYear: Number(data.CurrentYear2),
   };
 };
 

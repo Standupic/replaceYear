@@ -17,10 +17,11 @@ Axios.interceptors.request.use((config: AxiosRequestConfig): AxiosRequestConfig 
       return config;
     }
 
+    const CSRF = sessionStorage.getItem(INTERSAPTION.CSRF);
+
     if (config.url) {
       config.url = process.env.REACT_APP_HOST + config.url;
       const requestToken = config.url.includes('IXCSRFToken');
-      const CSRF = sessionStorage.getItem(INTERSAPTION.CSRF);
       if (CSRF && CSRF !== 'undefined' && !requestToken) {
         config.headers['x-csrf-token'] = CSRF;
       }

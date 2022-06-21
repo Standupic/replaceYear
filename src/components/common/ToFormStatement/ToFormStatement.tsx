@@ -1,20 +1,22 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Button, Hint } from 'juicyfront';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Card, Heading, Stack } from '../../styledComponents';
 import formStatement from '../../../middlewares/formStatement';
-import { selectDelta, selectPostData } from '../../../selectors/calculatorSelector';
-import {
-  selectAttachmentId,
-  selectFormingApplicationLoading,
-} from '../../../selectors/globalSelector';
+import { selectDelta, selectParamsApplication } from '../../../selectors/calculatorSelector';
+import { formingLoading, selectAttachmentId } from '../../../selectors/globalSelector';
+import editDraftStatement from '../../../middlewares/editDraft';
 
-const ToFormStatement = () => {
+export interface IPropsSwitcherToApply {
+  isDraft?: boolean;
+}
+
+const ToFormStatement: FC<IPropsSwitcherToApply> = ({ isDraft }) => {
   const dispatch = useDispatch();
-  const params = useSelector(selectPostData);
+  const params = useSelector(selectParamsApplication);
   const delta = useSelector(selectDelta);
-  const formingLoading = useSelector(selectFormingApplicationLoading);
   const attachmentId = useSelector(selectAttachmentId);
+  const loading = useSelector(formingLoading);
   return (
     <Card>
       <Stack>
@@ -23,12 +25,16 @@ const ToFormStatement = () => {
         </Heading>
         <Box>
           <Button
-            preloader={formingLoading}
+            preloader={loading}
             size={'s'}
             width={'32px'}
             disabled={delta <= 0}
             onClick={() => {
-              dispatch(formStatement({ ...params, event: 'PRINT' }));
+              if (isDraft) {
+                dispatch(editDraftStatement({ ...params, event: 'PRINT' }));
+              } else {
+                dispatch(formStatement({ ...params, event: 'PRINT' }));
+              }
             }}>
             Сформировать
           </Button>

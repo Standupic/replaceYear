@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import initReplaceYear from '../middlewares/initReplaceYear';
-import { mappingGetStatement, savePdfFile } from '../helpers';
+import { mappingInitData, savePdfFile } from '../helpers';
 import formStatement from '../middlewares/formStatement';
 import getStatement, { IAttachment } from '../middlewares/getStatement';
 import submitStatement from '../middlewares/submitStatement';
+import editDraftStatement from '../middlewares/editDraft';
 import { computingDraftApplication } from './calculatorSlice';
 import { IApplicationMapped } from './applicationsSlice';
 
@@ -21,18 +22,14 @@ export enum ACCESS_APPLICATION {
 }
 
 export interface InitData {
-  reqId: string;
-  statusId: string;
-  CurrentYear1: string;
-  CurrentYear1Repl: boolean;
-  CurrentYear2: string;
-  CurrentYear2Repl: boolean;
-  CurrentAmount: number;
+  previousYear: number;
+  beforePreviousYear: number;
 }
 
 export interface GlobalState {
   statusApplication: STATUS_APPLICATION | undefined;
   accessApplication: ACCESS_APPLICATION | undefined;
+  initData: InitData;
   hasAlreadyOneMessage: string;
   date: string;
   paramsAttachment: IAttachment | undefined;
@@ -50,6 +47,7 @@ export interface GlobalState {
 const initialState: GlobalState = {
   statusApplication: undefined,
   accessApplication: undefined,
+  initData: {} as InitData,
   hasAlreadyOneMessage: '',
   statementAttachmentId: '',
   isHandSignature: undefined,
@@ -103,15 +101,17 @@ export const globalStateSlice = createSlice({
     cancelSign: (state: GlobalState) => {
       state.isSigned = false;
     },
-    modalHandler: (state: GlobalState) => {
+    modalHandlerSuccess: (state: GlobalState) => {
       state.statementAttachmentId = '';
       state.paramsAttachment = undefined;
       state.isSigned = false;
       state.isVisibleFormStatement = true;
-      state.toContinue = false;
     },
-    reset: () => {
-      return initialState;
+    reset: (state: GlobalState) => {
+      state.statementAttachmentId = '';
+      state.paramsAttachment = undefined;
+      state.isSigned = false;
+      state.isVisibleFormStatement = true;
     },
   },
   extraReducers: (builder) => {
@@ -121,10 +121,10 @@ export const globalStateSlice = createSlice({
     builder.addCase(initReplaceYear.fulfilled, (state: GlobalState, action) => {
       if (action.payload.message) {
         state.hasAlreadyOneMessage = action.payload.message;
-        state.toContinue = false;
       } else {
         state.toContinue = true;
       }
+      state.initData = mappingInitData(action.payload);
       state.isHandSignature = action.payload.anotherEmployer;
       state.initLoading = false;
     });
@@ -142,19 +142,22 @@ export const globalStateSlice = createSlice({
     builder.addCase(formStatement.rejected, (state: GlobalState) => {
       state.formStatementLoading = false;
     });
-    builder.addCase(getStatement.fulfilled, (state: GlobalState, action) => {
-      state.pdfFileLoading = false;
-      const mappedData = mappingGetStatement(action.payload);
-      state.paramsAttachment = mappedData;
-      if (!state.isHandSignature) {
-        return state;
-      } else {
-        const { base64, fileName } = mappedData;
-        if (base64 && fileName) {
-          savePdfFile(base64, fileName);
+    builder.addCase(
+      getStatement.fulfilled,
+      (state: GlobalState, action: PayloadAction<IAttachment>) => {
+        state.pdfFileLoading = false;
+        state.paramsAttachment = action.payload;
+        if (!state.isHandSignature) {
+          return state;
+        } else {
+          const { base64, fileName } = action.payload;
+          if (base64 && fileName) {
+            savePdfFile(base64, fileName);
+          }
         }
-      }
-    });
+        return state;
+      },
+    );
     builder.addCase(getStatement.pending, (state: GlobalState) => {
       state.pdfFileLoading = true;
     });
@@ -172,12 +175,20 @@ export const globalStateSlice = createSlice({
       state.statusApplication = STATUS_APPLICATION.Error;
       state.submitLoading = false;
     });
+    builder.addCase(editDraftStatement.fulfilled, (state: GlobalState) => {
+      state.formStatementLoading = false;
+    });
+    builder.addCase(editDraftStatement.pending, (state: GlobalState) => {
+      state.formStatementLoading = true;
+    });
+    builder.addCase(editDraftStatement.rejected, (state: GlobalState) => {
+      state.formStatementLoading = false;
+    });
     builder.addCase(
       computingDraftApplication,
       (state: GlobalState, action: PayloadAction<IApplicationMapped>) => {
         if (action.payload.id) {
           state.statementAttachmentId = action.payload.id;
-          state.paramsAttachment = action.payload.attachment;
         }
       },
     );
@@ -191,7 +202,7 @@ export const {
   cancelSign,
   toggleIsVisibleFormStatement,
   reset,
-  modalHandler,
+  modalHandlerSuccess,
   resetStatementAttachmentId,
 } = globalStateSlice.actions;
 export default globalStateSlice.reducer;
