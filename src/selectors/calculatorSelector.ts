@@ -8,7 +8,6 @@ import {
   totalNotActiveYears,
 } from '../helpers';
 import { selectAttachmentId } from './globalSelector';
-import { selectCurrentApplication } from './applicationsSelector';
 
 export const selectHelperList = (state: RootState) => state.calculator.helperList;
 export const selectTopYear = (state: RootState) => state.calculator.topActiveYear;
@@ -62,7 +61,7 @@ export const selectDataActiveYears = createSelector(
       },
       total: totalActiveYears,
       isTheBest,
-      diff: delta,
+      delta: delta,
     };
   },
 );
@@ -85,26 +84,6 @@ export const selectIncomeActiveYears = createSelector(
       topYearIncome: 0,
       bottomYearIncome: 0,
     };
-  },
-);
-
-export const selectParamsApplication = createSelector(
-  selectTopYear,
-  selectBottomYear,
-  selectAttachmentId,
-  (top, bottom, attachmentId) => {
-    const params = {
-      NextYear1: top.value.toString(),
-      NextYear2: bottom.value.toString(),
-    };
-    if (attachmentId) {
-      return {
-        ...params,
-        Id: attachmentId,
-      };
-    } else {
-      return params;
-    }
   },
 );
 

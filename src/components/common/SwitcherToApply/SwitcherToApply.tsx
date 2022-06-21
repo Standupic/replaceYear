@@ -1,29 +1,41 @@
 import React, { FC } from 'react';
-import { useSelector } from 'react-redux';
-import {
-  selectAttachmentId,
-  selectIsHandSignature,
-  selectIsVisibleFormStatement,
-} from '../../../selectors/globalSelector';
 import ToFormStatement from '../ToFormStatement';
 import ToApplyManually from '../ToApplyManually';
 import ToApplySignification from '../ToApplySignification/ToApplySignification';
+import { IAttachment } from '../../../middlewares/getStatement';
 
 export interface IPropsSwitcherToApply {
-  isDraft?: boolean;
+  isHandSignature?: boolean;
+  isVisibleFormStatement: boolean;
+  attachmentId: string;
+  attachment?: IAttachment;
+  toFormStatement: () => void;
+  toUpdateAttachment: (props: { base64: string; cert?: string; singBase64?: string }) => void;
+  manuallyLoading: boolean;
 }
 
-const SwitcherToApply: FC<IPropsSwitcherToApply> = ({ isDraft }) => {
-  const attachmentId = useSelector(selectAttachmentId);
-  const isHandSignature = useSelector(selectIsHandSignature);
-  const isVisibleFormStatement = useSelector(selectIsVisibleFormStatement);
+const SwitcherToApply: FC<IPropsSwitcherToApply> = ({
+  isHandSignature,
+  isVisibleFormStatement,
+  attachmentId,
+  attachment,
+  toFormStatement,
+  toUpdateAttachment,
+  manuallyLoading,
+}) => {
   if (!isVisibleFormStatement && attachmentId && !isHandSignature) {
-    return <ToApplySignification isDraft={isDraft} />;
+    return <ToApplySignification attachment={attachment} toUpdateAttachment={toUpdateAttachment} />;
   }
   if (!isVisibleFormStatement && attachmentId && isHandSignature) {
-    return <ToApplyManually />;
+    return (
+      <ToApplyManually
+        toUpdateAttachment={toUpdateAttachment}
+        attachmentId={attachmentId}
+        loading={manuallyLoading}
+      />
+    );
   }
-  return <ToFormStatement isDraft={isDraft} />;
+  return <ToFormStatement toFormStatement={toFormStatement} />;
 };
 
 export default SwitcherToApply;

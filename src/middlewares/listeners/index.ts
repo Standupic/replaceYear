@@ -22,6 +22,7 @@ import formStatement from '../formStatement';
 import editDraftStatement from '../editDraft';
 import getEditedDraftStatement from '../getEditedDraftStatement';
 import getApplication from '../getApplication';
+import { toggleDraftSinged, toggleDraftToFormStatement } from '../../store/draftSlice';
 
 const listenerMiddleware = createListenerMiddleware();
 
@@ -74,7 +75,6 @@ listenerMiddleware.startListening({
 listenerMiddleware.startListening({
   matcher: isFulfilled(editDraftStatement),
   effect: async (action: any, api) => {
-    api.dispatch(toggleIsVisibleFormStatement(false));
     api.dispatch(getEditedDraftStatement(action.payload.Id));
   },
 });
@@ -83,9 +83,14 @@ listenerMiddleware.startListening({
   matcher: isAnyOf(toMostBenefit, incrementYear, decrementYear, cancelSign),
   effect: async (_action: any, api) => {
     const store = api.getState() as RootState;
-    const { statementAttachmentId } = store.globalState;
-    if (statementAttachmentId) {
+    const { attachmentId } = store.globalState;
+    const { attachmentDraftId } = store.draft;
+    if (attachmentId) {
       api.dispatch(toggleIsVisibleFormStatement(true));
+    }
+    if (attachmentDraftId) {
+      api.dispatch(toggleDraftToFormStatement(true));
+      api.dispatch(toggleDraftSinged(false));
     }
   },
 });
@@ -95,7 +100,7 @@ listenerMiddleware.startListening({
   effect: async (action: any, api) => {
     const store = api.getState() as RootState;
     if (action.meta.arg.isDraft) {
-      api.dispatch(computingDraftApplication(store.applications.currentApplication));
+      api.dispatch(computingDraftApplication(store.draft.currentDraft));
     }
   },
 });

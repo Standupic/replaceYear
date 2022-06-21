@@ -8,13 +8,9 @@ export const selectAccessApplication = (state: RootState) => state.globalState.a
 export const selectFormingApplicationLoading = (state: RootState) =>
   state.globalState.formStatementLoading;
 
-export const selectAttachmentId = (state: RootState) => state.globalState.statementAttachmentId;
-
-export const selectIsHandSignature = (state: RootState) => state.globalState.isHandSignature;
+export const selectAttachmentId = (state: RootState) => state.globalState.attachmentId;
 
 export const selectPdfFileLoading = (state: RootState) => state.globalState.pdfFileLoading;
-
-export const selectParamsAttachment = (state: RootState) => state.globalState.paramsAttachment;
 
 export const selectCurrentDate = (state: RootState) => state.globalState.date;
 

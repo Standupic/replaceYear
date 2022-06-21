@@ -2,18 +2,13 @@ import React, { FC } from 'react';
 import { Button, Hint } from 'juicyfront';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Card, Heading, Stack } from '../../styledComponents';
-import formStatement from '../../../middlewares/formStatement';
-import { selectDelta, selectParamsApplication } from '../../../selectors/calculatorSelector';
+import { selectDelta } from '../../../selectors/calculatorSelector';
 import { formingLoading, selectAttachmentId } from '../../../selectors/globalSelector';
-import editDraftStatement from '../../../middlewares/editDraft';
 
 export interface IPropsSwitcherToApply {
-  isDraft?: boolean;
+  toFormStatement: () => void;
 }
-
-const ToFormStatement: FC<IPropsSwitcherToApply> = ({ isDraft }) => {
-  const dispatch = useDispatch();
-  const params = useSelector(selectParamsApplication);
+const ToFormStatement: FC<IPropsSwitcherToApply> = ({ toFormStatement }) => {
   const delta = useSelector(selectDelta);
   const attachmentId = useSelector(selectAttachmentId);
   const loading = useSelector(formingLoading);
@@ -30,11 +25,7 @@ const ToFormStatement: FC<IPropsSwitcherToApply> = ({ isDraft }) => {
             width={'32px'}
             disabled={delta <= 0}
             onClick={() => {
-              if (isDraft) {
-                dispatch(editDraftStatement({ ...params, event: 'PRINT' }));
-              } else {
-                dispatch(formStatement({ ...params, event: 'PRINT' }));
-              }
+              toFormStatement();
             }}>
             Сформировать
           </Button>

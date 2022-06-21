@@ -10,7 +10,6 @@ import {
   mappingHelperList,
 } from '../helpers';
 import initReplaceYear from '../middlewares/initReplaceYear';
-import { InitData, reset } from './globalStateSlice';
 import { IApplicationMapped } from './applicationsSlice';
 
 export interface ITwoPreviousYears {

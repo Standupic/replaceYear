@@ -1,5 +1,5 @@
 import { Button } from 'juicyfront';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { AllTrash } from 'juicyfront/indexIcon';
@@ -14,52 +14,67 @@ import { RootState } from '../../store';
 
 import {
   selectDataActiveYears,
-  selectDelta,
   selectIncomeActiveYears,
   selectTotalNotActiveYears,
 } from '../../selectors/calculatorSelector';
 import getApplication from '../../middlewares/getApplication';
-import { resetCurrentApplication } from '../../store/applicationsSlice';
 import MainTittle from '../../components/common/MainTittle';
 import DeleteButton from '../../components/styledComponents/DeleteButton/index.';
 import deleteDraft from '../../middlewares/deleteDraft';
 import ModalDraft from '../../components/common/ModalDraft/ModalDraft';
-import {
-  resetStatementAttachmentId,
-  toggleIsVisibleFormStatement,
-} from '../../store/globalStateSlice';
 import { computingApplication } from '../../store/calculatorSlice';
+import { resetDraft, updateDraftAttachmentFile } from '../../store/draftSlice';
+import editDraftStatement from '../../middlewares/editDraft';
 
 const DraftApplication = () => {
-  const { statementAttachmentId, paramsAttachment, isSigned, submitLoading } =
-    useSelector((state: RootState) => state.globalState);
-  const { loading, currentApplication } = useSelector((state: RootState) => state.applications);
-  const { timeStamp } = currentApplication;
   const { topActiveYear, bottomActiveYear, previousYear, beforePreviousYear } = useSelector(
     (state: RootState) => state.calculator,
   );
+  const { submitLoading, isHandSignature } = useSelector((state: RootState) => state.globalState);
+  const {
+    draftLoading,
+    currentDraft,
+    isSinged,
+    attachmentDraftId,
+    toFormStatement,
+    toFormLoading,
+  } = useSelector((state: RootState) => state.draft);
+  const { attachment, timeStamp } = currentDraft;
   const dispatch = useDispatch();
-  const delta = useSelector(selectDelta);
   const totalNotActiveYear = useSelector(selectTotalNotActiveYears);
   const dataActiveYears = useSelector(selectDataActiveYears);
-  const { total, diff, isTheBest, controller } = dataActiveYears;
+  const { total, delta, isTheBest, controller } = dataActiveYears;
   const { topYearIncome, bottomYearIncome } = useSelector(selectIncomeActiveYears);
   const params = useParams<{ id: string }>();
   useEffect(() => {
     if (params && params.id) {
       dispatch(getApplication({ id: params.id, isDraft: true }));
-      dispatch(toggleIsVisibleFormStatement(false));
     }
     return () => {
-      dispatch(resetCurrentApplication());
-      dispatch(resetStatementAttachmentId());
-      dispatch(toggleIsVisibleFormStatement(false));
+      dispatch(resetDraft());
       dispatch(computingApplication());
     };
   }, [params, params.id, dispatch]);
 
+  const handlerToFormStatement = useCallback(() => {
+    dispatch(
+      editDraftStatement({
+        NextYear1: topActiveYear.value.toString(),
+        NextYear2: bottomActiveYear.value.toString(),
+        event: 'PRINT',
+        Id: attachmentDraftId,
+      }),
+    );
+  }, [topActiveYear.value, bottomActiveYear.value, attachmentDraftId]);
+
+  const toUpdateAttachment = useCallback(
+    (props: { base64: string; cert?: string; singBase64?: string }) => {
+      dispatch(updateDraftAttachmentFile(props));
+    },
+    [dispatch],
+  );
   return (
-    <PagePreloader loader={loading}>
+    <PagePreloader loader={draftLoading}>
       <Stack as={PadBox} padding={[KEY_SPACING.lg, KEY_SPACING.zero, KEY_SPACING.zero]}>
         <>
           <MainTittle
@@ -75,25 +90,33 @@ const DraftApplication = () => {
             beforePreviousYear={beforePreviousYear}
             totalNotActiveYear={totalNotActiveYear}
             total={total}
-            diff={diff}
+            diff={delta}
             isTheBest={isTheBest}
             controller={controller}
             topYearIncome={topYearIncome}
             bottomYearIncome={bottomYearIncome}
           />
-          <SwitcherToApply isDraft={true} />
+          <SwitcherToApply
+            attachmentId={attachmentDraftId}
+            isHandSignature={isHandSignature}
+            isVisibleFormStatement={toFormStatement}
+            attachment={attachment}
+            toFormStatement={handlerToFormStatement}
+            toUpdateAttachment={toUpdateAttachment}
+            manuallyLoading={toFormLoading}
+          />
         </>
       </Stack>
       <StickyButton>
         <Inline gutter={KEY_SPACING.sm}>
           <Button
             preloader={submitLoading}
-            disabled={delta <= 0 || !isSigned}
+            disabled={delta <= 0 || !isSinged}
             onClick={() => {
               dispatch(
                 submitStatement({
-                  attachments: { ...paramsAttachment },
-                  id: statementAttachmentId,
+                  attachments: { ...attachment },
+                  id: attachmentDraftId,
                 }),
               );
             }}>
