@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import initReplaceYear from '../middlewares/initReplaceYear';
-import {mappingGetStatement, mappingInitData, savePdfFile} from '../helpers';
+import { mappingInitData, savePdfFile } from '../helpers';
 import formStatement from '../middlewares/formStatement';
 import getStatement, { IAttachment } from '../middlewares/getStatement';
 import submitStatement from '../middlewares/submitStatement';
+import editDraftStatement from '../middlewares/editDraft';
 import { computingDraftApplication } from './calculatorSlice';
 import { IApplicationMapped } from './applicationsSlice';
 
@@ -106,8 +107,11 @@ export const globalStateSlice = createSlice({
       state.isSigned = false;
       state.isVisibleFormStatement = true;
     },
-    reset: () => {
-      return initialState;
+    reset: (state: GlobalState) => {
+      state.statementAttachmentId = '';
+      state.paramsAttachment = undefined;
+      state.isSigned = false;
+      state.isVisibleFormStatement = true;
     },
   },
   extraReducers: (builder) => {
@@ -138,19 +142,22 @@ export const globalStateSlice = createSlice({
     builder.addCase(formStatement.rejected, (state: GlobalState) => {
       state.formStatementLoading = false;
     });
-    builder.addCase(getStatement.fulfilled, (state: GlobalState, action) => {
-      state.pdfFileLoading = false;
-      const mappedData = mappingGetStatement(action.payload);
-      state.paramsAttachment = mappedData;
-      if (!state.isHandSignature) {
-        return state;
-      } else {
-        const { base64, fileName } = mappedData;
-        if (base64 && fileName) {
-          savePdfFile(base64, fileName);
+    builder.addCase(
+      getStatement.fulfilled,
+      (state: GlobalState, action: PayloadAction<IAttachment>) => {
+        state.pdfFileLoading = false;
+        state.paramsAttachment = action.payload;
+        if (!state.isHandSignature) {
+          return state;
+        } else {
+          const { base64, fileName } = action.payload;
+          if (base64 && fileName) {
+            savePdfFile(base64, fileName);
+          }
         }
-      }
-    });
+        return state;
+      },
+    );
     builder.addCase(getStatement.pending, (state: GlobalState) => {
       state.pdfFileLoading = true;
     });
@@ -168,12 +175,20 @@ export const globalStateSlice = createSlice({
       state.statusApplication = STATUS_APPLICATION.Error;
       state.submitLoading = false;
     });
+    builder.addCase(editDraftStatement.fulfilled, (state: GlobalState) => {
+      state.formStatementLoading = false;
+    });
+    builder.addCase(editDraftStatement.pending, (state: GlobalState) => {
+      state.formStatementLoading = true;
+    });
+    builder.addCase(editDraftStatement.rejected, (state: GlobalState) => {
+      state.formStatementLoading = false;
+    });
     builder.addCase(
       computingDraftApplication,
       (state: GlobalState, action: PayloadAction<IApplicationMapped>) => {
         if (action.payload.id) {
           state.statementAttachmentId = action.payload.id;
-          state.paramsAttachment = action.payload.attachment;
         }
       },
     );

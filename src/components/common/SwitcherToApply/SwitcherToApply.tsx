@@ -23,7 +23,7 @@ const SwitcherToApply: FC<IPropsSwitcherToApply> = ({ isDraft }) => {
   if (!isVisibleFormStatement && attachmentId && isHandSignature) {
     return <ToApplyManually />;
   }
-  return <ToFormStatement />;
+  return <ToFormStatement isDraft={isDraft} />;
 };
 
 export default SwitcherToApply;

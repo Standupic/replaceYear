@@ -17,8 +17,8 @@ interface IStatementParams {
   Id?: string;
 }
 
-const formStatement = createAsyncThunk<any, any, { rejectValue: any }>(
-  'formStatement',
+const editDraftStatement = createAsyncThunk<any, any, { rejectValue: any }>(
+  'editDraftStatement',
   async (params: IStatementParams, api) => {
     try {
       const { data } = await Axios.post(
@@ -34,4 +34,4 @@ const formStatement = createAsyncThunk<any, any, { rejectValue: any }>(
   },
 );
 
-export default formStatement;
+export default editDraftStatement;

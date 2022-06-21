@@ -18,6 +18,10 @@ import {
   toMostBenefit,
 } from '../../store/calculatorSlice';
 import deleteDraft from '../deleteDraft';
+import formStatement from '../formStatement';
+import editDraftStatement from '../editDraft';
+import getEditedDraftStatement from '../getEditedDraftStatement';
+import getApplication from '../getApplication';
 
 const listenerMiddleware = createListenerMiddleware();
 
@@ -38,7 +42,7 @@ listenerMiddleware.startListening({
 });
 
 listenerMiddleware.startListening({
-  type: 'helperList/fulfilled',
+  matcher: isFulfilled(getHelperList),
   effect: async (action: any, api) => {
     const store = api.getState() as RootState;
     const twoPreviousYears = {
@@ -58,12 +62,20 @@ listenerMiddleware.startListening({
 
 // Взять данные заявление под копотом если подписываем заявление в ручную. Формуруем -> под копотом берем даныые файла.
 listenerMiddleware.startListening({
-  type: 'formStatement/fulfilled',
+  matcher: isFulfilled(formStatement),
   effect: async (action: any, api) => {
     api.dispatch(toggleIsVisibleFormStatement(false));
     if (!action.payload.anotherEmployer) {
       api.dispatch(getStatement(action.payload.Id));
     }
+  },
+});
+
+listenerMiddleware.startListening({
+  matcher: isFulfilled(editDraftStatement),
+  effect: async (action: any, api) => {
+    api.dispatch(toggleIsVisibleFormStatement(false));
+    api.dispatch(getEditedDraftStatement(action.payload.Id));
   },
 });
 
@@ -79,7 +91,7 @@ listenerMiddleware.startListening({
 });
 
 listenerMiddleware.startListening({
-  type: 'getApplication/fulfilled',
+  matcher: isFulfilled(getApplication),
   effect: async (action: any, api) => {
     const store = api.getState() as RootState;
     if (action.meta.arg.isDraft) {
@@ -92,7 +104,6 @@ listenerMiddleware.startListening({
   matcher: isAnyOf(isFulfilled(submitStatement), isFulfilled(deleteDraft)),
   effect: async (_action, api) => {
     api.dispatch(initReplaceYear({}));
-    console.log('Submit fulfilled');
   },
 });
 

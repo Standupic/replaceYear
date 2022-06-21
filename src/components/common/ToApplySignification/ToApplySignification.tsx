@@ -1,14 +1,9 @@
 import React, { FC } from 'react';
-import { Signification, Preloader } from 'juicyfront';
+import { Signification } from 'juicyfront';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  selectCurrentDate,
-  selectFormingApplicationLoading,
-  selectParamsAttachment,
-} from '../../../selectors/globalSelector';
+import { selectCurrentDate } from '../../../selectors/globalSelector';
 import { IAttachment } from '../../../middlewares/getStatement';
-import { attachFile, cancelSign, GlobalState } from '../../../store/globalStateSlice';
-import { Card, Center } from '../../styledComponents';
+import { attachFile, cancelSign } from '../../../store/globalStateSlice';
 import { IPropsSwitcherToApply } from '../SwitcherToApply/SwitcherToApply';
 import { RootState } from '../../../store';
 

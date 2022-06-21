@@ -31,7 +31,7 @@ import {
 import { computingApplication } from '../../store/calculatorSlice';
 
 const DraftApplication = () => {
-  const { statementAttachmentId, paramsAttachment, isSigned, submitLoading, initData } =
+  const { statementAttachmentId, paramsAttachment, isSigned, submitLoading } =
     useSelector((state: RootState) => state.globalState);
   const { loading, currentApplication } = useSelector((state: RootState) => state.applications);
   const { timeStamp } = currentApplication;
@@ -54,7 +54,7 @@ const DraftApplication = () => {
       dispatch(resetCurrentApplication());
       dispatch(resetStatementAttachmentId());
       dispatch(toggleIsVisibleFormStatement(false));
-      dispatch(computingApplication(initData));
+      dispatch(computingApplication());
     };
   }, [params, params.id, dispatch]);
 
@@ -81,7 +81,7 @@ const DraftApplication = () => {
             topYearIncome={topYearIncome}
             bottomYearIncome={bottomYearIncome}
           />
-          <SwitcherToApply isDraft />
+          <SwitcherToApply isDraft={true} />
         </>
       </Stack>
       <StickyButton>
