@@ -41,7 +41,6 @@ const ToApplyManually: FC<IProps> = ({ attachmentId, attachment, toUpdateAttachm
                   name={'file'}
                   placeholder={'Прикрепить файл'}
                   setFile={(file: IFileData[]) => {
-                    console.log(file);
                     if (!file.length) {
                       setAttachable(false);
                     } else {

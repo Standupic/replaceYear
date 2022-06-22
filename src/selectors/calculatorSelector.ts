@@ -7,7 +7,6 @@ import {
   totalActiveYears,
   totalNotActiveYears,
 } from '../helpers';
-import { selectAttachmentId } from './globalSelector';
 
 export const selectHelperList = (state: RootState) => state.calculator.helperList;
 export const selectTopYear = (state: RootState) => state.calculator.topActiveYear;
@@ -86,4 +85,3 @@ export const selectIncomeActiveYears = createSelector(
     };
   },
 );
-

@@ -25,6 +25,7 @@ import ModalDraft from '../../components/common/ModalDraft/ModalDraft';
 import { computingApplication } from '../../store/calculatorSlice';
 import { resetDraft, toggleDraftSigned, updateDraftAttachmentFile } from '../../store/draftSlice';
 import editDraftStatement from '../../middlewares/editDraft';
+import Permission from '../../components/Permission';
 
 const DraftApplication = () => {
   const { topActiveYear, bottomActiveYear, previousYear, beforePreviousYear } = useSelector(
@@ -80,63 +81,65 @@ const DraftApplication = () => {
 
   return (
     <PagePreloader loader={draftLoading}>
-      <Stack as={PadBox} padding={[KEY_SPACING.lg, KEY_SPACING.zero, KEY_SPACING.zero]}>
-        <>
-          <MainTittle
-            text={`Заявка на замену лет для расчёта больничного на ${new Date(
-              timeStamp,
-            ).getFullYear()} год от ${new Date(timeStamp).toLocaleDateString()} [Черновик]`}
-          />
-          <User />
-          <Calculator
-            topActiveYear={topActiveYear}
-            bottomActiveYear={bottomActiveYear}
-            previousYear={previousYear}
-            beforePreviousYear={beforePreviousYear}
-            totalNotActiveYear={totalNotActiveYear}
-            total={total}
-            diff={delta}
-            isTheBest={isTheBest}
-            controller={controller}
-            topYearIncome={topYearIncome}
-            bottomYearIncome={bottomYearIncome}
-          />
-          <SwitcherToApply
-            attachmentId={attachmentDraftId}
-            isHandSignature={isHandSignature}
-            isVisibleFormStatement={toFormStatement}
-            attachment={attachment}
-            toFormStatement={handlerToFormStatement}
-            toUpdateAttachment={toUpdateAttachment}
-            cancelSign={cancelSign}
-            toFormLoading={toFormLoading}
-          />
-        </>
-      </Stack>
-      <StickyButton>
-        <Inline gutter={KEY_SPACING.sm}>
-          <Button
-            preloader={submitLoading}
-            disabled={delta <= 0 || !isSigned}
-            onClick={() => {
-              dispatch(
-                submitStatement({
-                  attachments: { ...attachment },
-                  id: attachmentDraftId,
-                }),
-              );
-            }}>
-            Отправить
-          </Button>
-          <DeleteButton
-            onClick={() => {
-              dispatch(deleteDraft({ id: params.id }));
-            }}>
-            <AllTrash color={'red'} />
-          </DeleteButton>
-        </Inline>
-      </StickyButton>
-      <ModalDraft />
+      <Permission mode={'applications'}>
+        <Stack as={PadBox} padding={[KEY_SPACING.lg, KEY_SPACING.zero, KEY_SPACING.zero]}>
+          <>
+            <MainTittle
+              text={`Заявка на замену лет для расчёта больничного на ${new Date(
+                timeStamp,
+              ).getFullYear()} год от ${new Date(timeStamp).toLocaleDateString()} [Черновик]`}
+            />
+            <User />
+            <Calculator
+              topActiveYear={topActiveYear}
+              bottomActiveYear={bottomActiveYear}
+              previousYear={previousYear}
+              beforePreviousYear={beforePreviousYear}
+              totalNotActiveYear={totalNotActiveYear}
+              total={total}
+              diff={delta}
+              isTheBest={isTheBest}
+              controller={controller}
+              topYearIncome={topYearIncome}
+              bottomYearIncome={bottomYearIncome}
+            />
+            <SwitcherToApply
+              attachmentId={attachmentDraftId}
+              isHandSignature={isHandSignature}
+              isVisibleFormStatement={toFormStatement}
+              attachment={attachment}
+              toFormStatement={handlerToFormStatement}
+              toUpdateAttachment={toUpdateAttachment}
+              cancelSign={cancelSign}
+              toFormLoading={toFormLoading}
+            />
+          </>
+        </Stack>
+        <StickyButton>
+          <Inline gutter={KEY_SPACING.sm}>
+            <Button
+              preloader={submitLoading}
+              disabled={delta <= 0 || !isSigned}
+              onClick={() => {
+                dispatch(
+                  submitStatement({
+                    attachments: { ...attachment },
+                    id: attachmentDraftId,
+                  }),
+                );
+              }}>
+              Отправить
+            </Button>
+            <DeleteButton
+              onClick={() => {
+                dispatch(deleteDraft({ id: params.id }));
+              }}>
+              <AllTrash color={'red'} />
+            </DeleteButton>
+          </Inline>
+        </StickyButton>
+        <ModalDraft />
+      </Permission>
     </PagePreloader>
   );
 };

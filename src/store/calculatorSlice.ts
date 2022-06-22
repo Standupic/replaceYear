@@ -6,6 +6,7 @@ import {
   computingDraftTwoYearActive,
   computingOnlyOneYearActive,
   computingTwoYearsActive,
+  convertRubToPennyHelperList,
   getPreviousTwoYears,
   mappingHelperList,
 } from '../helpers';
@@ -207,7 +208,7 @@ const calculatorSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getHelperList.fulfilled, (state, action) => {
-      state.helperList = mappingHelperList(action.payload);
+      state.helperList = convertRubToPennyHelperList(mappingHelperList(action.payload));
 
       state.previousTwoYears = getPreviousTwoYears(mappingHelperList(action.payload), {
         previousYear: state.previousYear,
