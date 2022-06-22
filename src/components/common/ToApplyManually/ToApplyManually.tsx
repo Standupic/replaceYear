@@ -1,21 +1,22 @@
 import React, { FC, useState } from 'react';
 import { Button, Hint, InputFile } from 'juicyfront';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { IFileData } from 'juicyfront/types';
 import { Box, Card, Heading, Stack, Inline } from '../../styledComponents';
 import { ReactComponent as DownLoadSVG } from '../../../assets/images/download.svg';
 import getStatement, { IAttachment } from '../../../middlewares/getStatement';
+import { selectPdfFileLoading } from '../../../selectors/globalSelector';
 
 interface IProps {
   attachment?: IAttachment;
   attachmentId: string;
   toUpdateAttachment: (props: { base64: string; cert?: string; singBase64?: string }) => void;
-  loading: boolean;
 }
 
-const ToApplyManually: FC<IProps> = ({ attachmentId, attachment, toUpdateAttachment, loading }) => {
+const ToApplyManually: FC<IProps> = ({ attachmentId, attachment, toUpdateAttachment }) => {
   const dispatch = useDispatch();
   const [isAttachable, setAttachable] = useState(false);
+  const pdfLoading = useSelector(selectPdfFileLoading);
   return (
     <>
       <Card>
@@ -40,6 +41,7 @@ const ToApplyManually: FC<IProps> = ({ attachmentId, attachment, toUpdateAttachm
                   name={'file'}
                   placeholder={'Прикрепить файл'}
                   setFile={(file: IFileData[]) => {
+                    console.log(file);
                     if (!file.length) {
                       setAttachable(false);
                     } else {
@@ -51,7 +53,7 @@ const ToApplyManually: FC<IProps> = ({ attachmentId, attachment, toUpdateAttachm
               </Box>
               <Button
                 buttonType={'outline'}
-                preloader={loading}
+                preloader={pdfLoading}
                 onClick={() => dispatch(getStatement(attachmentId))}
                 startAdornment={<DownLoadSVG />}>
                 Шаблон заявления

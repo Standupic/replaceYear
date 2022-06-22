@@ -1,17 +1,15 @@
 import React, { FC } from 'react';
 import { Button, Hint } from 'juicyfront';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Box, Card, Heading, Stack } from '../../styledComponents';
 import { selectDelta } from '../../../selectors/calculatorSelector';
-import { formingLoading, selectAttachmentId } from '../../../selectors/globalSelector';
 
 export interface IPropsSwitcherToApply {
   toFormStatement: () => void;
+  loading: boolean;
 }
-const ToFormStatement: FC<IPropsSwitcherToApply> = ({ toFormStatement }) => {
+const ToFormStatement: FC<IPropsSwitcherToApply> = ({ toFormStatement, loading }) => {
   const delta = useSelector(selectDelta);
-  const attachmentId = useSelector(selectAttachmentId);
-  const loading = useSelector(formingLoading);
   return (
     <Card>
       <Stack>
@@ -34,11 +32,6 @@ const ToFormStatement: FC<IPropsSwitcherToApply> = ({ toFormStatement }) => {
           <Hint variant={'yellow'} maxWidth={'100%'}>
             Невозможно сформировать заявление, если новый средний дневной заработок меньше либо
             равен, чем до замены лет
-          </Hint>
-        )}
-        {attachmentId === undefined && (
-          <Hint variant={'red'} maxWidth={'100%'}>
-            К сожалению не удалось сформировать заявление. Обратитесь в службу поддержки.
           </Hint>
         )}
       </Stack>

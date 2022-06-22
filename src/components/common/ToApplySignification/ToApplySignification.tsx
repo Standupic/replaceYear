@@ -8,11 +8,11 @@ import { cancelSign } from '../../../store/globalStateSlice';
 interface IProps {
   attachment?: IAttachment;
   toUpdateAttachment: (props: { base64: string; cert?: string; singBase64?: string }) => void;
+  cancelSign: () => void;
 }
 
-const ToApplySignification: FC<IProps> = ({ attachment, toUpdateAttachment }) => {
+const ToApplySignification: FC<IProps> = ({ attachment, toUpdateAttachment, cancelSign }) => {
   const currentDate = useSelector(selectCurrentDate);
-  const dispatch = useDispatch();
   return (
     <>
       <Signification
@@ -27,7 +27,7 @@ const ToApplySignification: FC<IProps> = ({ attachment, toUpdateAttachment }) =>
           }
         }}
         onSignCancel={() => {
-          dispatch(cancelSign());
+          cancelSign();
         }}
         data={attachment ? attachment : ({} as IAttachment)}
         hideButtons={['reject', 'rejectManual']}

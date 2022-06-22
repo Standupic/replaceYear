@@ -67,6 +67,11 @@ const createApplication = () => {
     },
     [],
   );
+
+  const cancelSign = useCallback(() => {
+    dispatch(cancelSign());
+  }, [dispatch]);
+
   return (
     <PagePreloader loader={initLoading}>
       <Permission mode={'create'}>
@@ -94,7 +99,8 @@ const createApplication = () => {
                 attachment={attachment}
                 toFormStatement={handlerToFormStatement}
                 toUpdateAttachment={toUpdateAttachment}
-                manuallyLoading={formStatementLoading}
+                cancelSign={cancelSign}
+                toFormLoading={formStatementLoading}
               />
             </>
           ) : (

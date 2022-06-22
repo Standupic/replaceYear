@@ -15,7 +15,7 @@ export enum STATUS_DRAFT_APPLICATION {
 export interface DraftState {
   attachmentDraftId: string;
   toFormStatement: boolean;
-  isSinged: boolean;
+  isSigned: boolean;
   currentDraft: IApplicationMapped;
   draftLoading: boolean;
   statusDraft: STATUS_DRAFT_APPLICATION | undefined;
@@ -26,7 +26,7 @@ export interface DraftState {
 const initialState: DraftState = {
   attachmentDraftId: '',
   toFormStatement: false,
-  isSinged: true,
+  isSigned: false,
   currentDraft: {} as IApplicationMapped,
   draftLoading: false,
   statusDraft: undefined,
@@ -41,8 +41,8 @@ const draftSlice = createSlice({
     resetDraft: () => {
       return initialState;
     },
-    toggleDraftSinged: (state: DraftState, action: PayloadAction<boolean>) => {
-      state.isSinged = action.payload;
+    toggleDraftSigned: (state: DraftState, action: PayloadAction<boolean>) => {
+      state.isSigned = action.payload;
     },
     setDraftStatus: (
       state: DraftState,
@@ -64,6 +64,7 @@ const draftSlice = createSlice({
         cert: action.payload.cert,
         singBase64: action.payload.singBase64,
       };
+      state.isSigned = true;
     },
   },
   extraReducers: (builder) => {
@@ -80,9 +81,14 @@ const draftSlice = createSlice({
       (state: DraftState, action: PayloadAction<IAttachment>) => {
         state.currentDraft.attachment = action.payload;
         state.toFormStatement = false;
-        state.isSinged = true;
       },
     );
+    builder.addCase(getEditedDraftStatement.pending, (state: DraftState) => {
+      state.toFormStatement = true;
+    });
+    builder.addCase(getEditedDraftStatement.rejected, (state: DraftState) => {
+      state.toFormStatement = true;
+    });
     builder.addCase(
       getApplication.fulfilled,
       (state: DraftState, action: PayloadAction<IApplicationMapped>) => {
@@ -124,7 +130,7 @@ export const {
   resetDraft,
   setDraftStatus,
   toggleDraftToFormStatement,
-  toggleDraftSinged,
+  toggleDraftSigned,
   updateDraftAttachmentFile,
 } = draftSlice.actions;
 

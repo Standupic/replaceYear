@@ -23,7 +23,7 @@ import DeleteButton from '../../components/styledComponents/DeleteButton/index.'
 import deleteDraft from '../../middlewares/deleteDraft';
 import ModalDraft from '../../components/common/ModalDraft/ModalDraft';
 import { computingApplication } from '../../store/calculatorSlice';
-import { resetDraft, updateDraftAttachmentFile } from '../../store/draftSlice';
+import { resetDraft, toggleDraftSigned, updateDraftAttachmentFile } from '../../store/draftSlice';
 import editDraftStatement from '../../middlewares/editDraft';
 
 const DraftApplication = () => {
@@ -34,7 +34,7 @@ const DraftApplication = () => {
   const {
     draftLoading,
     currentDraft,
-    isSinged,
+    isSigned,
     attachmentDraftId,
     toFormStatement,
     toFormLoading,
@@ -73,6 +73,11 @@ const DraftApplication = () => {
     },
     [dispatch],
   );
+
+  const cancelSign = useCallback(() => {
+    dispatch(toggleDraftSigned(false));
+  }, [dispatch]);
+
   return (
     <PagePreloader loader={draftLoading}>
       <Stack as={PadBox} padding={[KEY_SPACING.lg, KEY_SPACING.zero, KEY_SPACING.zero]}>
@@ -103,7 +108,8 @@ const DraftApplication = () => {
             attachment={attachment}
             toFormStatement={handlerToFormStatement}
             toUpdateAttachment={toUpdateAttachment}
-            manuallyLoading={toFormLoading}
+            cancelSign={cancelSign}
+            toFormLoading={toFormLoading}
           />
         </>
       </Stack>
@@ -111,7 +117,7 @@ const DraftApplication = () => {
         <Inline gutter={KEY_SPACING.sm}>
           <Button
             preloader={submitLoading}
-            disabled={delta <= 0 || !isSinged}
+            disabled={delta <= 0 || !isSigned}
             onClick={() => {
               dispatch(
                 submitStatement({
