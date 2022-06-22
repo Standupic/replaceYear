@@ -19,7 +19,8 @@ import { RootState } from '../../store';
 import {
   updateAttachNewApplicationFile,
   toggleIsVisibleFormStatement,
-  toggleToContinue, cancelSign,
+  toggleToContinue,
+  cancelSign,
 } from '../../store/globalStateSlice';
 import formStatement from '../../middlewares/formStatement';
 

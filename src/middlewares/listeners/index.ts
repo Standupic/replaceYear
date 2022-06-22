@@ -81,6 +81,13 @@ listenerMiddleware.startListening({
 });
 
 listenerMiddleware.startListening({
+  matcher: isAnyOf(toMostBenefit, incrementYear, decrementYear),
+  effect: async (_action, api) => {
+    api.dispatch(cancelSign());
+  },
+});
+
+listenerMiddleware.startListening({
   matcher: isAnyOf(toMostBenefit, incrementYear, decrementYear, cancelSign),
   effect: async (_action, api) => {
     const store = api.getState() as RootState;

@@ -6,6 +6,7 @@ import { Box, Card, Heading, Stack, Inline } from '../../styledComponents';
 import { ReactComponent as DownLoadSVG } from '../../../assets/images/download.svg';
 import getStatement, { IAttachment } from '../../../middlewares/getStatement';
 import { selectPdfFileLoading } from '../../../selectors/globalSelector';
+import { resetStatementAttachment } from '../../../store/globalStateSlice';
 
 interface IProps {
   attachment?: IAttachment;
@@ -43,6 +44,7 @@ const ToApplyManually: FC<IProps> = ({ attachmentId, attachment, toUpdateAttachm
                   setFile={(file: IFileData[]) => {
                     if (!file.length) {
                       setAttachable(false);
+                      dispatch(resetStatementAttachment());
                     } else {
                       toUpdateAttachment({ base64: file[0].base64 });
                       setAttachable(!isAttachable);

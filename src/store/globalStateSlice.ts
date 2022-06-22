@@ -75,6 +75,9 @@ export const globalStateSlice = createSlice({
     resetStatementAttachmentId: (state: GlobalState) => {
       state.attachmentId = '';
     },
+    resetStatementAttachment: (state: GlobalState) => {
+      state.attachment = undefined;
+    },
     toggleToContinue: (state: GlobalState, action: PayloadAction<boolean>) => {
       state.toContinue = action.payload;
     },
@@ -182,6 +185,7 @@ export const {
   cancelSign,
   toggleIsVisibleFormStatement,
   reset,
+  resetStatementAttachment,
   modalHandlerSuccess,
   resetStatementAttachmentId,
 } = globalStateSlice.actions;
