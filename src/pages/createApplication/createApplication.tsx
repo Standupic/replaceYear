@@ -19,7 +19,7 @@ import { RootState } from '../../store';
 import {
   updateAttachNewApplicationFile,
   toggleIsVisibleFormStatement,
-  toggleToContinue,
+  toggleToContinue, cancelSign,
 } from '../../store/globalStateSlice';
 import formStatement from '../../middlewares/formStatement';
 
@@ -68,9 +68,9 @@ const createApplication = () => {
     [],
   );
 
-  const cancelSign = useCallback(() => {
+  const cancelSignHandler = useCallback(() => {
     dispatch(cancelSign());
-  }, [dispatch]);
+  }, []);
 
   return (
     <PagePreloader loader={initLoading}>
@@ -99,7 +99,7 @@ const createApplication = () => {
                 attachment={attachment}
                 toFormStatement={handlerToFormStatement}
                 toUpdateAttachment={toUpdateAttachment}
-                cancelSign={cancelSign}
+                cancelSign={cancelSignHandler}
                 toFormLoading={formStatementLoading}
               />
             </>

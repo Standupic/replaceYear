@@ -4,7 +4,6 @@ import { mappingInitData, savePdfFile } from '../helpers';
 import formStatement from '../middlewares/formStatement';
 import getStatement, { IAttachment } from '../middlewares/getStatement';
 import submitStatement from '../middlewares/submitStatement';
-import editDraftStatement from '../middlewares/editDraft';
 
 export enum STATUS_APPLICATION {
   Error = 'Error',
