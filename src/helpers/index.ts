@@ -264,7 +264,6 @@ export const mappingGetStatement = (data: any) => {
 };
 
 export const mappingGetApplication = (data: any): IApplicationMapped => {
-  console.log(data);
   return {
     previousYear: data.CurrentYear1,
     beforePreviousYear: data.CurrentYear2,
