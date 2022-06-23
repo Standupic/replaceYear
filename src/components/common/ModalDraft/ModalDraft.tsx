@@ -8,11 +8,9 @@ import '../Modal/styles.sass';
 import { KEY_SPACING } from '../../styledComponents/constants';
 import { Center, Stack, Heading } from '../../styledComponents';
 import { RootState } from '../../../store';
-import {
-  setStatusDraftApplication,
-  STATUS_DRAFT_APPLICATION,
-} from '../../../store/applicationsSlice';
+import { STATUS_DRAFT_APPLICATION } from '../../../store/applicationsSlice';
 import { Text } from '../Modal/Modal-parts';
+import { setDraftStatus } from '../../../store/draftSlice';
 
 const HeadingValues = {
   [STATUS_DRAFT_APPLICATION.Error]: 'Черновик не был удален',
@@ -30,27 +28,27 @@ const Images = {
 };
 
 const ModalDraft: FC = () => {
-  const { statusDraftApplication } = useSelector((state: RootState) => state.applications);
+  const { statusDraft } = useSelector((state: RootState) => state.draft);
   const dispatch = useDispatch();
   const history = useHistory();
   const onClickHandler = () => {
-    if (statusDraftApplication === STATUS_DRAFT_APPLICATION.Success) {
+    if (statusDraft === STATUS_DRAFT_APPLICATION.Success) {
       history.goBack();
     }
-    dispatch(setStatusDraftApplication(undefined));
+    dispatch(setDraftStatus(undefined));
   };
   return (
     <>
-      {statusDraftApplication && (
+      {statusDraft && (
         <Modal size="s" header onClose={onClickHandler}>
           <Center as={Stack} gutter={KEY_SPACING.lg} centerChildren>
-            {Images[statusDraftApplication]}
+            {Images[statusDraft]}
             <Center as={Stack} centerChildren gutter={KEY_SPACING.sm}>
               <Heading size={'18px'} level={'h6'}>
-                {HeadingValues[statusDraftApplication]}
+                {HeadingValues[statusDraft]}
               </Heading>
-              <Text isError={statusDraftApplication === STATUS_DRAFT_APPLICATION.Error}>
-                {TextValues[statusDraftApplication]}
+              <Text isError={statusDraft === STATUS_DRAFT_APPLICATION.Error}>
+                {TextValues[statusDraft]}
               </Text>
             </Center>
             <Button fullWidth onClick={onClickHandler}>

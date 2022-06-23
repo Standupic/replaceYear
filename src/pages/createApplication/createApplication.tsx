@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Button } from 'juicyfront';
 import { useDispatch, useSelector } from 'react-redux';
 import { PadBox, Stack, StickyButton } from '../../components/styledComponents';
@@ -8,7 +8,6 @@ import Calculator from '../../components/common/Calculator/Calculator';
 import HasAlreadyOne from '../../components/common/HasAlreadyOne/HasAlreadyOne';
 import {
   selectDataActiveYears,
-  selectDelta,
   selectIncomeActiveYears,
   selectTotalNotActiveYears,
 } from '../../selectors/calculatorSelector';
@@ -17,35 +16,63 @@ import User from '../../components/common/User';
 import submitStatement from '../../middlewares/submitStatement';
 import PagePreloader from '../../components/common/PagePreloader';
 import { RootState } from '../../store';
-import { toggleIsVisibleFormStatement, toggleToContinue } from '../../store/globalStateSlice';
+import {
+  updateAttachNewApplicationFile,
+  toggleIsVisibleFormStatement,
+  toggleToContinue,
+  cancelSign, resetCreateApplication,
+} from '../../store/globalStateSlice';
+import formStatement from '../../middlewares/formStatement';
 
 const createApplication = () => {
   const {
-    statementAttachmentId,
-    paramsAttachment,
+    attachmentId,
+    attachment,
     isSigned,
     submitLoading,
     initLoading,
     toContinue,
     hasAlreadyOneMessage,
+    isHandSignature,
+    isVisibleFormStatement,
+    formStatementLoading,
   } = useSelector((state: RootState) => state.globalState);
-  const delta = useSelector(selectDelta);
   const dispatch = useDispatch();
   const { topActiveYear, bottomActiveYear, previousYear, beforePreviousYear } = useSelector(
     (state: RootState) => state.calculator,
   );
   const totalNotActiveYear = useSelector(selectTotalNotActiveYears);
   const dataActiveYears = useSelector(selectDataActiveYears);
-  const { total, diff, isTheBest, controller } = dataActiveYears;
+  const { total, delta, isTheBest, controller } = dataActiveYears;
   const { topYearIncome, bottomYearIncome } = useSelector(selectIncomeActiveYears);
   useEffect(() => {
     if (hasAlreadyOneMessage) {
       dispatch(toggleToContinue(false));
     }
     return () => {
-      dispatch(toggleIsVisibleFormStatement(true));
+      dispatch(resetCreateApplication());
     };
   }, []);
+  const handlerToFormStatement = () => {
+    const data = {
+      NextYear1: topActiveYear.value.toString(),
+      NextYear2: bottomActiveYear.value.toString(),
+      event: 'PRINT',
+    };
+    const params = attachmentId ? { ...data, Id: attachmentId } : { ...data };
+    dispatch(formStatement(params));
+  };
+  const toUpdateAttachment = useCallback(
+    (props: { base64: string; cert?: string; singBase64?: string }) => {
+      dispatch(updateAttachNewApplicationFile(props));
+    },
+    [],
+  );
+
+  const cancelSignHandler = useCallback(() => {
+    dispatch(cancelSign());
+  }, []);
+
   return (
     <PagePreloader loader={initLoading}>
       <Permission mode={'create'}>
@@ -60,13 +87,22 @@ const createApplication = () => {
                 beforePreviousYear={beforePreviousYear}
                 totalNotActiveYear={totalNotActiveYear}
                 total={total}
-                diff={diff}
+                diff={delta}
                 isTheBest={isTheBest}
                 controller={controller}
                 topYearIncome={topYearIncome}
                 bottomYearIncome={bottomYearIncome}
               />
-              <SwitcherToApply />
+              <SwitcherToApply
+                attachmentId={attachmentId}
+                isHandSignature={isHandSignature}
+                isVisibleFormStatement={isVisibleFormStatement}
+                attachment={attachment}
+                toFormStatement={handlerToFormStatement}
+                toUpdateAttachment={toUpdateAttachment}
+                cancelSign={cancelSignHandler}
+                toFormLoading={formStatementLoading}
+              />
             </>
           ) : (
             <>
@@ -83,8 +119,8 @@ const createApplication = () => {
               onClick={() => {
                 dispatch(
                   submitStatement({
-                    attachments: { ...paramsAttachment },
-                    id: statementAttachmentId,
+                    attachments: { ...attachment },
+                    id: attachmentId,
                   }),
                 );
               }}>

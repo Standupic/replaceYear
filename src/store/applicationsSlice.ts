@@ -1,14 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Variant } from 'juicyfront/types';
 import receiveApplications, { IApplications } from '../middlewares/receiveApplications';
-import { mappingApplications, mappingGetApplication } from '../helpers';
+import { mappingApplications } from '../helpers';
 import getApplication from '../middlewares/getApplication';
 import { IUser } from '../types/user';
 import { IScenarioStage } from '../components/common/ApplicationCard/ApplicationCard';
 import searchingApplications from '../middlewares/searchingApplications';
 import { IAttachment } from '../middlewares/getStatement';
-import deleteDraft from '../middlewares/deleteDraft';
-import getEditedDraftStatement from '../middlewares/getEditedDraftStatement';
 import { reset } from './globalStateSlice';
 
 export enum PERMISSION_APPLICATIONS {
@@ -116,8 +114,8 @@ const applicationsSlice = createSlice({
     });
     builder.addCase(
       getApplication.fulfilled,
-      (state: ApplicationsState, action: PayloadAction<any>) => {
-        state.currentApplication = mappingGetApplication(action.payload);
+      (state: ApplicationsState, action: PayloadAction<IApplicationMapped>) => {
+        state.currentApplication = action.payload;
         state.loading = false;
       },
     );
@@ -139,30 +137,11 @@ const applicationsSlice = createSlice({
         }
       },
     );
-    builder.addCase(
-      getEditedDraftStatement.fulfilled,
-      (state: ApplicationsState, action: PayloadAction<IAttachment>) => {
-        if (state.currentApplication) {
-          state.currentApplication.attachment = action.payload;
-        }
-      },
-    );
     builder.addCase(searchingApplications.pending, (state: ApplicationsState) => {
       state.loading = true;
     });
     builder.addCase(searchingApplications.rejected, (state: ApplicationsState) => {
       state.loading = false;
-    });
-    builder.addCase(deleteDraft.fulfilled, (state: ApplicationsState) => {
-      state.loading = false;
-      state.statusDraftApplication = STATUS_DRAFT_APPLICATION.Success;
-    });
-    builder.addCase(deleteDraft.pending, (state: ApplicationsState) => {
-      state.loading = true;
-    });
-    builder.addCase(deleteDraft.rejected, (state: ApplicationsState) => {
-      state.loading = false;
-      state.statusDraftApplication = STATUS_DRAFT_APPLICATION.Error;
     });
     builder.addCase(reset, () => {
       return initialState;

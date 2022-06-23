@@ -4,15 +4,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IFileData } from 'juicyfront/types';
 import { Box, Card, Heading, Stack, Inline } from '../../styledComponents';
 import { ReactComponent as DownLoadSVG } from '../../../assets/images/download.svg';
-import getStatement from '../../../middlewares/getStatement';
-import { attachFile } from '../../../store/globalStateSlice';
-import { RootState } from '../../../store';
+import getStatement, { IAttachment } from '../../../middlewares/getStatement';
+import { selectPdfFileLoading } from '../../../selectors/globalSelector';
+import { resetStatementAttachment } from '../../../store/globalStateSlice';
 
-const ToApplyManually = () => {
+interface IProps {
+  attachment?: IAttachment;
+  attachmentId: string;
+  toUpdateAttachment: (props: { base64: string; cert?: string; singBase64?: string }) => void;
+}
+
+const ToApplyManually: FC<IProps> = ({ attachmentId, attachment, toUpdateAttachment }) => {
   const dispatch = useDispatch();
-  const { statementAttachmentId, pdfFileLoading, paramsAttachment, formStatementLoading } =
-    useSelector((state: RootState) => state.globalState);
   const [isAttachable, setAttachable] = useState(false);
+  const pdfLoading = useSelector(selectPdfFileLoading);
   return (
     <>
       <Card>
@@ -32,15 +37,16 @@ const ToApplyManually = () => {
               <Box>
                 <InputFile
                   buttonType="light"
-                  disabled={isAttachable || !paramsAttachment}
+                  disabled={isAttachable || !attachment}
                   fullWidth={false}
                   name={'file'}
                   placeholder={'Прикрепить файл'}
                   setFile={(file: IFileData[]) => {
                     if (!file.length) {
                       setAttachable(false);
+                      dispatch(resetStatementAttachment());
                     } else {
-                      dispatch(attachFile({ base64: file[0].base64 }));
+                      toUpdateAttachment({ base64: file[0].base64 });
                       setAttachable(!isAttachable);
                     }
                   }}
@@ -48,8 +54,8 @@ const ToApplyManually = () => {
               </Box>
               <Button
                 buttonType={'outline'}
-                preloader={pdfFileLoading || formStatementLoading}
-                onClick={() => dispatch(getStatement(statementAttachmentId))}
+                preloader={pdfLoading}
+                onClick={() => dispatch(getStatement(attachmentId))}
                 startAdornment={<DownLoadSVG />}>
                 Шаблон заявления
               </Button>

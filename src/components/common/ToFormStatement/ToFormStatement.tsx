@@ -1,22 +1,15 @@
 import React, { FC } from 'react';
 import { Button, Hint } from 'juicyfront';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Box, Card, Heading, Stack } from '../../styledComponents';
-import formStatement from '../../../middlewares/formStatement';
-import { selectDelta, selectParamsApplication } from '../../../selectors/calculatorSelector';
-import { formingLoading, selectAttachmentId } from '../../../selectors/globalSelector';
-import editDraftStatement from '../../../middlewares/editDraft';
+import { selectDelta } from '../../../selectors/calculatorSelector';
 
 export interface IPropsSwitcherToApply {
-  isDraft?: boolean;
+  toFormStatement: () => void;
+  loading: boolean;
 }
-
-const ToFormStatement: FC<IPropsSwitcherToApply> = ({ isDraft }) => {
-  const dispatch = useDispatch();
-  const params = useSelector(selectParamsApplication);
+const ToFormStatement: FC<IPropsSwitcherToApply> = ({ toFormStatement, loading }) => {
   const delta = useSelector(selectDelta);
-  const attachmentId = useSelector(selectAttachmentId);
-  const loading = useSelector(formingLoading);
   return (
     <Card>
       <Stack>
@@ -30,11 +23,7 @@ const ToFormStatement: FC<IPropsSwitcherToApply> = ({ isDraft }) => {
             width={'32px'}
             disabled={delta <= 0}
             onClick={() => {
-              if (isDraft) {
-                dispatch(editDraftStatement({ ...params, event: 'PRINT' }));
-              } else {
-                dispatch(formStatement({ ...params, event: 'PRINT' }));
-              }
+              toFormStatement();
             }}>
             Сформировать
           </Button>
@@ -43,11 +32,6 @@ const ToFormStatement: FC<IPropsSwitcherToApply> = ({ isDraft }) => {
           <Hint variant={'yellow'} maxWidth={'100%'}>
             Невозможно сформировать заявление, если новый средний дневной заработок меньше либо
             равен, чем до замены лет
-          </Hint>
-        )}
-        {attachmentId === undefined && (
-          <Hint variant={'red'} maxWidth={'100%'}>
-            К сожалению не удалось сформировать заявление. Обратитесь в службу поддержки.
           </Hint>
         )}
       </Stack>

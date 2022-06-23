@@ -1,29 +1,49 @@
 import React, { FC } from 'react';
-import { useSelector } from 'react-redux';
-import {
-  selectAttachmentId,
-  selectIsHandSignature,
-  selectIsVisibleFormStatement,
-} from '../../../selectors/globalSelector';
 import ToFormStatement from '../ToFormStatement';
 import ToApplyManually from '../ToApplyManually';
 import ToApplySignification from '../ToApplySignification/ToApplySignification';
+import { IAttachment } from '../../../middlewares/getStatement';
 
 export interface IPropsSwitcherToApply {
-  isDraft?: boolean;
+  isHandSignature?: boolean;
+  isVisibleFormStatement: boolean;
+  attachmentId: string;
+  attachment?: IAttachment;
+  toFormStatement: () => void;
+  toUpdateAttachment: (props: { base64: string; cert?: string; singBase64?: string }) => void;
+  cancelSign: () => void;
+  toFormLoading: boolean;
 }
 
-const SwitcherToApply: FC<IPropsSwitcherToApply> = ({ isDraft }) => {
-  const attachmentId = useSelector(selectAttachmentId);
-  const isHandSignature = useSelector(selectIsHandSignature);
-  const isVisibleFormStatement = useSelector(selectIsVisibleFormStatement);
+const SwitcherToApply: FC<IPropsSwitcherToApply> = ({
+  isHandSignature,
+  isVisibleFormStatement,
+  attachmentId,
+  attachment,
+  toFormStatement,
+  toUpdateAttachment,
+  cancelSign,
+  toFormLoading,
+}) => {
   if (!isVisibleFormStatement && attachmentId && !isHandSignature) {
-    return <ToApplySignification isDraft={isDraft} />;
+    return (
+      <ToApplySignification
+        attachment={attachment}
+        toUpdateAttachment={toUpdateAttachment}
+        cancelSign={cancelSign}
+      />
+    );
   }
   if (!isVisibleFormStatement && attachmentId && isHandSignature) {
-    return <ToApplyManually />;
+    return (
+      <ToApplyManually
+        toUpdateAttachment={toUpdateAttachment}
+        attachmentId={attachmentId}
+        attachment={attachment}
+      />
+    );
   }
-  return <ToFormStatement isDraft={isDraft} />;
+  return <ToFormStatement toFormStatement={toFormStatement} loading={toFormLoading} />;
 };
 
 export default SwitcherToApply;

@@ -6,6 +6,7 @@ import { checkIsThereMoreThanOneNotSelectableYear } from '../../helpers';
 import {
   ACCESS_APPLICATION,
   cancelSign,
+  resetCreateApplication,
   setAccessToApplication,
   toggleIsVisibleFormStatement,
 } from '../../store/globalStateSlice';
@@ -22,19 +23,21 @@ import formStatement from '../formStatement';
 import editDraftStatement from '../editDraft';
 import getEditedDraftStatement from '../getEditedDraftStatement';
 import getApplication from '../getApplication';
+import { toggleDraftSigned, toggleDraftToFormStatement } from '../../store/draftSlice';
+import authorization from '../authorization';
 
 const listenerMiddleware = createListenerMiddleware();
 
 listenerMiddleware.startListening({
-  type: 'authorization/fulfilled',
+  matcher: isFulfilled(authorization),
   effect: async (_action, api) => {
     api.dispatch(initReplaceYear({}));
   },
 });
 
 listenerMiddleware.startListening({
-  type: 'initReplaceYear/fulfilled',
-  effect: async (_action: any, api) => {
+  matcher: isFulfilled(initReplaceYear),
+  effect: async (_action, api) => {
     api.dispatch(getHelperList({}));
     console.log('helper list');
     api.unsubscribe();
@@ -43,7 +46,7 @@ listenerMiddleware.startListening({
 
 listenerMiddleware.startListening({
   matcher: isFulfilled(getHelperList),
-  effect: async (action: any, api) => {
+  effect: async (action, api) => {
     const store = api.getState() as RootState;
     const twoPreviousYears = {
       previousYear: store.calculator.previousYear,
@@ -63,7 +66,7 @@ listenerMiddleware.startListening({
 // Взять данные заявление под копотом если подписываем заявление в ручную. Формуруем -> под копотом берем даныые файла.
 listenerMiddleware.startListening({
   matcher: isFulfilled(formStatement),
-  effect: async (action: any, api) => {
+  effect: async (action, api) => {
     api.dispatch(toggleIsVisibleFormStatement(false));
     if (!action.payload.anotherEmployer) {
       api.dispatch(getStatement(action.payload.Id));
@@ -73,29 +76,40 @@ listenerMiddleware.startListening({
 
 listenerMiddleware.startListening({
   matcher: isFulfilled(editDraftStatement),
-  effect: async (action: any, api) => {
-    api.dispatch(toggleIsVisibleFormStatement(false));
+  effect: async (action, api) => {
     api.dispatch(getEditedDraftStatement(action.payload.Id));
   },
 });
 
 listenerMiddleware.startListening({
+  matcher: isAnyOf(toMostBenefit, incrementYear, decrementYear),
+  effect: async (_action, api) => {
+    api.dispatch(cancelSign());
+  },
+});
+
+listenerMiddleware.startListening({
   matcher: isAnyOf(toMostBenefit, incrementYear, decrementYear, cancelSign),
-  effect: async (_action: any, api) => {
+  effect: async (_action, api) => {
     const store = api.getState() as RootState;
-    const { statementAttachmentId } = store.globalState;
-    if (statementAttachmentId) {
-      api.dispatch(toggleIsVisibleFormStatement(true));
+    const { attachmentId } = store.globalState;
+    const { attachmentDraftId } = store.draft;
+    if (attachmentId) {
+      api.dispatch(resetCreateApplication());
+    }
+    if (attachmentDraftId) {
+      api.dispatch(toggleDraftToFormStatement(true));
+      api.dispatch(toggleDraftSigned(false));
     }
   },
 });
 
 listenerMiddleware.startListening({
   matcher: isFulfilled(getApplication),
-  effect: async (action: any, api) => {
+  effect: async (action, api) => {
     const store = api.getState() as RootState;
     if (action.meta.arg.isDraft) {
-      api.dispatch(computingDraftApplication(store.applications.currentApplication));
+      api.dispatch(computingDraftApplication(store.draft.currentDraft));
     }
   },
 });

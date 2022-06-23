@@ -32,12 +32,13 @@ export const domElementGetter = () => {
   return div;
 };
 
-export const getCurrency = (income: number, options?: { toNumber: boolean }) => {
+export const getCurrency = (income: number) => {
   if (income) {
-    if (options && options.toNumber) {
-      return Number(income.toLocaleString('ru-Ru').replace(',', '.'));
-    }
-    return income.toLocaleString('ru-Ru', { style: 'currency', currency: 'RUB' });
+    return income.toLocaleString('ru-Ru', {
+      style: 'currency',
+      currency: 'RUB',
+      maximumFractionDigits: 2,
+    });
   }
   return '';
 };
@@ -70,6 +71,13 @@ export const minMaxYears = (years: IHelperListAPI[]): IMinMaxYear => {
 export const mappingHelperList = (years: IHelperListAPI[]) => {
   return years.map((item) => {
     item.year = Number(item.year);
+    return item;
+  });
+};
+
+export const convertRubToPennyHelperList = (years: IHelperListAPI[]) => {
+  return years.map((item) => {
+    item.Amount = item.Amount * 100;
     return item;
   });
 };
@@ -235,13 +243,13 @@ export const totalActiveYears = (topYear: IYear, bottomYear: IYear, helperList: 
       return item.year === topYear.value || item.year === bottomYear.value;
     })
     .reduce((acc: any, item) => {
-      return acc + item.dailyAmount;
+      return acc + item.Amount / 730 / 100;
     }, 0);
 };
 
 export const totalNotActiveYears = (items: IHelperList[]) => {
   return items?.reduce((acc: any, item) => {
-    return acc + item.dailyAmount;
+    return acc + item.Amount / 730 / 100;
   }, 0);
 };
 

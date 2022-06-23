@@ -4,9 +4,6 @@ import { mappingInitData, savePdfFile } from '../helpers';
 import formStatement from '../middlewares/formStatement';
 import getStatement, { IAttachment } from '../middlewares/getStatement';
 import submitStatement from '../middlewares/submitStatement';
-import editDraftStatement from '../middlewares/editDraft';
-import { computingDraftApplication } from './calculatorSlice';
-import { IApplicationMapped } from './applicationsSlice';
 
 export enum STATUS_APPLICATION {
   Error = 'Error',
@@ -32,9 +29,9 @@ export interface GlobalState {
   initData: InitData;
   hasAlreadyOneMessage: string;
   date: string;
-  paramsAttachment: IAttachment | undefined;
+  attachment: IAttachment | undefined;
   isSigned: boolean;
-  statementAttachmentId: string | false;
+  attachmentId: string;
   isHandSignature: boolean | undefined;
   isVisibleFormStatement: boolean;
   toContinue: boolean;
@@ -49,9 +46,9 @@ const initialState: GlobalState = {
   accessApplication: undefined,
   initData: {} as InitData,
   hasAlreadyOneMessage: '',
-  statementAttachmentId: '',
+  attachmentId: '',
   isHandSignature: undefined,
-  paramsAttachment: undefined,
+  attachment: undefined,
   isSigned: false,
   date: new Date().toLocaleDateString(),
   isVisibleFormStatement: true,
@@ -76,7 +73,10 @@ export const globalStateSlice = createSlice({
       state.accessApplication = action.payload;
     },
     resetStatementAttachmentId: (state: GlobalState) => {
-      state.statementAttachmentId = '';
+      state.attachmentId = '';
+    },
+    resetStatementAttachment: (state: GlobalState) => {
+      state.attachment = undefined;
     },
     toggleToContinue: (state: GlobalState, action: PayloadAction<boolean>) => {
       state.toContinue = action.payload;
@@ -84,13 +84,13 @@ export const globalStateSlice = createSlice({
     toggleIsVisibleFormStatement: (state: GlobalState, action: PayloadAction<boolean>) => {
       state.isVisibleFormStatement = action.payload;
     },
-    attachFile: (
+    updateAttachNewApplicationFile: (
       state,
       action: PayloadAction<{ base64: string; cert?: string; singBase64?: string }>,
     ) => {
       // @ts-ignore
-      state.paramsAttachment = {
-        ...state.paramsAttachment,
+      state.attachment = {
+        ...state.attachment,
         base64: action.payload.base64,
         action: 'U',
         cert: action.payload.cert,
@@ -101,15 +101,15 @@ export const globalStateSlice = createSlice({
     cancelSign: (state: GlobalState) => {
       state.isSigned = false;
     },
-    modalHandlerSuccess: (state: GlobalState) => {
-      state.statementAttachmentId = '';
-      state.paramsAttachment = undefined;
+    resetCreateApplication: (state: GlobalState) => {
+      state.attachmentId = '';
+      state.attachment = undefined;
       state.isSigned = false;
       state.isVisibleFormStatement = true;
     },
     reset: (state: GlobalState) => {
-      state.statementAttachmentId = '';
-      state.paramsAttachment = undefined;
+      state.attachmentId = '';
+      state.attachment = undefined;
       state.isSigned = false;
       state.isVisibleFormStatement = true;
     },
@@ -137,7 +137,7 @@ export const globalStateSlice = createSlice({
     });
     builder.addCase(formStatement.fulfilled, (state: GlobalState, action) => {
       state.formStatementLoading = false;
-      state.statementAttachmentId = action.payload.Id;
+      state.attachmentId = action.payload.Id;
     });
     builder.addCase(formStatement.rejected, (state: GlobalState) => {
       state.formStatementLoading = false;
@@ -146,7 +146,7 @@ export const globalStateSlice = createSlice({
       getStatement.fulfilled,
       (state: GlobalState, action: PayloadAction<IAttachment>) => {
         state.pdfFileLoading = false;
-        state.paramsAttachment = action.payload;
+        state.attachment = action.payload;
         if (!state.isHandSignature) {
           return state;
         } else {
@@ -175,34 +175,18 @@ export const globalStateSlice = createSlice({
       state.statusApplication = STATUS_APPLICATION.Error;
       state.submitLoading = false;
     });
-    builder.addCase(editDraftStatement.fulfilled, (state: GlobalState) => {
-      state.formStatementLoading = false;
-    });
-    builder.addCase(editDraftStatement.pending, (state: GlobalState) => {
-      state.formStatementLoading = true;
-    });
-    builder.addCase(editDraftStatement.rejected, (state: GlobalState) => {
-      state.formStatementLoading = false;
-    });
-    builder.addCase(
-      computingDraftApplication,
-      (state: GlobalState, action: PayloadAction<IApplicationMapped>) => {
-        if (action.payload.id) {
-          state.statementAttachmentId = action.payload.id;
-        }
-      },
-    );
   },
 });
 export const {
   setStatusApplication,
   toggleToContinue,
-  attachFile,
+  updateAttachNewApplicationFile,
   setAccessToApplication,
   cancelSign,
   toggleIsVisibleFormStatement,
   reset,
-  modalHandlerSuccess,
+  resetStatementAttachment,
+  resetCreateApplication,
   resetStatementAttachmentId,
 } = globalStateSlice.actions;
 export default globalStateSlice.reducer;
