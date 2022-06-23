@@ -75,8 +75,8 @@ export const selectIncomeActiveYears = createSelector(
     );
     if (filtered && filtered.length === 2) {
       return {
-        topYearIncome: filtered[0].Amount,
-        bottomYearIncome: filtered[1].Amount,
+        topYearIncome: filtered[0].Amount / 100,
+        bottomYearIncome: filtered[1].Amount / 100,
       };
     }
     return {
