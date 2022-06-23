@@ -5,6 +5,7 @@ import formStatement from '../middlewares/formStatement';
 import getStatement, { IAttachment } from '../middlewares/getStatement';
 import submitStatement from '../middlewares/submitStatement';
 import getInitMessage from "../middlewares/getInitMessage";
+import getDraftStatement from "../middlewares/getDraftStatement";
 
 export enum STATUS_APPLICATION {
   Error = 'Error',

@@ -13,6 +13,9 @@ export interface IPropsSwitcherToApply {
   toUpdateAttachment: (props: { base64: string; cert?: string; singBase64?: string }) => void;
   cancelSign: () => void;
   toFormLoading: boolean;
+  resetAttachmentManually: () => void;
+  getStatementManually: (id: string) => void;
+  pdfFileLoading: boolean;
 }
 
 const SwitcherToApply: FC<IPropsSwitcherToApply> = ({
@@ -24,6 +27,9 @@ const SwitcherToApply: FC<IPropsSwitcherToApply> = ({
   toUpdateAttachment,
   cancelSign,
   toFormLoading,
+  resetAttachmentManually,
+  getStatementManually,
+  pdfFileLoading,
 }) => {
   if (!isVisibleFormStatement && attachmentId && !isHandSignature) {
     return (
@@ -40,6 +46,9 @@ const SwitcherToApply: FC<IPropsSwitcherToApply> = ({
         toUpdateAttachment={toUpdateAttachment}
         attachmentId={attachmentId}
         attachment={attachment}
+        reset={resetAttachmentManually}
+        getStatement={getStatementManually}
+        pdfLoading={pdfFileLoading}
       />
     );
   }

@@ -1,23 +1,28 @@
 import React, { FC, useState } from 'react';
 import { Button, Hint, InputFile } from 'juicyfront';
-import { useDispatch, useSelector } from 'react-redux';
 import { IFileData } from 'juicyfront/types';
 import { Box, Card, Heading, Stack, Inline } from '../../styledComponents';
 import { ReactComponent as DownLoadSVG } from '../../../assets/images/download.svg';
-import getStatement, { IAttachment } from '../../../middlewares/getStatement';
-import { selectPdfFileLoading } from '../../../selectors/globalSelector';
-import { resetStatementAttachment } from '../../../store/globalStateSlice';
+import { IAttachment } from '../../../middlewares/getStatement';
 
 interface IProps {
   attachment?: IAttachment;
   attachmentId: string;
   toUpdateAttachment: (props: { base64: string; cert?: string; singBase64?: string }) => void;
+  reset: () => void;
+  getStatement: (id: string) => void;
+  pdfLoading: boolean;
 }
 
-const ToApplyManually: FC<IProps> = ({ attachmentId, attachment, toUpdateAttachment }) => {
-  const dispatch = useDispatch();
+const ToApplyManually: FC<IProps> = ({
+  attachmentId,
+  attachment,
+  toUpdateAttachment,
+  reset,
+  getStatement,
+  pdfLoading,
+}) => {
   const [isAttachable, setAttachable] = useState(false);
-  const pdfLoading = useSelector(selectPdfFileLoading);
   return (
     <>
       <Card>
@@ -44,7 +49,7 @@ const ToApplyManually: FC<IProps> = ({ attachmentId, attachment, toUpdateAttachm
                   setFile={(file: IFileData[]) => {
                     if (!file.length) {
                       setAttachable(false);
-                      dispatch(resetStatementAttachment());
+                      reset();
                     } else {
                       toUpdateAttachment({ base64: file[0].base64 });
                       setAttachable(!isAttachable);
@@ -55,7 +60,7 @@ const ToApplyManually: FC<IProps> = ({ attachmentId, attachment, toUpdateAttachm
               <Button
                 buttonType={'outline'}
                 preloader={pdfLoading}
-                onClick={() => dispatch(getStatement(attachmentId))}
+                onClick={() => getStatement(attachmentId)}
                 startAdornment={<DownLoadSVG />}>
                 Шаблон заявления
               </Button>

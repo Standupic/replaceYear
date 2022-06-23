@@ -2,10 +2,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import getApplication from '../middlewares/getApplication';
 import deleteDraft from '../middlewares/deleteDraft';
 import getEditedDraftStatement from '../middlewares/getEditedDraftStatement';
-import { IAttachment } from '../middlewares/getStatement';
+import getStatement, { IAttachment } from '../middlewares/getStatement';
 import editDraftStatement from '../middlewares/editDraft';
+import { savePdfFile } from '../helpers';
+import getDraftStatement from '../middlewares/getDraftStatement';
 import { IApplicationMapped, PERMISSION_APPLICATIONS } from './applicationsSlice';
 import { computingDraftApplication } from './calculatorSlice';
+import { GlobalState } from './globalStateSlice';
 
 export enum STATUS_DRAFT_APPLICATION {
   Error = 'Error',
@@ -21,6 +24,7 @@ export interface DraftState {
   statusDraft: STATUS_DRAFT_APPLICATION | undefined;
   accessDraft: PERMISSION_APPLICATIONS | undefined;
   toFormLoading: boolean;
+  pdfFileLoading: boolean;
 }
 
 const initialState: DraftState = {
@@ -32,6 +36,7 @@ const initialState: DraftState = {
   statusDraft: undefined,
   accessDraft: undefined,
   toFormLoading: false,
+  pdfFileLoading: false,
 };
 
 const draftSlice = createSlice({
@@ -49,6 +54,9 @@ const draftSlice = createSlice({
       action: PayloadAction<STATUS_DRAFT_APPLICATION | undefined>,
     ) => {
       state.statusDraft = action.payload;
+    },
+    resetDraftStatementAttachment: (state: DraftState) => {
+      state.currentDraft.attachment = {} as IAttachment;
     },
     toggleDraftToFormStatement: (state: DraftState, action: PayloadAction<boolean>) => {
       state.toFormStatement = action.payload;
@@ -123,6 +131,23 @@ const draftSlice = createSlice({
     builder.addCase(editDraftStatement.rejected, (state: DraftState) => {
       state.toFormLoading = false;
     });
+    builder.addCase(
+      getDraftStatement.fulfilled,
+      (state: DraftState, action: PayloadAction<IAttachment>) => {
+        state.currentDraft.attachment = action.payload;
+        const { base64, fileName } = action.payload;
+        if (base64 && fileName) {
+          savePdfFile(base64, fileName);
+        }
+        return state;
+      },
+    );
+    builder.addCase(getDraftStatement.pending, (state: DraftState) => {
+      state.pdfFileLoading = true;
+    });
+    builder.addCase(getDraftStatement.rejected, (state: DraftState) => {
+      state.pdfFileLoading = false;
+    });
   },
 });
 
@@ -132,6 +157,7 @@ export const {
   toggleDraftToFormStatement,
   toggleDraftSigned,
   updateDraftAttachmentFile,
+  resetDraftStatementAttachment,
 } = draftSlice.actions;
 
 export default draftSlice.reducer;

@@ -21,8 +21,10 @@ import {
   toggleToContinue,
   cancelSign,
   resetCreateApplication,
+  resetStatementAttachment,
 } from '../../store/globalStateSlice';
 import formStatement from '../../middlewares/formStatement';
+import getStatement from '../../middlewares/getStatement';
 
 const createApplication = () => {
   const {
@@ -36,6 +38,7 @@ const createApplication = () => {
     isHandSignature,
     isVisibleFormStatement,
     formStatementLoading,
+    pdfFileLoading,
   } = useSelector((state: RootState) => state.globalState);
   const dispatch = useDispatch();
   const { topActiveYear, bottomActiveYear, previousYear, beforePreviousYear } = useSelector(
@@ -73,6 +76,14 @@ const createApplication = () => {
     dispatch(cancelSign());
   }, []);
 
+  const resetManually = useCallback(() => {
+    dispatch(resetStatementAttachment());
+  }, []);
+
+  const getStatementManually = useCallback((id: string) => {
+    dispatch(getStatement(id));
+  }, []);
+
   return (
     <PagePreloader loader={initLoading}>
       <Permission mode={'create'}>
@@ -102,6 +113,9 @@ const createApplication = () => {
                 toUpdateAttachment={toUpdateAttachment}
                 cancelSign={cancelSignHandler}
                 toFormLoading={formStatementLoading}
+                resetAttachmentManually={resetManually}
+                getStatementManually={getStatementManually}
+                pdfFileLoading={pdfFileLoading}
               />
             </>
           ) : (
