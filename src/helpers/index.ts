@@ -137,6 +137,14 @@ const sortAmount = (a: IHelperList, b: IHelperList) => {
   }
   return 0;
 };
+
+export const sortIncomeYear = (a: IHelperList, b: IHelperList) => {
+  if (a.year < b.year) {
+    return -1;
+  }
+  return 0;
+};
+
 export const getMostBenefitYear = (
   years: IHelperList[],
   notSelectableYear: number,

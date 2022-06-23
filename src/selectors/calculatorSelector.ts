@@ -4,6 +4,7 @@ import {
   checkMostBenefitYear,
   controllerArrow,
   getDelta,
+  sortIncomeYear,
   totalActiveYears,
   totalNotActiveYears,
 } from '../helpers';
@@ -73,10 +74,13 @@ export const selectIncomeActiveYears = createSelector(
     const filtered = helperList.filter(
       (item) => item.year === top.value || item.year === bottom.value,
     );
-    if (filtered && filtered.length === 2) {
+    const obj: Record<string, number> = filtered.reduce((acc, item) => {
+      return { ...acc, [`${item.year}`]: item.Amount / 100 };
+    }, {});
+    if (Object.keys(obj).length === 2) {
       return {
-        topYearIncome: filtered[0].Amount / 100,
-        bottomYearIncome: filtered[1].Amount / 100,
+        topYearIncome: obj[String(top.value)],
+        bottomYearIncome: obj[String(bottom.value)],
       };
     }
     return {
