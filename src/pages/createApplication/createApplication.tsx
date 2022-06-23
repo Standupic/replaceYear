@@ -18,9 +18,9 @@ import PagePreloader from '../../components/common/PagePreloader';
 import { RootState } from '../../store';
 import {
   updateAttachNewApplicationFile,
-  toggleIsVisibleFormStatement,
   toggleToContinue,
-  cancelSign, resetCreateApplication,
+  cancelSign,
+  resetCreateApplication,
 } from '../../store/globalStateSlice';
 import formStatement from '../../middlewares/formStatement';
 

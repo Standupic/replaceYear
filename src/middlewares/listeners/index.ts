@@ -25,6 +25,7 @@ import getEditedDraftStatement from '../getEditedDraftStatement';
 import getApplication from '../getApplication';
 import { toggleDraftSigned, toggleDraftToFormStatement } from '../../store/draftSlice';
 import authorization from '../authorization';
+import getInitMessage from '../getInitMessage';
 
 const listenerMiddleware = createListenerMiddleware();
 
@@ -40,7 +41,6 @@ listenerMiddleware.startListening({
   effect: async (_action, api) => {
     api.dispatch(getHelperList({}));
     console.log('helper list');
-    api.unsubscribe();
   },
 });
 
@@ -117,7 +117,7 @@ listenerMiddleware.startListening({
 listenerMiddleware.startListening({
   matcher: isAnyOf(isFulfilled(submitStatement), isFulfilled(deleteDraft)),
   effect: async (_action, api) => {
-    api.dispatch(initReplaceYear({}));
+    api.dispatch(getInitMessage({}));
   },
 });
 
