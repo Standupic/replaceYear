@@ -20,7 +20,7 @@ import {
   updateAttachNewApplicationFile,
   toggleIsVisibleFormStatement,
   toggleToContinue,
-  cancelSign,
+  cancelSign, resetCreateApplication,
 } from '../../store/globalStateSlice';
 import formStatement from '../../middlewares/formStatement';
 
@@ -50,7 +50,7 @@ const createApplication = () => {
       dispatch(toggleToContinue(false));
     }
     return () => {
-      dispatch(toggleIsVisibleFormStatement(true));
+      dispatch(resetCreateApplication());
     };
   }, []);
   const handlerToFormStatement = () => {

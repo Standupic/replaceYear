@@ -101,7 +101,7 @@ export const globalStateSlice = createSlice({
     cancelSign: (state: GlobalState) => {
       state.isSigned = false;
     },
-    modalHandlerSuccess: (state: GlobalState) => {
+    resetCreateApplication: (state: GlobalState) => {
       state.attachmentId = '';
       state.attachment = undefined;
       state.isSigned = false;
@@ -186,7 +186,7 @@ export const {
   toggleIsVisibleFormStatement,
   reset,
   resetStatementAttachment,
-  modalHandlerSuccess,
+  resetCreateApplication,
   resetStatementAttachmentId,
 } = globalStateSlice.actions;
 export default globalStateSlice.reducer;

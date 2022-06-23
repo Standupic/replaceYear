@@ -6,6 +6,7 @@ import { checkIsThereMoreThanOneNotSelectableYear } from '../../helpers';
 import {
   ACCESS_APPLICATION,
   cancelSign,
+  resetCreateApplication,
   setAccessToApplication,
   toggleIsVisibleFormStatement,
 } from '../../store/globalStateSlice';
@@ -94,7 +95,7 @@ listenerMiddleware.startListening({
     const { attachmentId } = store.globalState;
     const { attachmentDraftId } = store.draft;
     if (attachmentId) {
-      api.dispatch(toggleIsVisibleFormStatement(true));
+      api.dispatch(resetCreateApplication());
     }
     if (attachmentDraftId) {
       api.dispatch(toggleDraftToFormStatement(true));
