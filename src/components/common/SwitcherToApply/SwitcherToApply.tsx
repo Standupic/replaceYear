@@ -10,7 +10,12 @@ export interface IPropsSwitcherToApply {
   attachmentId: string;
   attachment?: IAttachment;
   toFormStatement: () => void;
-  toUpdateAttachment: (props: { base64: string; cert?: string; singBase64?: string }) => void;
+  toUpdateAttachment: (props: {
+    base64: string;
+    cert?: string;
+    singBase64?: string;
+    fileName?: string;
+  }) => void;
   cancelSign: () => void;
   toFormLoading: boolean;
   resetAttachmentManually: () => void;

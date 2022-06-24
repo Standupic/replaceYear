@@ -4,8 +4,8 @@ import { mappingInitData, savePdfFile } from '../helpers';
 import formStatement from '../middlewares/formStatement';
 import getStatement, { IAttachment } from '../middlewares/getStatement';
 import submitStatement from '../middlewares/submitStatement';
-import getInitMessage from "../middlewares/getInitMessage";
-import getDraftStatement from "../middlewares/getDraftStatement";
+import getInitMessage from '../middlewares/getInitMessage';
+import getDraftStatement from '../middlewares/getDraftStatement';
 
 export enum STATUS_APPLICATION {
   Error = 'Error',
@@ -32,6 +32,7 @@ export interface GlobalState {
   hasAlreadyOneMessage: string;
   date: string;
   attachment: IAttachment | undefined;
+  isPdf: boolean;
   isSigned: boolean;
   attachmentId: string;
   isHandSignature: boolean | undefined;
@@ -51,6 +52,7 @@ const initialState: GlobalState = {
   attachmentId: '',
   isHandSignature: undefined,
   attachment: undefined,
+  isPdf: true,
   isSigned: false,
   date: new Date().toLocaleDateString(),
   isVisibleFormStatement: true,
@@ -89,7 +91,12 @@ export const globalStateSlice = createSlice({
     },
     updateAttachNewApplicationFile: (
       state,
-      action: PayloadAction<{ base64: string; cert?: string; singBase64?: string }>,
+      action: PayloadAction<{
+        base64: string;
+        cert?: string;
+        singBase64?: string;
+        fileName?: string;
+      }>,
     ) => {
       // @ts-ignore
       state.attachment = {
@@ -98,11 +105,18 @@ export const globalStateSlice = createSlice({
         action: 'U',
         cert: action.payload.cert,
         singBase64: action.payload.singBase64,
+        // @ts-ignore
+        fileName: action.payload.fileName,
       };
+      if (state.attachment) {
+        state.isPdf = state.attachment.fileName.split('.')[1] === 'pdf';
+      }
       state.isSigned = true;
     },
     cancelSign: (state: GlobalState) => {
       state.isSigned = false;
+      state.attachment = undefined;
+      state.isPdf = true;
     },
     resetCreateApplication: (state: GlobalState) => {
       state.attachmentId = '';

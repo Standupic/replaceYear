@@ -25,6 +25,7 @@ import {
 } from '../../store/globalStateSlice';
 import formStatement from '../../middlewares/formStatement';
 import getStatement from '../../middlewares/getStatement';
+import IsPdf from '../../components/common/IsPdf';
 
 const createApplication = () => {
   const {
@@ -39,6 +40,7 @@ const createApplication = () => {
     isVisibleFormStatement,
     formStatementLoading,
     pdfFileLoading,
+    isPdf,
   } = useSelector((state: RootState) => state.globalState);
   const dispatch = useDispatch();
   const { topActiveYear, bottomActiveYear, previousYear, beforePreviousYear } = useSelector(
@@ -66,7 +68,7 @@ const createApplication = () => {
     dispatch(formStatement(params));
   };
   const toUpdateAttachment = useCallback(
-    (props: { base64: string; cert?: string; singBase64?: string }) => {
+    (props: { base64: string; cert?: string; singBase64?: string; fileName?: string }) => {
       dispatch(updateAttachNewApplicationFile(props));
     },
     [],
@@ -104,6 +106,7 @@ const createApplication = () => {
                 topYearIncome={topYearIncome}
                 bottomYearIncome={bottomYearIncome}
               />
+              {!isPdf && <IsPdf />}
               <SwitcherToApply
                 attachmentId={attachmentId}
                 isHandSignature={isHandSignature}
@@ -129,7 +132,7 @@ const createApplication = () => {
           <StickyButton>
             <Button
               preloader={submitLoading}
-              disabled={delta <= 0 || !isSigned}
+              disabled={delta <= 0 || !isSigned || !isPdf}
               onClick={() => {
                 dispatch(
                   submitStatement({

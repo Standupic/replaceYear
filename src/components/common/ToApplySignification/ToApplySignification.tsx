@@ -1,13 +1,18 @@
 import React, { FC } from 'react';
 import { Signification } from 'juicyfront';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectCurrentDate } from '../../../selectors/globalSelector';
 import { IAttachment } from '../../../middlewares/getStatement';
-import { cancelSign } from '../../../store/globalStateSlice';
+const lodash = require('lodash');
 
 interface IProps {
   attachment?: IAttachment;
-  toUpdateAttachment: (props: { base64: string; cert?: string; singBase64?: string }) => void;
+  toUpdateAttachment: (props: {
+    base64: string;
+    cert?: string;
+    singBase64?: string;
+    fileName: string;
+  }) => void;
   cancelSign: () => void;
 }
 
@@ -17,12 +22,17 @@ const ToApplySignification: FC<IProps> = ({ attachment, toUpdateAttachment, canc
     <>
       <Signification
         onSignify={(result) => {
+          if (lodash.isEmpty(result.file)) {
+            cancelSign();
+            return;
+          }
           if (result) {
             const { file } = result;
             toUpdateAttachment({
               base64: file.base64,
               cert: file.cert,
               singBase64: file.singBase64,
+              fileName: file.fileName,
             });
           }
         }}

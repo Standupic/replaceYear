@@ -8,7 +8,12 @@ import { IAttachment } from '../../../middlewares/getStatement';
 interface IProps {
   attachment?: IAttachment;
   attachmentId: string;
-  toUpdateAttachment: (props: { base64: string; cert?: string; singBase64?: string }) => void;
+  toUpdateAttachment: (props: {
+    base64: string;
+    cert?: string;
+    singBase64?: string;
+    fileName?: string;
+  }) => void;
   reset: () => void;
   getStatement: (id: string) => void;
   pdfLoading: boolean;
@@ -45,9 +50,10 @@ const ToApplyManually: FC<IProps> = ({
                   disabled={isAttachable || !attachment}
                   fullWidth={false}
                   name={'file'}
-                  accept={'pdf'}
+                  accept={'application/pdf'}
                   placeholder={'Прикрепить файл'}
                   setFile={(file: IFileData[]) => {
+                    console.log(file);
                     if (!file.length) {
                       setAttachable(false);
                       reset();
