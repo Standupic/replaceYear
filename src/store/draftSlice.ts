@@ -57,6 +57,7 @@ const draftSlice = createSlice({
     },
     resetDraftStatementAttachment: (state: DraftState) => {
       state.currentDraft.attachment = {} as IAttachment;
+      state.isSigned = false;
     },
     toggleDraftToFormStatement: (state: DraftState, action: PayloadAction<boolean>) => {
       state.toFormStatement = action.payload;

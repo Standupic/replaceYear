@@ -25,8 +25,8 @@ const infoStyle: React.CSSProperties | undefined = {
 };
 
 const currentYearStyle: React.CSSProperties | undefined = {
-  top: '15px',
-  left: '155px',
+  top: '25px',
+  left: '25px',
   width: '207px',
   height: '40px',
 };
@@ -55,7 +55,6 @@ const YearActive: FC<IYearProps> = ({
         </ButtonYear>
       )}
       <CurrentYear
-        ref={currentYearRef}
         align={'center'}
         size={'1.1rem'}
         disable={disabled}
@@ -66,34 +65,33 @@ const YearActive: FC<IYearProps> = ({
         onMouseLeave={() => {
           setVisibleInCome(false);
         }}>
-        <YearBox>{year}</YearBox>
-        {disabled && (
-          <StatusInfoYear
-            ref={statusInfoRef}
+        <YearBox ref={currentYearRef}>{year}</YearBox>
+        <PopUp
+          text={`Расчётная база: ${income > 0 ? getCurrency(income) : 0}`}
+          isVisible={isVisibleInCome}
+          currentRef={currentYearRef}
+          style={currentYearStyle}
+        />
+      </CurrentYear>
+      {disabled && (
+        <StatusInfoYear ref={statusInfoRef}>
+          <StatusInfoOutline
+            size={'xxs'}
             onMouseOver={() => {
               setVisibleInfo(true);
             }}
             onMouseLeave={() => {
               setVisibleInfo(false);
-            }}>
-            <StatusInfoOutline size={'xxs'} />
-            <PopUp
-              isVisible={isVisibleInfo}
-              text={`В ${year} году не было длительного отсутствия`}
-              currentRef={statusInfoRef}
-              style={infoStyle}
-            />
-          </StatusInfoYear>
-        )}
-        {!disabled && (
-          <PopUp
-            text={`Расчётная база: ${income > 0 ? getCurrency(income) : 0}`}
-            isVisible={isVisibleInCome}
-            currentRef={currentYearRef}
-            style={currentYearStyle}
+            }}
           />
-        )}
-      </CurrentYear>
+          <PopUp
+            isVisible={isVisibleInfo}
+            text={`В ${year} году не было длительного отсутствия`}
+            currentRef={statusInfoRef}
+            style={infoStyle}
+          />
+        </StatusInfoYear>
+      )}
       {!disabled && (
         <ButtonYear
           disabled={!controller.right}

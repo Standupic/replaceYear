@@ -45,6 +45,7 @@ const ToApplyManually: FC<IProps> = ({
                   disabled={isAttachable || !attachment}
                   fullWidth={false}
                   name={'file'}
+                  accept={'pdf'}
                   placeholder={'Прикрепить файл'}
                   setFile={(file: IFileData[]) => {
                     if (!file.length) {

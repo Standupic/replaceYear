@@ -1,7 +1,6 @@
-import { StatusInfoOutline } from 'juicyfront/indexIcon';
 import { Toast } from 'juicyfront';
 import React, { FC } from 'react';
-import { PopUpText, StatusInfoYear } from './calculator-parts';
+import { PopUpText } from './calculator-parts';
 
 interface IPopUpProps {
   currentRef: React.MutableRefObject<null>;

@@ -79,6 +79,7 @@ export const globalStateSlice = createSlice({
     },
     resetStatementAttachment: (state: GlobalState) => {
       state.attachment = undefined;
+      state.isSigned = false;
     },
     toggleToContinue: (state: GlobalState, action: PayloadAction<boolean>) => {
       state.toContinue = action.payload;

@@ -4,7 +4,6 @@ import {
   checkMostBenefitYear,
   controllerArrow,
   getDelta,
-  sortIncomeYear,
   totalActiveYears,
   totalNotActiveYears,
 } from '../helpers';

@@ -125,9 +125,10 @@ export const CurrentYear = styled(Text as any).attrs(() => ({
 
 export const StatusInfoYear = styled.em`
   position: absolute;
-  right: -50px;
-  bottom: -14px;
+  right: 38%;
+  bottom: 5px;
   cursor: pointer;
+  color: #b1b5bb;
 `;
 
 export const PopUpText = styled(Text as any).attrs(() => ({}))`
