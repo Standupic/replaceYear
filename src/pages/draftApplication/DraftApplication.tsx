@@ -23,9 +23,15 @@ import DeleteButton from '../../components/styledComponents/DeleteButton/index.'
 import deleteDraft from '../../middlewares/deleteDraft';
 import ModalDraft from '../../components/common/ModalDraft/ModalDraft';
 import { computingApplication } from '../../store/calculatorSlice';
-import { resetDraft, toggleDraftSigned, updateDraftAttachmentFile } from '../../store/draftSlice';
+import {
+  resetDraft,
+  toggleDraftSigned,
+  updateDraftAttachmentFile,
+  resetDraftStatementAttachment,
+} from '../../store/draftSlice';
 import editDraftStatement from '../../middlewares/editDraft';
 import Permission from '../../components/Permission';
+import getDraftStatement from '../../middlewares/getDraftStatement';
 
 const DraftApplication = () => {
   const { topActiveYear, bottomActiveYear, previousYear, beforePreviousYear } = useSelector(
@@ -39,6 +45,7 @@ const DraftApplication = () => {
     attachmentDraftId,
     toFormStatement,
     toFormLoading,
+    pdfFileLoading,
   } = useSelector((state: RootState) => state.draft);
   const { attachment, timeStamp } = currentDraft;
   const dispatch = useDispatch();
@@ -79,6 +86,14 @@ const DraftApplication = () => {
     dispatch(toggleDraftSigned(false));
   }, [dispatch]);
 
+  const resetDraftManually = useCallback(() => {
+    dispatch(resetDraftStatementAttachment());
+  }, []);
+
+  const getDraftStatementManually = useCallback((id: string) => {
+    dispatch(getDraftStatement(id));
+  }, []);
+
   return (
     <PagePreloader loader={draftLoading}>
       <Permission mode={'applications'}>
@@ -112,6 +127,9 @@ const DraftApplication = () => {
               toUpdateAttachment={toUpdateAttachment}
               cancelSign={cancelSign}
               toFormLoading={toFormLoading}
+              resetAttachmentManually={resetDraftManually}
+              getStatementManually={getDraftStatementManually}
+              pdfFileLoading={pdfFileLoading}
             />
           </>
         </Stack>

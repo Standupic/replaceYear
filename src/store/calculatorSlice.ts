@@ -214,6 +214,7 @@ const calculatorSlice = createSlice({
         previousYear: state.previousYear,
         beforePreviousYear: state.beforePreviousYear,
       });
+
       const isThereNotSelectable = checkIsThereNotSelectableYear(action.payload, {
         previousYear: state.previousYear,
         beforePreviousYear: state.beforePreviousYear,

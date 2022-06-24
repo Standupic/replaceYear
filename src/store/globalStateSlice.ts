@@ -4,6 +4,8 @@ import { mappingInitData, savePdfFile } from '../helpers';
 import formStatement from '../middlewares/formStatement';
 import getStatement, { IAttachment } from '../middlewares/getStatement';
 import submitStatement from '../middlewares/submitStatement';
+import getInitMessage from "../middlewares/getInitMessage";
+import getDraftStatement from "../middlewares/getDraftStatement";
 
 export enum STATUS_APPLICATION {
   Error = 'Error',
@@ -77,6 +79,7 @@ export const globalStateSlice = createSlice({
     },
     resetStatementAttachment: (state: GlobalState) => {
       state.attachment = undefined;
+      state.isSigned = false;
     },
     toggleToContinue: (state: GlobalState, action: PayloadAction<boolean>) => {
       state.toContinue = action.payload;
@@ -131,6 +134,9 @@ export const globalStateSlice = createSlice({
     builder.addCase(initReplaceYear.rejected, (state: GlobalState, action) => {
       state.accessApplication = action.payload;
       state.initLoading = false;
+    });
+    builder.addCase(getInitMessage.fulfilled, (state: GlobalState, action) => {
+      state.hasAlreadyOneMessage = action.payload;
     });
     builder.addCase(formStatement.pending, (state: GlobalState) => {
       state.formStatementLoading = true;
