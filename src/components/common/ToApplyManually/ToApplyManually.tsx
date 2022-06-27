@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { Button, Hint, InputFile } from 'juicyfront';
 import { IFileData } from 'juicyfront/types';
 import { Box, Card, Heading, Stack, Inline } from '../../styledComponents';
@@ -28,6 +28,7 @@ const ToApplyManually: FC<IProps> = ({
   getStatement,
   pdfLoading,
 }) => {
+  const [isAttachable, setAttachable] = useState(false);
   return (
     <>
       <Card>
@@ -47,15 +48,17 @@ const ToApplyManually: FC<IProps> = ({
               <Box>
                 <InputFile
                   buttonType="light"
-                  disabled={_.isEmpty(attachment)}
+                  disabled={isAttachable || _.isEmpty(attachment)}
                   fullWidth={false}
                   name={'file'}
                   placeholder={'Прикрепить файл'}
                   setFile={(file: IFileData[]) => {
                     if (!file.length) {
                       reset();
+                      setAttachable(false);
                     } else {
                       toUpdateAttachment({ base64: file[0].base64, fileName: file[0].file.name });
+                      setAttachable(true);
                     }
                   }}
                 />

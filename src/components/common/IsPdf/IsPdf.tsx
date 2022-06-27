@@ -7,7 +7,7 @@ const isPdf = () => {
   return (
     <Card>
       <Hint variant={'red'} maxWidth={'100%'}>
-        <Text size={'0.875rem'}>Прикрепите пожалуйста файл формата pdf.</Text>
+        <Text size={'0.875rem'}>Прикрепите, пожалуйста, заявление в формате PDF.</Text>
       </Hint>
     </Card>
   );
