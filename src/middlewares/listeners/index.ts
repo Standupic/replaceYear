@@ -6,9 +6,7 @@ import { checkIsThereMoreThanOneNotSelectableYear } from '../../helpers';
 import {
   ACCESS_APPLICATION,
   cancelSign,
-  resetCreateApplication,
   setAccessToApplication,
-  toggleIsVisibleFormStatement,
 } from '../../store/globalStateSlice';
 import { RootState } from '../../store';
 import getStatement from '../getStatement';
@@ -23,7 +21,7 @@ import formStatement from '../formStatement';
 import editDraftStatement from '../editDraft';
 import getEditedDraftStatement from '../getEditedDraftStatement';
 import getApplication from '../getApplication';
-import { toggleDraftSigned, toggleDraftToFormStatement } from '../../store/draftSlice';
+import { cancelDraftSigned } from '../../store/draftSlice';
 import authorization from '../authorization';
 import getInitMessage from '../getInitMessage';
 
@@ -67,7 +65,6 @@ listenerMiddleware.startListening({
 listenerMiddleware.startListening({
   matcher: isFulfilled(formStatement),
   effect: async (action, api) => {
-    api.dispatch(toggleIsVisibleFormStatement(false));
     if (!action.payload.anotherEmployer) {
       api.dispatch(getStatement(action.payload.Id));
     }
@@ -77,29 +74,30 @@ listenerMiddleware.startListening({
 listenerMiddleware.startListening({
   matcher: isFulfilled(editDraftStatement),
   effect: async (action, api) => {
-    api.dispatch(getEditedDraftStatement(action.payload.Id));
+    if (!action.payload.anotherEmployer) {
+      api.dispatch(getEditedDraftStatement(action.payload.Id));
+    }
   },
 });
+
+// listenerMiddleware.startListening({
+//   matcher: isAnyOf(toMostBenefit, incrementYear, decrementYear),
+//   effect: async (_action, api) => {
+//     api.dispatch(cancelSign());
+//     api.dispacth(cancelDraftSigned())
+//   },
+// });
 
 listenerMiddleware.startListening({
   matcher: isAnyOf(toMostBenefit, incrementYear, decrementYear),
   effect: async (_action, api) => {
-    api.dispatch(cancelSign());
-  },
-});
-
-listenerMiddleware.startListening({
-  matcher: isAnyOf(toMostBenefit, incrementYear, decrementYear, cancelSign),
-  effect: async (_action, api) => {
     const store = api.getState() as RootState;
     const { attachmentId } = store.globalState;
-    const { attachmentDraftId } = store.draft;
     if (attachmentId) {
-      api.dispatch(resetCreateApplication());
+      api.dispatch(cancelSign());
     }
-    if (attachmentDraftId) {
-      api.dispatch(toggleDraftToFormStatement(true));
-      api.dispatch(toggleDraftSigned(false));
+    if (store.draft.currentDraft.attachment) {
+      api.dispatch(cancelDraftSigned());
     }
   },
 });

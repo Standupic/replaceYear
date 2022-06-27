@@ -1,9 +1,10 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { Button, Hint, InputFile } from 'juicyfront';
 import { IFileData } from 'juicyfront/types';
 import { Box, Card, Heading, Stack, Inline } from '../../styledComponents';
 import { ReactComponent as DownLoadSVG } from '../../../assets/images/download.svg';
 import { IAttachment } from '../../../middlewares/getStatement';
+const _ = require('lodash/lang');
 
 interface IProps {
   attachment?: IAttachment;
@@ -27,7 +28,6 @@ const ToApplyManually: FC<IProps> = ({
   getStatement,
   pdfLoading,
 }) => {
-  const [isAttachable, setAttachable] = useState(false);
   return (
     <>
       <Card>
@@ -47,19 +47,15 @@ const ToApplyManually: FC<IProps> = ({
               <Box>
                 <InputFile
                   buttonType="light"
-                  disabled={isAttachable || !attachment}
+                  disabled={_.isEmpty(attachment)}
                   fullWidth={false}
                   name={'file'}
-                  accept={'application/pdf'}
                   placeholder={'Прикрепить файл'}
                   setFile={(file: IFileData[]) => {
-                    console.log(file);
                     if (!file.length) {
-                      setAttachable(false);
                       reset();
                     } else {
-                      toUpdateAttachment({ base64: file[0].base64 });
-                      setAttachable(!isAttachable);
+                      toUpdateAttachment({ base64: file[0].base64, fileName: file[0].file.name });
                     }
                   }}
                 />

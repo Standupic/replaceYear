@@ -149,9 +149,6 @@ const applicationsSlice = createSlice({
   },
 });
 
-export const {
-  setFilterDate,
-  resetCurrentApplication,
-  setAccessApplications,
-} = applicationsSlice.actions;
+export const { setFilterDate, resetCurrentApplication, setAccessApplications } =
+  applicationsSlice.actions;
 export default applicationsSlice.reducer;

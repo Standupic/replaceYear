@@ -5,7 +5,6 @@ import formStatement from '../middlewares/formStatement';
 import getStatement, { IAttachment } from '../middlewares/getStatement';
 import submitStatement from '../middlewares/submitStatement';
 import getInitMessage from '../middlewares/getInitMessage';
-import getDraftStatement from '../middlewares/getDraftStatement';
 
 export enum STATUS_APPLICATION {
   Error = 'Error',
@@ -23,6 +22,13 @@ export enum ACCESS_APPLICATION {
 export interface InitData {
   previousYear: number;
   beforePreviousYear: number;
+}
+
+export interface IFile {
+  base64: string;
+  cert?: string;
+  singBase64?: string;
+  fileName?: string;
 }
 
 export interface GlobalState {
@@ -76,28 +82,10 @@ export const globalStateSlice = createSlice({
     setAccessToApplication: (state: GlobalState, action: PayloadAction<ACCESS_APPLICATION>) => {
       state.accessApplication = action.payload;
     },
-    resetStatementAttachmentId: (state: GlobalState) => {
-      state.attachmentId = '';
-    },
-    resetStatementAttachment: (state: GlobalState) => {
-      state.attachment = undefined;
-      state.isSigned = false;
-    },
     toggleToContinue: (state: GlobalState, action: PayloadAction<boolean>) => {
       state.toContinue = action.payload;
     },
-    toggleIsVisibleFormStatement: (state: GlobalState, action: PayloadAction<boolean>) => {
-      state.isVisibleFormStatement = action.payload;
-    },
-    updateAttachNewApplicationFile: (
-      state,
-      action: PayloadAction<{
-        base64: string;
-        cert?: string;
-        singBase64?: string;
-        fileName?: string;
-      }>,
-    ) => {
+    updateAttachNewApplicationFile: (state, action: PayloadAction<IFile>) => {
       // @ts-ignore
       state.attachment = {
         ...state.attachment,
@@ -108,8 +96,8 @@ export const globalStateSlice = createSlice({
         // @ts-ignore
         fileName: action.payload.fileName,
       };
-      if (state.attachment) {
-        state.isPdf = state.attachment.fileName.split('.')[1] === 'pdf';
+      if (action.payload.fileName) {
+        state.isPdf = action.payload.fileName.split('.')[1] === 'pdf';
       }
       state.isSigned = true;
     },
@@ -117,18 +105,11 @@ export const globalStateSlice = createSlice({
       state.isSigned = false;
       state.attachment = undefined;
       state.isPdf = true;
-    },
-    resetCreateApplication: (state: GlobalState) => {
-      state.attachmentId = '';
-      state.attachment = undefined;
-      state.isSigned = false;
       state.isVisibleFormStatement = true;
-    },
-    reset: (state: GlobalState) => {
       state.attachmentId = '';
-      state.attachment = undefined;
-      state.isSigned = false;
-      state.isVisibleFormStatement = true;
+    },
+    reset: () => {
+      return initialState;
     },
   },
   extraReducers: (builder) => {
@@ -158,6 +139,7 @@ export const globalStateSlice = createSlice({
     builder.addCase(formStatement.fulfilled, (state: GlobalState, action) => {
       state.formStatementLoading = false;
       state.attachmentId = action.payload.Id;
+      state.isVisibleFormStatement = false;
     });
     builder.addCase(formStatement.rejected, (state: GlobalState) => {
       state.formStatementLoading = false;
@@ -203,10 +185,6 @@ export const {
   updateAttachNewApplicationFile,
   setAccessToApplication,
   cancelSign,
-  toggleIsVisibleFormStatement,
   reset,
-  resetStatementAttachment,
-  resetCreateApplication,
-  resetStatementAttachmentId,
 } = globalStateSlice.actions;
 export default globalStateSlice.reducer;

@@ -18,7 +18,6 @@ export interface IPropsSwitcherToApply {
   }) => void;
   cancelSign: () => void;
   toFormLoading: boolean;
-  resetAttachmentManually: () => void;
   getStatementManually: (id: string) => void;
   pdfFileLoading: boolean;
 }
@@ -32,7 +31,6 @@ const SwitcherToApply: FC<IPropsSwitcherToApply> = ({
   toUpdateAttachment,
   cancelSign,
   toFormLoading,
-  resetAttachmentManually,
   getStatementManually,
   pdfFileLoading,
 }) => {
@@ -51,7 +49,7 @@ const SwitcherToApply: FC<IPropsSwitcherToApply> = ({
         toUpdateAttachment={toUpdateAttachment}
         attachmentId={attachmentId}
         attachment={attachment}
-        reset={resetAttachmentManually}
+        reset={cancelSign}
         getStatement={getStatementManually}
         pdfLoading={pdfFileLoading}
       />

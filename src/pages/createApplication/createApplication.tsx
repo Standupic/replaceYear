@@ -20,8 +20,7 @@ import {
   updateAttachNewApplicationFile,
   toggleToContinue,
   cancelSign,
-  resetCreateApplication,
-  resetStatementAttachment,
+  IFile,
 } from '../../store/globalStateSlice';
 import formStatement from '../../middlewares/formStatement';
 import getStatement from '../../middlewares/getStatement';
@@ -55,7 +54,7 @@ const createApplication = () => {
       dispatch(toggleToContinue(false));
     }
     return () => {
-      dispatch(resetCreateApplication());
+      dispatch(cancelSign());
     };
   }, []);
   const handlerToFormStatement = () => {
@@ -67,19 +66,12 @@ const createApplication = () => {
     const params = attachmentId ? { ...data, Id: attachmentId } : { ...data };
     dispatch(formStatement(params));
   };
-  const toUpdateAttachment = useCallback(
-    (props: { base64: string; cert?: string; singBase64?: string; fileName?: string }) => {
-      dispatch(updateAttachNewApplicationFile(props));
-    },
-    [],
-  );
+  const toUpdateAttachment = useCallback((props: IFile) => {
+    dispatch(updateAttachNewApplicationFile(props));
+  }, []);
 
   const cancelSignHandler = useCallback(() => {
     dispatch(cancelSign());
-  }, []);
-
-  const resetManually = useCallback(() => {
-    dispatch(resetStatementAttachment());
   }, []);
 
   const getStatementManually = useCallback((id: string) => {
@@ -116,7 +108,6 @@ const createApplication = () => {
                 toUpdateAttachment={toUpdateAttachment}
                 cancelSign={cancelSignHandler}
                 toFormLoading={formStatementLoading}
-                resetAttachmentManually={resetManually}
                 getStatementManually={getStatementManually}
                 pdfFileLoading={pdfFileLoading}
               />

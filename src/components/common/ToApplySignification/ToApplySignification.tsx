@@ -23,7 +23,6 @@ const ToApplySignification: FC<IProps> = ({ attachment, toUpdateAttachment, canc
       <Signification
         onSignify={(result) => {
           if (lodash.isEmpty(result.file)) {
-            cancelSign();
             return;
           }
           if (result) {

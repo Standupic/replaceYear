@@ -23,15 +23,12 @@ import DeleteButton from '../../components/styledComponents/DeleteButton/index.'
 import deleteDraft from '../../middlewares/deleteDraft';
 import ModalDraft from '../../components/common/ModalDraft/ModalDraft';
 import { computingApplication } from '../../store/calculatorSlice';
-import {
-  resetDraft,
-  toggleDraftSigned,
-  updateDraftAttachmentFile,
-  resetDraftStatementAttachment,
-} from '../../store/draftSlice';
+import { reset, cancelDraftSigned, updateDraftAttachmentFile } from '../../store/draftSlice';
 import editDraftStatement from '../../middlewares/editDraft';
 import Permission from '../../components/Permission';
 import getDraftStatement from '../../middlewares/getDraftStatement';
+import IsPdf from '../../components/common/IsPdf/IsPdf';
+import { IFile } from '../../store/globalStateSlice';
 
 const DraftApplication = () => {
   const { topActiveYear, bottomActiveYear, previousYear, beforePreviousYear } = useSelector(
@@ -42,12 +39,12 @@ const DraftApplication = () => {
     draftLoading,
     currentDraft,
     isSigned,
-    attachmentDraftId,
     toFormStatement,
     toFormLoading,
     pdfFileLoading,
+    isPdf,
   } = useSelector((state: RootState) => state.draft);
-  const { attachment, timeStamp } = currentDraft;
+  const { attachment, timeStamp, id } = currentDraft;
   const dispatch = useDispatch();
   const totalNotActiveYear = useSelector(selectTotalNotActiveYears);
   const dataActiveYears = useSelector(selectDataActiveYears);
@@ -59,7 +56,7 @@ const DraftApplication = () => {
       dispatch(getApplication({ id: params.id, isDraft: true }));
     }
     return () => {
-      dispatch(resetDraft());
+      dispatch(reset());
       dispatch(computingApplication());
     };
   }, [params, params.id, dispatch]);
@@ -70,25 +67,21 @@ const DraftApplication = () => {
         NextYear1: topActiveYear.value.toString(),
         NextYear2: bottomActiveYear.value.toString(),
         event: 'PRINT',
-        Id: attachmentDraftId,
+        Id: id,
       }),
     );
-  }, [topActiveYear.value, bottomActiveYear.value, attachmentDraftId]);
+  }, [topActiveYear.value, bottomActiveYear.value, id]);
 
   const toUpdateAttachment = useCallback(
-    (props: { base64: string; cert?: string; singBase64?: string }) => {
+    (props: IFile) => {
       dispatch(updateDraftAttachmentFile(props));
     },
     [dispatch],
   );
 
   const cancelSign = useCallback(() => {
-    dispatch(toggleDraftSigned(false));
+    dispatch(cancelDraftSigned());
   }, [dispatch]);
-
-  const resetDraftManually = useCallback(() => {
-    dispatch(resetDraftStatementAttachment());
-  }, []);
 
   const getDraftStatementManually = useCallback((id: string) => {
     dispatch(getDraftStatement(id));
@@ -118,8 +111,9 @@ const DraftApplication = () => {
               topYearIncome={topYearIncome}
               bottomYearIncome={bottomYearIncome}
             />
+            {!isPdf && <IsPdf />}
             <SwitcherToApply
-              attachmentId={attachmentDraftId}
+              attachmentId={id}
               isHandSignature={isHandSignature}
               isVisibleFormStatement={toFormStatement}
               attachment={attachment}
@@ -127,7 +121,6 @@ const DraftApplication = () => {
               toUpdateAttachment={toUpdateAttachment}
               cancelSign={cancelSign}
               toFormLoading={toFormLoading}
-              resetAttachmentManually={resetDraftManually}
               getStatementManually={getDraftStatementManually}
               pdfFileLoading={pdfFileLoading}
             />
@@ -137,12 +130,12 @@ const DraftApplication = () => {
           <Inline gutter={KEY_SPACING.sm}>
             <Button
               preloader={submitLoading}
-              disabled={delta <= 0 || !isSigned}
+              disabled={delta <= 0 || !isSigned || !isPdf}
               onClick={() => {
                 dispatch(
                   submitStatement({
                     attachments: { ...attachment },
-                    id: attachmentDraftId,
+                    id: id,
                   }),
                 );
               }}>

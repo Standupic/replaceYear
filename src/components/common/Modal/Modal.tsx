@@ -7,6 +7,7 @@ import { ReactComponent as CrossSVG } from '../../../assets/images/cross.svg';
 import './styles.sass';
 import {
   resetCreateApplication,
+  cancelSign,  
   setStatusApplication,
   STATUS_APPLICATION,
 } from '../../../store/globalStateSlice';
@@ -37,7 +38,7 @@ const ModalCreateApplication: FC = () => {
   const handlerClick = () => {
     if (statusApplication === STATUS_APPLICATION.Success) {
       history.push('/replaceyears/applications');
-      dispatch(resetCreateApplication());
+      dispatch(cancelSign());
     }
     dispatch(setStatusApplication(undefined));
   };
